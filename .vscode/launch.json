@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-HrsApplication<hrs>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.skillstorm.hrs.HrsApplication",
+      "projectName": "hrs",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
