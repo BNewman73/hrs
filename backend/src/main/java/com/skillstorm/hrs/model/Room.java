@@ -23,31 +23,12 @@ public class Room extends BaseEntity {
   @Field("room_number")
   private String roomNumber;
 
-  private RoomType type;
-
   @Field("price_per_night")
   private Integer pricePerNight;
 
-  private List<Amenity> amenities;
-
-  private String description;
-
   private List<String> images;
 
-  // defines capacity for the room as well
-  public enum RoomType {
-    SINGLE,
-    DOUBLE
-  }
-
-  public enum Amenity {
-    WIFI,
-    TV,
-    REFRIGERATOR,
-    STOVE,
-    BALCONY,
-    SAFE,
-    COFFEE_MAKER,
-    MICROWAVE
-  }
+  private RoomDetails roomDetails;
+ 
 }
+
