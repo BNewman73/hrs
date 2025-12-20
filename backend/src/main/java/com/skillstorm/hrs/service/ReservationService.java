@@ -6,8 +6,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.skillstorm.hrs.dto.BlockRequestDTO;
-import com.skillstorm.hrs.dto.BookingRequestDTO;
+import com.skillstorm.hrs.dto.reservation.BlockRequestDTO;
+import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
 import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.exception.ResourceNotFoundException;
 import com.skillstorm.hrs.exception.RoomNotAvailableException;

@@ -1,4 +1,4 @@
-package com.skillstorm.hrs.dto;
+package com.skillstorm.hrs.dto.reservation;
 
 import java.time.LocalDate;
 

@@ -5,8 +5,8 @@ import java.time.LocalDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import com.skillstorm.hrs.dto.BlockRequestDTO;
-import com.skillstorm.hrs.dto.BookingRequestDTO;
+import com.skillstorm.hrs.dto.reservation.BlockRequestDTO;
+import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

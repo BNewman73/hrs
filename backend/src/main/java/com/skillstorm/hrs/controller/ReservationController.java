@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.skillstorm.hrs.dto.BlockRequestDTO;
-import com.skillstorm.hrs.dto.BookingRequestDTO;
+import com.skillstorm.hrs.dto.reservation.BlockRequestDTO;
+import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
 import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.model.Reservation;
 import com.skillstorm.hrs.model.Reservation.ReservationType;
