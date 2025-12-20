@@ -1,11 +1,15 @@
 spring:
   application:
     name: hrs
-  # active profile determines which application-{profile}.yml to load
+
   profiles:
     active: dev
+
+  data:
+    mongodb:
+      auto-index-creation: true   
 
 server:
   port: 8080
   servlet:
-    context-path: /api
+    context-path: /api            
