@@ -1,8 +1,8 @@
 # Development config
 
-# MongoDB - Local Development
 spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/hrs
-      auto-index-creation: true
+      auto-index-creation: true  
+      
