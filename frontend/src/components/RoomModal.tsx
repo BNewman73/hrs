@@ -70,7 +70,7 @@ export default function RoomModal({
           action={
             <>
             <Box sx={{display:"flex", justifyContent:"space-between",flexDirection:"column"}}>
- <Button onClick={onClose} sx={{bgcolor:"gray"}}> <Close/></Button>
+ <Button  sx={{ placeSelf:"self-end",maxWidth:"2px" ,borderRadius: 2, fontSize: "1rem",bgcolor:"grey" }} onClick={onClose} > <Close/></Button>
             <Typography variant="h6" color="primary" fontWeight="bold">
               ${room.pricePerNight}/night
             </Typography>
@@ -114,7 +114,7 @@ export default function RoomModal({
               </Button>
             }
             backButton={
-              <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+              <Button   size="small" onClick={handleBack} disabled={activeStep === 0}>
                 <KeyboardArrowLeft /> Back
               </Button>
             }

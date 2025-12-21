@@ -12,7 +12,8 @@ public class SecurityConfig {
 //this file
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        http 
+            .cors(cors -> {})    // Must enable Cors          
             .csrf(csrf -> csrf.disable()) // Must disable CSRF for POST requests to work
             .authorizeHttpRequests(auth -> auth
                 .anyRequest().permitAll() // This "unlocks" all your API doors
@@ -20,3 +21,5 @@ public class SecurityConfig {
         return http.build();
     }
 }
+
+
