@@ -26,4 +26,13 @@ declare global {
     images: string[];
     roomDetails: RoomDetails;
   }
+
+  interface RoomPostDTO{
+     roomNumber: string;
+    pricePerNight: number;
+    images: string[];
+    roomType: RoomType;
+
+  }
+
 }
