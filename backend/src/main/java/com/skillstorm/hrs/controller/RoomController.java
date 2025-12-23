@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,52 +17,56 @@ import org.springframework.web.bind.annotation.RestController;
 import com.skillstorm.hrs.dto.roomDTOS.RoomDTO;
 import com.skillstorm.hrs.dto.roomDTOS.RoomPatchDTO;
 import com.skillstorm.hrs.dto.roomDTOS.RoomPutDTO;
-import com.skillstorm.hrs.model.Room;
+import com.skillstorm.hrs.dto.roomDTOS.RoomResponseDTO;
 import com.skillstorm.hrs.service.RoomService;
 
 import jakarta.validation.Valid;
 
-
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/rooms")
 public class RoomController {
     private final RoomService roomService;
-    
-public RoomController(RoomService roomService){
-    this.roomService=roomService;
-}
 
-@PostMapping
-public ResponseEntity<Room> postRoom(@RequestBody RoomDTO room){
-    Room createdRoom = roomService.createRoom(room);
-    return new ResponseEntity<>(createdRoom,HttpStatus.CREATED);
-}
+    public RoomController(RoomService roomService) {
+        this.roomService = roomService;
+    }
 
-@GetMapping
-public ResponseEntity<List<Room>> getRooms() {
-    List<Room> allRooms = roomService.retrieveAllRooms(); 
-    return ResponseEntity.ok(allRooms);
-}
+    @PostMapping
+    public ResponseEntity<RoomResponseDTO> postRoom(@RequestBody RoomDTO room) {
+        RoomResponseDTO createdRoom = roomService.createRoom(room);
+        return new ResponseEntity<>(createdRoom, HttpStatus.CREATED);
+    }
 
- @PutMapping("/{roomNumber}")
-    public ResponseEntity<RoomDTO> putRoom(
-            @PathVariable String roomNumber,
+    @GetMapping
+    public ResponseEntity<List<RoomResponseDTO>> getRooms() {
+        List<RoomResponseDTO> allRooms = roomService.retrieveAllRooms();
+        return ResponseEntity.ok(allRooms);
+    }
+
+    @GetMapping("{publicId}")
+    public ResponseEntity<RoomResponseDTO> getRoom(@PathVariable String publicId) {
+
+        return ResponseEntity.ok(roomService.retrieveRoom(publicId));
+    }
+
+    @PutMapping("/{publicId}")
+    public ResponseEntity<RoomResponseDTO> putRoom(
+            @PathVariable String publicId,
             @RequestBody @Valid RoomPutDTO dto) {
-     return ResponseEntity.ok(roomService.updateRoom(roomNumber, dto, true));
+        return ResponseEntity.ok(roomService.updateRoom(publicId, dto, true));
     }
 
-    @PatchMapping("/{roomNumber}")
-    public ResponseEntity<RoomDTO> patchRoom(
-            @PathVariable String roomNumber,
-            @RequestBody@Valid RoomPatchDTO dto) {
-        return ResponseEntity.ok(roomService.updateRoom(roomNumber, dto, false));
+    @PatchMapping("/{publicId}")
+    public ResponseEntity<RoomResponseDTO> patchRoom(
+            @PathVariable String publicId,
+            @RequestBody @Valid RoomPatchDTO dto) {
+        return ResponseEntity.ok(roomService.updateRoom(publicId, dto, false));
     }
-    @DeleteMapping("/{roomNumber}")
-    public ResponseEntity<String> deleteRoom(@PathVariable String roomNumber){
-                roomService.deleteRoom(roomNumber);
-                return ResponseEntity.noContent().build();
-    }   
 
+    @DeleteMapping("/{publicId")
+    public ResponseEntity<Void> deleteRoom(@PathVariable String publicId) {
+        roomService.deleteRoom(publicId);
+        return ResponseEntity.noContent().build();
+    }
 
 }
