@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-
 interface RoomsState {
   items: Room[];
   status: "idle" | "loading" | "succeeded" | "failed";
@@ -12,52 +11,72 @@ const initialState: RoomsState = {
   status: "idle",
 };
 
-// Shared error helper
-async function parseErrorMessage(
+/**
+ * Shared error helper: Since Spring GlobalExceptionHandler
+ * returns (ResponseEntity<String>),
+ * use res.text() to get message.
+ */
+async function getCleanErrorMessage(
   res: Response,
   fallback: string
 ): Promise<string> {
   try {
-    const data = await res.json();
-    return data?.message || fallback;
+    const text = await res.text();
+    return text || fallback;
   } catch {
     return fallback;
   }
 }
-//Thunks
+
+// --- Thunks ---
+
 export const fetchRooms = createAsyncThunk<
   Room[],
   void,
   { rejectValue: string }
 >("rooms/fetchAll", async (_, { rejectWithValue }) => {
   const res = await fetch("http://localhost:8080/api/rooms");
-
-  if (!res.ok) {
-    const message = await parseErrorMessage(res, "Failed to fetch rooms");
-    return rejectWithValue(message);
-  }
-
+  if (!res.ok)
+    return rejectWithValue(
+      await getCleanErrorMessage(res, "Failed to fetch rooms")
+    );
   return (await res.json()) as Room[];
 });
 
 export const createRoom = createAsyncThunk<
   Room,
-  RoomPostDTO,
+  RoomDTO,
   { rejectValue: string }
 >("rooms/post", async (room, { rejectWithValue }) => {
   const res = await fetch("http://localhost:8080/api/rooms", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(room),
   });
 
   if (!res.ok) {
-    const message = await parseErrorMessage(res, "Failed to create room");
-    return rejectWithValue(message);
+    return rejectWithValue(
+      await getCleanErrorMessage(res, "Failed to create room")
+    );
   }
+  return (await res.json()) as Room;
+});
 
+export const updateRoom = createAsyncThunk<
+  Room,
+  RoomDTO,
+  { rejectValue: string }
+>("rooms/put", async (room, { rejectWithValue }) => {
+  const res = await fetch(`http://localhost:8080/api/rooms/${room.publicID}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(room),
+  });
+
+  if (!res.ok)
+    return rejectWithValue(
+      await getCleanErrorMessage(res, "Failed to update room")
+    );
   return (await res.json()) as Room;
 });
 
@@ -65,24 +84,19 @@ export const deleteRoom = createAsyncThunk<
   string,
   string,
   { rejectValue: string }
->("rooms/delete", async (roomNumber, { rejectWithValue }) => {
-  const res = await fetch(
-    `http://localhost:8080/api/rooms/${roomNumber}`,
-    { method: "DELETE" }
-  );
+>("rooms/delete", async (roomID, { rejectWithValue }) => {
+  const res = await fetch(`http://localhost:8080/api/rooms/${roomID}`, {
+    method: "DELETE",
+  });
 
-  if (!res.ok) {
-    const message = await parseErrorMessage(
-      res,
-      `Failed to delete room ${roomNumber}`
+  if (!res.ok)
+    return rejectWithValue(
+      await getCleanErrorMessage(res, `Failed to delete room ${roomID}`)
     );
-    return rejectWithValue(message);
-  }
-
-  return roomNumber;
+  return roomID; // Return the ID so the reducer can filter it out
 });
 
-// Slice
+// --- Slice ---
 
 const roomsSlice = createSlice({
   name: "rooms",
@@ -94,13 +108,10 @@ const roomsSlice = createSlice({
       .addCase(fetchRooms.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(
-        fetchRooms.fulfilled,
-        (state, action: PayloadAction<Room[]>) => {
-          state.status = "succeeded";
-          state.items = action.payload;
-        }
-      )
+      .addCase(fetchRooms.fulfilled, (state, action: PayloadAction<Room[]>) => {
+        state.status = "succeeded";
+        state.items = action.payload;
+      })
       .addCase(fetchRooms.rejected, (state) => {
         state.status = "failed";
       })
@@ -112,9 +123,18 @@ const roomsSlice = createSlice({
 
       // deleteRoom
       .addCase(deleteRoom.fulfilled, (state, action) => {
-        state.items = state.items.filter(
-          (r) => r.roomNumber !== action.payload
+        // Matches the string returned in the deleteRoom thunk
+        state.items = state.items.filter((r) => r.publicID !== action.payload);
+      })
+
+      // updateRoom
+      .addCase(updateRoom.fulfilled, (state, action) => {
+        const index = state.items.findIndex(
+          (u) => u.publicID === action.payload.publicID
         );
+        if (index !== -1) {
+          state.items[index] = action.payload;
+        }
       });
   },
 });
