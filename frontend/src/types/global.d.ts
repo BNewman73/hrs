@@ -1,7 +1,7 @@
 export {};
 
 declare global {
-  type RoomType = "SINGLE" | "DOUBLE";
+  type RoomType = "SINGLE" | "DOUBLE" | "DELUXE" | "SUITE";
 
   type Amenity =
     | "WIFI"
@@ -25,14 +25,48 @@ declare global {
     pricePerNight: number;
     images: string[];
     roomDetails: RoomDetails;
+    publicID: string;
   }
 
-  interface RoomPostDTO{
-     roomNumber: string;
+  interface RoomDTO {
+    roomNumber: string;
+    publicID: string;
     pricePerNight: number;
     images: string[];
     roomType: RoomType;
-
   }
 
+  interface User {
+    id: number;
+    name: string;
+    email: string;
+  }
+
+  interface NavBarProps {
+    user: User;
+  }
+  interface ToolbarProps {
+    searchQuery: string;
+    onSearchChange: (val: string) => void;
+    typeFilter: RoomType | "ALL"; // Specific type
+    onTypeChange: (val: RoomType | "ALL") => void; // Specific type
+    sortOrder: SortOrder; // Specific type
+    onSortChange: (val: SortOrder) => void; // Specific type
+    onReset: () => void;
+    isFiltered: boolean;
+  }
+  interface GridConfig {
+    roomNo: { xs: string; sm: string };
+    price: { xs: string; sm: string };
+    category: string;
+    actions: string;
+  }
+
+  interface RoomItemProps {
+    room: Room; // Use your Room type here
+    gridConfig: GridConfig;
+    isExpanded: boolean;
+    onToggle: () => void;
+    onEdit: () => void;
+  }
 }

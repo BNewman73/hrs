@@ -32,7 +32,7 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<RoomResponseDTO> postRoom(@RequestBody RoomDTO room) {
+    public ResponseEntity<RoomResponseDTO> postRoom(@RequestBody @Valid RoomDTO room) {
         RoomResponseDTO createdRoom = roomService.createRoom(room);
         return new ResponseEntity<>(createdRoom, HttpStatus.CREATED);
     }

@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +25,7 @@ public class Room extends BaseEntity {
     @Indexed(unique = true)
     @Field("room_number")
     private String roomNumber;
-
+    @Positive
     @Field("price_per_night")
     private Integer pricePerNight;
 
