@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -22,13 +21,12 @@ import com.skillstorm.hrs.dto.CalendarEventDTO;
 import com.skillstorm.hrs.dto.roomDTOS.RoomDTO;
 import com.skillstorm.hrs.dto.roomDTOS.RoomPatchDTO;
 import com.skillstorm.hrs.dto.roomDTOS.RoomPutDTO;
-import com.skillstorm.hrs.model.Room;
+import com.skillstorm.hrs.dto.roomDTOS.RoomResponseDTO;
 import com.skillstorm.hrs.service.ReservationService;
 import com.skillstorm.hrs.service.RoomService;
 
 import jakarta.validation.Valid;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/rooms")
 public class RoomController {
@@ -41,34 +39,40 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<Room> postRoom(@RequestBody RoomDTO room) {
-        Room createdRoom = roomService.createRoom(room);
+    public ResponseEntity<RoomResponseDTO> postRoom(@RequestBody @Valid RoomDTO room) {
+        RoomResponseDTO createdRoom = roomService.createRoom(room);
         return new ResponseEntity<>(createdRoom, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Room>> getRooms() {
-        List<Room> allRooms = roomService.retrieveAllRooms();
+    public ResponseEntity<List<RoomResponseDTO>> getRooms() {
+        List<RoomResponseDTO> allRooms = roomService.retrieveAllRooms();
         return ResponseEntity.ok(allRooms);
     }
 
-    @PutMapping("/{roomNumber}")
-    public ResponseEntity<RoomDTO> putRoom(
-            @PathVariable String roomNumber,
+    @GetMapping("{publicId}")
+    public ResponseEntity<RoomResponseDTO> getRoom(@PathVariable String publicId) {
+
+        return ResponseEntity.ok(roomService.retrieveRoom(publicId));
+    }
+
+    @PutMapping("/{publicId}")
+    public ResponseEntity<RoomResponseDTO> putRoom(
+            @PathVariable String publicId,
             @RequestBody @Valid RoomPutDTO dto) {
-        return ResponseEntity.ok(roomService.updateRoom(roomNumber, dto, true));
+        return ResponseEntity.ok(roomService.updateRoom(publicId, dto, true));
     }
 
-    @PatchMapping("/{roomNumber}")
-    public ResponseEntity<RoomDTO> patchRoom(
-            @PathVariable String roomNumber,
+    @PatchMapping("/{publicId}")
+    public ResponseEntity<RoomResponseDTO> patchRoom(
+            @PathVariable String publicId,
             @RequestBody @Valid RoomPatchDTO dto) {
-        return ResponseEntity.ok(roomService.updateRoom(roomNumber, dto, false));
+        return ResponseEntity.ok(roomService.updateRoom(publicId, dto, false));
     }
 
-    @DeleteMapping("/{roomNumber}")
-    public ResponseEntity<String> deleteRoom(@PathVariable String roomNumber) {
-        roomService.deleteRoom(roomNumber);
+    @DeleteMapping("/{publicId}")
+    public ResponseEntity<Void> deleteRoom(@PathVariable String publicId) {
+        roomService.deleteRoom(publicId);
         return ResponseEntity.noContent().build();
     }
 

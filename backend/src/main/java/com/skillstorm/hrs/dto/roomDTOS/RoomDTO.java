@@ -5,22 +5,22 @@ import java.util.List;
 import com.skillstorm.hrs.model.RoomDetails;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
+
 @Data
 public class RoomDTO {
-    @NotBlank 
+    @NotBlank
     private String roomNumber;
 
     @NotNull
     @Positive
     private Integer pricePerNight;
 
-    @NotEmpty
+    @NotNull
     private List<String> images;
 
     @NotNull
-    private RoomDetails.RoomType roomType; 
+    private RoomDetails.RoomType roomType;
 }

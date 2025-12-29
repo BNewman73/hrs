@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skillstorm.hrs.dto.roomDTOS.RoomDTO;
+import com.skillstorm.hrs.dto.roomDTOS.RoomResponseDTO;
+import com.skillstorm.hrs.exception.ResourceNotFoundException; // Added
+import com.skillstorm.hrs.exception.RoomNotAvailableException; // Added
 import com.skillstorm.hrs.model.Room;
 import com.skillstorm.hrs.repository.RoomRepository;
 
@@ -17,43 +20,59 @@ import lombok.RequiredArgsConstructor;
 public class RoomService {
 
     private final RoomRepository roomRepository;
-
     private final ModelMapper modelMapper;
 
     @Transactional
-    public Room createRoom(RoomDTO room) {
+    public RoomResponseDTO createRoom(RoomDTO room) {
+        // Business logic: Use RoomNotAvailableException for duplicates
         if (roomRepository.findByRoomNumber(room.getRoomNumber()).isPresent()) {
-            throw new RuntimeException("Room number " + room.getRoomNumber() + " already exists!");
+            throw new RoomNotAvailableException("Room number " + room.getRoomNumber() + " already exists!");
         }
-        Room newRoom = roomRepository.save(modelMapper.map(room, Room.class));
-
-        return newRoom;
-    }
-
-    public void deleteRoom(String roomNumber) {
-        Room room = roomRepository.findByRoomNumber(roomNumber)
-                .orElseThrow(() -> new RuntimeException("Room not found: " + roomNumber));
-        roomRepository.deleteById(room.getRoomNumber());
-
-    }
-
-    public List<Room> retrieveAllRooms() {
-        return roomRepository.findAll();
+        return convertToDto(roomRepository.save(convertToRoom(room)), RoomResponseDTO.class);
     }
 
     @Transactional
-    public RoomDTO updateRoom(String roomNumber, Object dto, boolean isPut) {
-        Room existing = roomRepository.findByRoomNumber(roomNumber)
-                .orElseThrow(() -> new RuntimeException("Room not found: " + roomNumber));
-
-        if (isPut) {
-            modelMapper.map(dto, existing);
-        } else {
-            modelMapper.map(dto, existing);
-        }
-
-        Room saved = roomRepository.save(existing);
-        return modelMapper.map(saved, RoomDTO.class);
+    public void deleteRoom(String publicId) {
+        Room room = roomRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with ID: " + publicId));
+        roomRepository.delete(room);
     }
 
+    public List<RoomResponseDTO> retrieveAllRooms() {
+        return roomRepository.findAll().stream()
+                .map(room -> convertToDto(room, RoomResponseDTO.class))
+                .toList();
+    }
+
+    public RoomResponseDTO retrieveRoom(String publicId) {
+        Room room = roomRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with ID: " + publicId));
+
+        return convertToDto(room, RoomResponseDTO.class);
+    }
+
+    @Transactional
+    public <T> RoomResponseDTO updateRoom(String publicId, T dto, boolean isFullUpdate) {
+        Room room = roomRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with ID: " + publicId));
+
+        if (!isFullUpdate) {
+            modelMapper.getConfiguration().setSkipNullEnabled(true);
+            modelMapper.map(dto, room);
+            modelMapper.getConfiguration().setSkipNullEnabled(false);
+        } else {
+            modelMapper.map(dto, room);
+        }
+
+        Room savedRoom = roomRepository.save(room);
+        return convertToDto(savedRoom, RoomResponseDTO.class);
+    }
+
+    private <S, T> T convertToDto(S entity, Class<T> targetClass) {
+        return modelMapper.map(entity, targetClass);
+    }
+
+    private <T> Room convertToRoom(T roomDTO) {
+        return modelMapper.map(roomDTO, Room.class);
+    }
 }

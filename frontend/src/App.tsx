@@ -1,52 +1,21 @@
-import {
-  Box,
-  CssBaseline,
-  Tab,
-  Tabs,
-  ThemeProvider,
-  createTheme,
-} from "@mui/material";
-import RoomAvailability from "./reservations/RoomAvailability";
-import { useState } from "react";
-import RoomCalendar from "./reservations/RoomCalendar";
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#1976d2",
-    },
-    secondary: {
-      main: "#dc004e",
-    },
-  },
-});
+import GlobalSnackbar from "./components/GlobalSnackbar";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import DashboardPage from "./components/DashboardPage";
+import Container from "@mui/material/Container";
 
 function App() {
-  const [currentTab, setCurrentTab] = useState(0);
-
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setCurrentTab(newValue);
-  };
-
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box
-        sx={{
-          borderBottom: 1,
-          borderColor: "divider",
-          backgroundColor: "white",
-        }}
-      >
-        <Tabs value={currentTab} onChange={handleTabChange} centered>
-          <Tab label="Search Rooms" />
-          <Tab label="Room Calendar" />
-        </Tabs>
-      </Box>
-
-      {currentTab === 0 && <RoomAvailability />}
-      {currentTab === 1 && <RoomCalendar />}
-    </ThemeProvider>
+    <>
+      <BrowserRouter>
+        <GlobalSnackbar />
+        <Container maxWidth="lg">
+          <Routes>
+            <Route path="/home" element={<div></div>} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+          </Routes>
+        </Container>
+      </BrowserRouter>
+    </>
   );
 }
 
