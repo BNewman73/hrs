@@ -19,6 +19,7 @@ import com.skillstorm.hrs.dto.reservation.BlockRequestDTO;
 import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
 import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.model.Reservation;
+import com.skillstorm.hrs.model.Room;
 import com.skillstorm.hrs.model.Reservation.ReservationType;
 import com.skillstorm.hrs.service.ReservationService;
 
@@ -86,5 +87,19 @@ public class ReservationController {
   public ResponseEntity<Void> deleteReservation(@PathVariable String id) {
     reservationService.deleteReservation(id);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  @GetMapping("/available")
+  public ResponseEntity<List<Room>> getAvailableRooms(
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
+      @RequestParam(required = false) Integer guests) {
+
+    if (checkOutDate.isBefore(checkInDate) || checkOutDate.isEqual(checkInDate)) {
+      throw new InvalidReservationException("Check out date must be strictly after check in date");
+    }
+
+    List<Room> availableRooms = reservationService.getAvailableRooms(checkInDate, checkOutDate, guests);
+    return new ResponseEntity<>(availableRooms, HttpStatus.OK);
   }
 }
