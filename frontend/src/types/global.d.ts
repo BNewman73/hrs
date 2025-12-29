@@ -27,12 +27,33 @@ declare global {
     roomDetails: RoomDetails;
   }
 
-  interface RoomPostDTO{
-     roomNumber: string;
+  interface RoomPostDTO {
+    roomNumber: string;
     pricePerNight: number;
     images: string[];
     roomType: RoomType;
-
   }
 
+  interface RoomAvailabilityRequest {
+    checkInDate: string;
+    checkOutDate: string;
+    guests?: number;
+  }
+
+  export interface CalendarEvent {
+    id: string;
+    title: string;
+    start: Date;
+    end: Date;
+    resourceId: string; // room number
+    type: "GUEST_BOOKING" | "ADMIN_BLOCK";
+    guestName?: string;
+    blockReason?: string;
+  }
+
+  export interface RoomCalendarRequest {
+    roomNumber: string;
+    startDate: string;
+    endDate: string;
+  }
 }

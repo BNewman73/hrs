@@ -3,15 +3,19 @@ package com.skillstorm.hrs.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.skillstorm.hrs.dto.CalendarEventDTO;
 import com.skillstorm.hrs.dto.reservation.BlockRequestDTO;
 import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
 import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.exception.ResourceNotFoundException;
 import com.skillstorm.hrs.exception.RoomNotAvailableException;
 import com.skillstorm.hrs.model.Reservation;
+import com.skillstorm.hrs.model.Room;
 import com.skillstorm.hrs.model.Reservation.ReservationType;
 import com.skillstorm.hrs.repository.ReservationRepository;
 import com.skillstorm.hrs.repository.RoomRepository;
@@ -100,4 +104,35 @@ public class ReservationService {
     if (!userRepository.existsById(id))
       throw new ResourceNotFoundException("User not found with id " + id);
   }
+
+  public List<Room> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, Integer guests) {
+    List<Room> allRooms = roomRepository.findAll();
+
+    List<Reservation> overlappingReservations = reservationRepository.findReservationsInDateRange(checkInDate,
+        checkOutDate);
+
+    Set<String> bookedRoomIds = overlappingReservations.stream()
+        .map(Reservation::getRoomId)
+        .collect(Collectors.toSet());
+
+    List<Room> availableRooms = allRooms.stream()
+        .filter(room -> !bookedRoomIds.contains(room.getRoomNumber()))
+        .filter(room -> guests == null || room.getRoomDetails().getMaxCapacity() >= guests)
+        .collect(Collectors.toList());
+
+    return availableRooms;
+  }
+
+  public List<CalendarEventDTO> getRoomReservations(String roomNumber, LocalDate startDate, LocalDate endDate) {
+    List<Reservation> reservations = reservationRepository
+        .findReservationsInDateRange(startDate, endDate)
+        .stream()
+        .filter(r -> r.getRoomId().equals(roomNumber))
+        .collect(Collectors.toList());
+
+    return reservations.stream()
+        .map(CalendarEventDTO::from)
+        .collect(Collectors.toList());
+  }
+
 }

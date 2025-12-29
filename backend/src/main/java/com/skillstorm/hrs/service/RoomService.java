@@ -12,9 +12,8 @@ import com.skillstorm.hrs.repository.RoomRepository;
 
 import lombok.RequiredArgsConstructor;
 
-
 @RequiredArgsConstructor
-@Service 
+@Service
 public class RoomService {
 
     private final RoomRepository roomRepository;
@@ -22,39 +21,39 @@ public class RoomService {
     private final ModelMapper modelMapper;
 
     @Transactional
-    public Room createRoom(RoomDTO room){
+    public Room createRoom(RoomDTO room) {
         if (roomRepository.findByRoomNumber(room.getRoomNumber()).isPresent()) {
             throw new RuntimeException("Room number " + room.getRoomNumber() + " already exists!");
         }
-            Room newRoom = roomRepository.save(modelMapper.map(room,Room.class));
-    
-            return newRoom;
+        Room newRoom = roomRepository.save(modelMapper.map(room, Room.class));
+
+        return newRoom;
     }
 
-    public void deleteRoom(String roomNumber){
-       Room room = roomRepository.findByRoomNumber(roomNumber).orElseThrow(()->  new RuntimeException("Room not found: " + roomNumber));
-        roomRepository.deleteById(room.getId());
-        
+    public void deleteRoom(String roomNumber) {
+        Room room = roomRepository.findByRoomNumber(roomNumber)
+                .orElseThrow(() -> new RuntimeException("Room not found: " + roomNumber));
+        roomRepository.deleteById(room.getRoomNumber());
 
     }
 
-    public List<Room> retrieveAllRooms(){
+    public List<Room> retrieveAllRooms() {
         return roomRepository.findAll();
     }
-    
-@Transactional
-public RoomDTO updateRoom(String roomNumber, Object dto, boolean isPut) {
-    Room existing = roomRepository.findByRoomNumber(roomNumber)
-            .orElseThrow(() -> new RuntimeException("Room not found: " + roomNumber));
 
-    if (isPut) {
-        modelMapper.map(dto, existing);
-    } else {
-        modelMapper.map(dto, existing);
+    @Transactional
+    public RoomDTO updateRoom(String roomNumber, Object dto, boolean isPut) {
+        Room existing = roomRepository.findByRoomNumber(roomNumber)
+                .orElseThrow(() -> new RuntimeException("Room not found: " + roomNumber));
+
+        if (isPut) {
+            modelMapper.map(dto, existing);
+        } else {
+            modelMapper.map(dto, existing);
+        }
+
+        Room saved = roomRepository.save(existing);
+        return modelMapper.map(saved, RoomDTO.class);
     }
-
-    Room saved = roomRepository.save(existing);
-    return modelMapper.map(saved, RoomDTO.class);
-}
 
 }

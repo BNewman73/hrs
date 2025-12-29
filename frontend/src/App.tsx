@@ -1,53 +1,53 @@
-import Container from "@mui/material/Container";
-import RoomCard from "./components/RoomCard";
-import { Box, Button, Toolbar } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "./shared/store/hooks";
-import { deleteRoom, fetchRooms } from "./features/roomSlice";
-import { useEffect, useState } from "react";
-import RoomCreateForm from "./components/RoomCreateForm";
-import NavBar from "./components/NavBar";
-import GlobalSnackbar from "./components/GlobalSnackbar";
-import { showToast } from "./features/toastSlice";
+import {
+  Box,
+  CssBaseline,
+  Tab,
+  Tabs,
+  ThemeProvider,
+  createTheme,
+} from "@mui/material";
+import RoomAvailability from "./reservations/RoomAvailability";
+import { useState } from "react";
+import RoomCalendar from "./reservations/RoomCalendar";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#1976d2",
+    },
+    secondary: {
+      main: "#dc004e",
+    },
+  },
+});
 
 function App() {
-  const [roomNumber, setRoomNumber] =useState<string>('');
-const dispatch =useAppDispatch(); 
-const rooms = useAppSelector((state)=>state.room.items);
-console.log(rooms)
-useEffect(()=>{
- dispatch(fetchRooms())
+  const [currentTab, setCurrentTab] = useState(0);
 
-  
-},[dispatch])
-  return <> 
-<NavBar /> 
- <GlobalSnackbar />
- <Toolbar />
-   <Container maxWidth="lg" >
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setCurrentTab(newValue);
+  };
 
-<Button onClick={async ()=>{  dispatch(deleteRoom(roomNumber)).unwrap().then(()=>{
-  dispatch(showToast({message:`Room ${roomNumber} was deleted`,severity:"success"}))}).catch(()=>
-  dispatch(showToast({message:"Room failed to be deleted",severity:"error"})))}}>
-  Delete ROOM
-</Button>
-<input type="text" value={roomNumber}  onChange={(e)=>setRoomNumber(e.target.value)} />
-     <Box  sx={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      placeItems:"center",
-      minHeight: "100vh",
-      
-    }}>
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box
+        sx={{
+          borderBottom: 1,
+          borderColor: "divider",
+          backgroundColor: "white",
+        }}
+      >
+        <Tabs value={currentTab} onChange={handleTabChange} centered>
+          <Tab label="Search Rooms" />
+          <Tab label="Room Calendar" />
+        </Tabs>
+      </Box>
 
-  <RoomCard />
-   <RoomCreateForm/>
-     </Box>
- 
-
-   </Container>
-   
-  </>;
+      {currentTab === 0 && <RoomAvailability />}
+      {currentTab === 1 && <RoomCalendar />}
+    </ThemeProvider>
+  );
 }
 
 export default App;
