@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Grid, Typography, CircularProgress, Alert } from "@mui/material";
 import { type SerializedError } from "@reduxjs/toolkit";
 import { type FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import RoomCard from "./RoomCard";
 
 interface RoomListProps {
   rooms?: Room[];
@@ -52,10 +53,7 @@ const RoomList: React.FC<RoomListProps> = ({ rooms, isLoading, error }) => {
       <Grid container spacing={3} sx={{ mt: 1 }}>
         {rooms.map((room) => (
           <Grid size={{ xs: 12, sm: 6, md: 4 }} key={room.roomNumber}>
-            {/*
-            Use our RoomCard component
             <RoomCard room={room} />
-            */}
           </Grid>
         ))}
       </Grid>
