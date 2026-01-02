@@ -3,12 +3,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import roomReducer from "../../features/roomSlice";
 import toastReducer from "../../features/toastSlice";
+import authReducer from "../../features/authSlice";
 import { roomApi } from "../../reservations/roomApi";
 
 export const store = configureStore({
   reducer: {
     room: roomReducer,
     toast: toastReducer,
+    auth: authReducer,
     [roomApi.reducerPath]: roomApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
