@@ -1,11 +1,8 @@
 package com.skillstorm.hrs.model;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -21,11 +18,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode()
+@EqualsAndHashCode(callSuper = true)
 @Document(collection = "rooms")
-public class Room {
+public class Room extends BaseEntity {
 
-    @Id
+    @Indexed(unique = true)
+    @Field("room_number")
     private String roomNumber;
     @Positive
     @Field("price_per_night")
@@ -34,12 +32,4 @@ public class Room {
     private List<String> images;
     @DocumentReference
     private RoomDetails roomDetails;
-
-    @CreatedDate
-    @Field("created_at")
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Field("updated_at")
-    private LocalDateTime updatedAt;
 }
