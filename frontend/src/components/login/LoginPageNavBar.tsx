@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import HotelIcon from "@mui/icons-material/Hotel";
 
-export default function HomePageNavBar() {
+export default function LoginPageNavBar() {
   return (
     <Box
       sx={{

@@ -6,24 +6,38 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.skillstorm.hrs.service.CustomOAuth2UserService;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private final CustomOAuth2UserService customOAuth2UserService;
+
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
+        this.customOAuth2UserService = customOAuth2UserService;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http 
-            .cors(cors -> {})
+  
+        return http
             .csrf(csrf -> csrf.disable())
+            .cors(cors -> {})
             .authorizeHttpRequests(auth -> auth
-                //.requestMatchers("/").permitAll()
+                .requestMatchers("/oauth2/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .oauth2Login(oauth -> {
-                oauth.defaultSuccessUrl("http://localhost:3000/dashboard", true);
-            })
-            .logout(logout -> logout.logoutSuccessUrl("http://localhost:3000/logout"))
+            .oauth2Login(oauth -> oauth
+                .userInfoEndpoint(userInfo ->
+                    userInfo.userService(customOAuth2UserService)
+                )
+                .defaultSuccessUrl("http://localhost:3000/dashboard", true)
+            )
+            .logout(logout ->
+                logout.logoutSuccessUrl("http://localhost:3000/logout")
+            )
             .build();
     }
 }

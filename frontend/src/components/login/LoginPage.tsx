@@ -15,9 +15,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { authStart } from "../../features/authSlice";
 import type { AppDispatch, RootState } from "../../shared/store/store";
 
-import HomePageNavBar from "./HomePageNavBar";
+import LoginPageNavBar from "./LoginPageNavBar";
 
-export default function HomePage() {
+export default function LoginPage() {
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading } = useSelector((state: RootState) => state.auth);
 
@@ -50,7 +50,7 @@ export default function HomePage() {
         }}
       >
         <Toolbar>
-          <HomePageNavBar />
+          <LoginPageNavBar />
         </Toolbar>
       </AppBar>
 

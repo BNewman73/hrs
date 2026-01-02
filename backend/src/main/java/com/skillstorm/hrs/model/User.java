@@ -17,26 +17,32 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @Document(collection = "users")
 public class User extends BaseEntity {
+  
+  // The key is unique on a particular provider and OAuth ID.
+  @Indexed
+  private Provider provider;
   @Indexed(unique = true)
-  private String email;
+  private String providerId;
 
-  // match name in db
+  private String email;
+  // Must match name in DB
   @Field("first_name")
   private String firstName;
-
-  // match name in db
+  // Must match name in DB
   @Field("last_name")
   private String lastName;
 
-  private String password;
-
   private UserRole role;
-
   private boolean enabled;
 
   public enum UserRole {
     GUEST,
     ADMIN,
     MANAGERJk
+  }
+
+  public enum Provider {
+    GOOGLE,
+    GITHUB
   }
 }
