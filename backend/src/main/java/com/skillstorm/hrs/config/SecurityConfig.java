@@ -21,12 +21,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-  
+
         return http
             .csrf(csrf -> csrf.disable())
             .cors(cors -> {})
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/oauth2/**").permitAll()
+                .requestMatchers("/oauth2/**", "/login/**").permitAll()
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth -> oauth
@@ -35,8 +35,11 @@ public class SecurityConfig {
                 )
                 .defaultSuccessUrl("http://localhost:3000/dashboard", true)
             )
-            .logout(logout ->
-                logout.logoutSuccessUrl("http://localhost:3000/logout")
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .logoutSuccessUrl("http://localhost:3000/logout")
             )
             .build();
     }

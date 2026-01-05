@@ -1,77 +1,76 @@
 package com.skillstorm.hrs.service;
 
-import java.util.Collections;
-import java.util.Map;
-
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.repository.UserRepository;
+import com.skillstorm.hrs.security.CustomUserPrincipal;
+import com.skillstorm.hrs.security.OAuthUserInfo;
+import com.skillstorm.hrs.security.OAuthUserInfoFactory;
 
 @Service
-public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+public class CustomOAuth2UserService
+    implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final UserRepository userRepository;
-    private final OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
 
     public CustomOAuth2UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        
+    public OAuth2User loadUser(OAuth2UserRequest userRequest)
+        throws OAuth2AuthenticationException {
+
+        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate =
+            new DefaultOAuth2UserService();
+
         OAuth2User oauth2User = delegate.loadUser(userRequest);
-        String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
-        User.Provider provider = User.Provider.valueOf(registrationId.toUpperCase());
-        Map<String, Object> attributes = oauth2User.getAttributes();
-
-        String providerId;
-        String email;
-        String firstName;
-        String lastName;
-
-        if (provider == User.Provider.GOOGLE) {
-            providerId = (String) attributes.get("sub");
-            email = (String) attributes.get("email");
-            firstName = (String) attributes.get("given_name");
-            lastName = (String) attributes.get("family_name");
-        } else if (provider == User.Provider.GITHUB) {
-            providerId = String.valueOf(attributes.get("id"));
-            email = (String) attributes.get("email");
-            firstName = (String) attributes.get("name");
-            lastName = "";
-        } else {
-            throw new OAuth2AuthenticationException("Unsupported provider");
-        }
-
-        User user = userRepository.findByProviderAndProviderId(provider, providerId).orElseGet(() -> 
-            registerNewUser(provider, providerId, email, firstName, lastName)
+        User.Provider provider = User.Provider.valueOf(
+            userRequest.getClientRegistration()
+                .getRegistrationId()
+                .toUpperCase()
         );
 
-        return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole())), attributes, "email");
+        OAuthUserInfo userInfo =
+            OAuthUserInfoFactory.getUserInfo(provider, oauth2User.getAttributes());
+
+        if (userInfo.getProviderId() == null) {
+            throw new OAuth2AuthenticationException("Missing provider ID");
+        }
+
+        User user = upsertUser(provider, userInfo);
+
+        return new CustomUserPrincipal(user, oauth2User.getAttributes());
     }
 
-    private User registerNewUser(User.Provider provider, String providerId, String email, String firstName, String lastName) {
-        User user = User.builder()
-                .email(email)
-                .firstName(firstName)
-                .lastName(lastName)
-                .provider(provider)
-                .providerId(providerId)
-                .role(User.UserRole.GUEST)
-                .enabled(true)
-                .build();
+    private User upsertUser(User.Provider provider, OAuthUserInfo info) {
 
-        return userRepository.save(user);
+        return userRepository
+            .findByProviderAndProviderId(provider, info.getProviderId())
+            .map(existing -> {
+                existing.setEmail(info.getEmail());
+                existing.setFirstName(info.getFirstName());
+                existing.setLastName(info.getLastName());
+                existing.setEnabled(true);
+                return userRepository.save(existing);
+            })
+            .orElseGet(() -> {
+                User user = new User();
+                user.setProvider(provider);
+                user.setProviderId(info.getProviderId());
+                user.setEmail(info.getEmail());
+                user.setFirstName(info.getFirstName());
+                user.setLastName(info.getLastName());
+                user.setRole(User.UserRole.GUEST);
+                user.setEnabled(true);
+                return userRepository.save(user);
+            });
     }
-
 }
