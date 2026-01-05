@@ -9,6 +9,18 @@ spring:
     mongodb:
       auto-index-creation: true
       uuid-representation: standard
+  
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: Ov23liZ1tPryYifyyYhY 
+            client-secret:
+            scope: read:user, user:email
+          google:
+            client-id: 249191790614-1dofquvhuita6ahs897a5qdocj7kpnd5.apps.googleusercontent.com
+            client-secret:
 
 server:
   port: 8080
