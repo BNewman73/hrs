@@ -29,7 +29,7 @@ public interface ReservationRepository extends MongoRepository<Reservation, Stri
       "{ 'start_date' : { $gte: ?1, $lte: ?2 } }," +
       "{ 'end_date' : { $gte: ?1, $lte: ?2 } }" +
       " ]}")
-  List<Reservation> findOverlappingReservations(String roomId, LocalDate startDate, LocalDate endDate);
+  List<Reservation> findOverlappingReservations(String roomNum, LocalDate startDate, LocalDate endDate);
 
   // find existing reservations anytime from startDate to EndDate for all rooms
   @Query("{ $or: [ " +

@@ -33,7 +33,7 @@ public class Reservation extends BaseEntity {
   private LocalDate endDate;
 
   @Field("user_id")
-  private String userId; // null for admin blocks
+  private String userId;
 
   @Field("number_of_adults")
   private Integer numberOfAdults; // null for admin blocks
@@ -46,9 +46,6 @@ public class Reservation extends BaseEntity {
 
   @Field("block_reason")
   private BlockReason blockReason; // null for guest bookings
-
-  @Field("blocked_by")
-  private String blockedBy; // id of admin who submitted block
 
   private String notes;
 
@@ -72,7 +69,6 @@ public class Reservation extends BaseEntity {
         .startDate(request.getStartDate())
         .endDate(request.getEndDate())
         .blockReason(request.getBlockReason())
-        .blockedBy(request.getBlockedBy())
         .build();
   }
 

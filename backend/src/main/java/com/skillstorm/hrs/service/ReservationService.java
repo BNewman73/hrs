@@ -87,17 +87,17 @@ public class ReservationService {
     }
   }
 
-  private void checkRoomAvailability(String roomId, LocalDate startDate, LocalDate endDate) {
-    checkRoomExists(roomId);
-    List<Reservation> conflicts = reservationRepository.findOverlappingReservations(roomId, startDate, endDate);
+  private void checkRoomAvailability(String roomNum, LocalDate startDate, LocalDate endDate) {
+    checkRoomExists(roomNum);
+    List<Reservation> conflicts = reservationRepository.findOverlappingReservations(roomNum, startDate, endDate);
     if (!conflicts.isEmpty()) {
-      throw new RoomNotAvailableException("Room " + roomId + " is not available from " + startDate + " to " + endDate);
+      throw new RoomNotAvailableException("Room " + roomNum + " is not available from " + startDate + " to " + endDate);
     }
   }
 
-  private void checkRoomExists(String id) {
-    if (!roomRepository.existsById(id))
-      throw new ResourceNotFoundException("Room not found with id " + id);
+  private void checkRoomExists(String num) {
+    if (!roomRepository.findByRoomNumber(num).isPresent())
+      throw new ResourceNotFoundException("Room not found with num " + num);
   }
 
   private void checkUserExists(String id) {

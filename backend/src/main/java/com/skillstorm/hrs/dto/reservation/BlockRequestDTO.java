@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BlockRequestDTO {
-  @NotNull(message = "Room ID is required")
+  @NotNull(message = "Room number is required")
   private String roomId;
 
   @NotNull(message = "Start date is required")
@@ -29,7 +29,4 @@ public class BlockRequestDTO {
 
   @NotNull(message = "Block reason is required")
   private BlockReason blockReason;
-
-  @NotNull(message = "Admin ID is required")
-  private String blockedBy;
 }

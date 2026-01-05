@@ -69,7 +69,6 @@ declare global {
     onToggle: () => void;
     onEdit: () => void;
   }
-  }
 
   interface RoomAvailabilityRequest {
     checkInDate: string;

@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 public class Room extends BaseEntity {
 
     @Indexed(unique = true)
+    @Field("room_number")
     private String roomNumber;
     @Positive
     @Field("price_per_night")
@@ -31,5 +32,4 @@ public class Room extends BaseEntity {
     private List<String> images;
     @DocumentReference
     private RoomDetails roomDetails;
-    
 }
