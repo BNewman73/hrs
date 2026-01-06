@@ -11,6 +11,8 @@ const initialState: RoomsState = {
   status: "idle",
 };
 
+const API_BASE = import.meta.env.VITE_API_URL;
+
 /**
  * Shared error helper: Since Spring GlobalExceptionHandler
  * returns (ResponseEntity<String>),
@@ -35,8 +37,8 @@ export const fetchRooms = createAsyncThunk<
   void,
   { rejectValue: string }
 >("rooms/fetchAll", async (_, { rejectWithValue }) => {
-  const res = await fetch("http://localhost:8080/api/rooms", { 
-    credentials: "include", 
+  const res = await fetch(`${API_BASE}`, {
+    credentials: "include",
   });
   if (!res.ok)
     return rejectWithValue(
@@ -50,7 +52,7 @@ export const createRoom = createAsyncThunk<
   RoomDTO,
   { rejectValue: string }
 >("rooms/post", async (room, { rejectWithValue }) => {
-  const res = await fetch("http://localhost:8080/api/rooms", {
+  const res = await fetch(`${API_BASE}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(room),
@@ -70,7 +72,7 @@ export const updateRoom = createAsyncThunk<
   RoomDTO,
   { rejectValue: string }
 >("rooms/put", async (room, { rejectWithValue }) => {
-  const res = await fetch(`http://localhost:8080/api/rooms/${room.publicID}`, {
+  const res = await fetch(`${API_BASE}/${room.publicID}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(room),
@@ -89,7 +91,7 @@ export const deleteRoom = createAsyncThunk<
   string,
   { rejectValue: string }
 >("rooms/delete", async (roomID, { rejectWithValue }) => {
-  const res = await fetch(`http://localhost:8080/api/rooms/${roomID}`, {
+  const res = await fetch(`${API_BASE}/${roomID}`, {
     method: "DELETE",
     credentials: "include",
   });

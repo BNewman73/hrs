@@ -9,13 +9,13 @@ spring:
     mongodb:
       auto-index-creation: true
       uuid-representation: standard
-  
+
   security:
     oauth2:
       client:
         registration:
           github:
-            client-id: Ov23liZ1tPryYifyyYhY 
+            client-id: Ov23liZ1tPryYifyyYhY
             client-secret:
             scope: read:user, user:email
           google:
@@ -23,6 +23,10 @@ spring:
             client-secret:
 
 server:
-  port: 8080
+  port: ${SERVER_PORT:5000}
+  address: 0.0.0.0
   servlet:
     context-path: /api
+app:
+  frontend:
+    url: ${APP_FRONTEND_URL:http://localhost:3000}
