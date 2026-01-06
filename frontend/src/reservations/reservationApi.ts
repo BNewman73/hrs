@@ -4,6 +4,7 @@ export const reservationApi = createApi({
   reducerPath: "reservationApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8080/api",
+    credentials: "include",
   }),
   endpoints: (builder) => ({
     getAllReservations: builder.query({

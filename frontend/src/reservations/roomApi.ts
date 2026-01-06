@@ -4,6 +4,7 @@ export const roomApi = createApi({
   reducerPath: "roomApi",
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api",
+    credentials: "include",
   }),
   endpoints: (builder) => ({
     getAvailableRooms: builder.query<Room[], RoomAvailabilityRequest>({
