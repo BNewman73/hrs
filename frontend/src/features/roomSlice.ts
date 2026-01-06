@@ -35,7 +35,9 @@ export const fetchRooms = createAsyncThunk<
   void,
   { rejectValue: string }
 >("rooms/fetchAll", async (_, { rejectWithValue }) => {
-  const res = await fetch("http://localhost:8080/api/rooms");
+  const res = await fetch("http://localhost:8080/api/rooms", { 
+    credentials: "include", 
+  });
   if (!res.ok)
     return rejectWithValue(
       await getCleanErrorMessage(res, "Failed to fetch rooms")
@@ -52,6 +54,7 @@ export const createRoom = createAsyncThunk<
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(room),
+    credentials: "include",
   });
 
   if (!res.ok) {
@@ -71,6 +74,7 @@ export const updateRoom = createAsyncThunk<
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(room),
+    credentials: "include",
   });
 
   if (!res.ok)
@@ -87,6 +91,7 @@ export const deleteRoom = createAsyncThunk<
 >("rooms/delete", async (roomID, { rejectWithValue }) => {
   const res = await fetch(`http://localhost:8080/api/rooms/${roomID}`, {
     method: "DELETE",
+    credentials: "include",
   });
 
   if (!res.ok)
