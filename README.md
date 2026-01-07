@@ -84,7 +84,7 @@ See [docs/SETUP.md](docs/SETUP.md) for detailed setup instructions.
 
 ## Team Members
 
-- Jevaughn Steward - [Assignment TBD]
+- Jevaughn Stewart - [Assignment TBD]
 - Mason Malone - [Assignment TBD]
 - Brandon Newman - [Assignment TBD]
 
