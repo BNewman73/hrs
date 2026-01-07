@@ -19,6 +19,7 @@ function App() {
           <Route path="/rooms" element={<RoomAvailability />} />
           <Route path="/room" element={<RoomCalendar />} />
           <Route path="/home" element={<HomePage />} />
+          <Route path="" element={<HomePage />} />
         </Routes>
       </BrowserRouter>
     </>

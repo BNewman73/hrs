@@ -20,8 +20,12 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 
 import { useAppDispatch } from "../../shared/store/hooks";
-import { createRoom, deleteRoom, updateRoom } from "../../features/roomSlice";
 import { showToast } from "../../features/toastSlice";
+import {
+  useCreateRoomMutation,
+  useUpdateRoomMutation,
+  useDeleteRoomMutation,
+} from "../../reservations/roomApi";
 
 const ROOM_TYPES: RoomType[] = ["SINGLE", "DOUBLE", "DELUXE", "SUITE"];
 
@@ -36,9 +40,11 @@ export default function RoomCreateForm({
 }) {
   const dispatch = useAppDispatch();
 
-  // State for the confirmation dialog
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [createRoom, { isLoading: isCreating }] = useCreateRoomMutation();
+  const [updateRoom, { isLoading: isUpdating }] = useUpdateRoomMutation();
+  const [deleteRoom, { isLoading: isDeleting }] = useDeleteRoomMutation();
 
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [room, setRoom] = useState<RoomDTO>({
     roomNumber: props?.roomNumber || "",
     pricePerNight: props?.pricePerNight || 0,
@@ -57,8 +63,11 @@ export default function RoomCreateForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      if (crud === "Create") await dispatch(createRoom(room)).unwrap();
-      else await dispatch(updateRoom(room)).unwrap();
+      if (crud === "Create") {
+        await createRoom(room).unwrap();
+      } else {
+        await updateRoom(room).unwrap();
+      }
 
       dispatch(
         showToast({
@@ -66,6 +75,7 @@ export default function RoomCreateForm({
           severity: "success",
         })
       );
+
       setRoom({
         roomNumber: "",
         roomType: "SINGLE",
@@ -73,23 +83,21 @@ export default function RoomCreateForm({
         publicID: "",
         images: [],
       });
+
       if (onClose) onClose();
     } catch (error: unknown) {
       const message =
         typeof error === "string" ? error : "An unexpected error occurred";
 
-      dispatch(
-        showToast({
-          message: message,
-          severity: "error",
-        })
-      );
+      dispatch(showToast({ message, severity: "error" }));
     }
   };
 
   const handleConfirmDelete = async () => {
+    if (!room.publicID) return;
+
     try {
-      await dispatch(deleteRoom(room.publicID)).unwrap();
+      await deleteRoom(room.publicID).unwrap();
       dispatch(
         showToast({ message: "Room deleted successfully", severity: "info" })
       );
@@ -204,6 +212,7 @@ export default function RoomCreateForm({
                 type="submit"
                 variant="contained"
                 size="large"
+                disabled={isCreating || isUpdating}
                 sx={{ py: 1.5, borderRadius: "8px 0 0 8px" }}
               >
                 {crud}
@@ -214,6 +223,7 @@ export default function RoomCreateForm({
                   variant="contained"
                   color="error"
                   size="large"
+                  disabled={isDeleting}
                   onClick={() => setConfirmOpen(true)}
                   sx={{ py: 1.5, borderRadius: "0 8px 8px 0" }}
                 >
@@ -225,17 +235,10 @@ export default function RoomCreateForm({
         </Box>
       </Container>
 
-      <Dialog
-        open={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title" sx={{ fontWeight: "bold" }}>
-          {"Confirm Deletion"}
-        </DialogTitle>
+      <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+        <DialogTitle sx={{ fontWeight: "bold" }}>Confirm Deletion</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText>
             Are you sure you want to delete{" "}
             <strong>Room {room.roomNumber}</strong>? This action cannot be
             undone and will remove all associated data.
@@ -250,6 +253,7 @@ export default function RoomCreateForm({
             color="error"
             variant="contained"
             autoFocus
+            disabled={isDeleting}
           >
             Permanently Delete
           </Button>
