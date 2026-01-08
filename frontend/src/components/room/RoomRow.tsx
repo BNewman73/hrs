@@ -36,7 +36,7 @@ interface RoomItemProps {
   onEdit: () => void;
 }
 
-export const RoomItem = ({
+export const RoomRow = ({
   room,
   gridConfig,
   isExpanded,

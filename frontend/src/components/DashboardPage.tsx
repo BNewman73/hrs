@@ -22,6 +22,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import NavBar from "./NavBar";
 import RoomCreateForm from "./room/RoomCrudForm";
 import RoomTable from "./room/RoomTable";
+import ReservationTable from "./room/ReservationTable";
 
 const DRAWER_WIDTH = 280;
 
@@ -40,12 +41,19 @@ export default function DashboardPage() {
   const menuItems = [
     { id: "Table", label: "View Inventory", icon: <BedIcon /> },
     { id: "Rooms", label: "Create Room", icon: <AddHomeWorkIcon /> },
+    {
+      id: "Reservations",
+      label: "View Reservations",
+      icon: <AddHomeWorkIcon />,
+    },
   ];
 
   const renderContent = () => {
     switch (activeTab) {
       case "Rooms":
         return <RoomCreateForm crud="Create" />;
+      case "Reservations":
+        return <ReservationTable />;
       case "Table":
       default:
         return <RoomTable />;
