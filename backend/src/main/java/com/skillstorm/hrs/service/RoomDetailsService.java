@@ -55,8 +55,8 @@ public class RoomDetailsService {
                 .max()
                 .orElse(0);
         List<String> images = roomsOfType.stream()
-                .map(Room::getImage)
-                .filter(image -> image != null && !image.isEmpty())
+                .map(Room::getImages)
+                .filter(image -> image != null && !image.isEmpty()).map(image -> image.get(0))
                 .distinct()
                 .collect(Collectors.toList());
         Map<String, List<String>> amenitiesByCategory = buildAmenitiesMap(roomDetails);

@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import RoomAvailability from "../reservations/RoomAvailability";
+import RoomAvailability from "./reservations/RoomAvailability";
 import { useNavigate } from "react-router-dom";
 
 const VIDEO_URL = import.meta.env.VITE_HOME_VIDEO_URL;

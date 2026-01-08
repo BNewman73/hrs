@@ -14,7 +14,7 @@ import {
   PickersDay,
   type PickersDayProps,
 } from "@mui/x-date-pickers/PickersDay";
-import { useGetRoomReservationsQuery } from "./roomApi";
+import { useGetRoomReservationsQuery } from "../../features/roomApi";
 import {
   startOfMonth,
   endOfMonth,

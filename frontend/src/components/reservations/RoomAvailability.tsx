@@ -1,15 +1,8 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  Container,
-  Paper,
-  Typography,
-  Grid,
-  TextField,
-  Button,
-} from "@mui/material";
+import { Container, Paper, Grid, TextField, Button } from "@mui/material";
 import { SearchOutlined } from "@mui/icons-material";
-import { useGetAvailableRoomsQuery } from "./roomApi";
+import { useGetAvailableRoomsQuery } from "../../features/roomApi";
 import RoomList from "./RoomList";
 
 const RoomAvailability: React.FC = () => {
@@ -48,11 +41,6 @@ const RoomAvailability: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Find Available {roomType!.charAt(0) + roomType!.slice(1).toLowerCase()}{" "}
-        Rooms
-      </Typography>
-
       <Paper elevation={5} sx={{ p: 3, mb: 4 }}>
         <Grid container spacing={3} alignItems="center">
           <Grid size={{ xs: 12, md: 3 }}>

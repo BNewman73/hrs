@@ -3,7 +3,6 @@ import { Box, Typography, CircularProgress, Alert, Stack } from "@mui/material";
 import { type SerializedError } from "@reduxjs/toolkit";
 import { type FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import SearchCard from "./SearchCard";
-
 interface RoomListProps {
   rooms?: Room[];
   isLoading: boolean;

@@ -24,9 +24,10 @@ declare global {
   interface Room {
     roomNumber: string;
     pricePerNight: number;
-    image: string;
+    images: string[];
     roomDetails: RoomDetails;
     publicID: string;
+    description: string;
   }
 
   interface RoomDTO {
@@ -35,6 +36,17 @@ declare global {
     pricePerNight: number;
     images: string[];
     roomType: RoomType;
+    description: string;
+  }
+  interface ReservationDTO {
+    id: string;
+    roomId: string;
+    startDate: string;
+    endDate: string;
+    type: ReservationType;
+    totalPrice?: number;
+    blockReason?: BlockReason;
+    notes?: string;
   }
 
   interface User {
@@ -110,54 +122,5 @@ declare global {
     "Comfort & Sleep"?: string[];
     "Food & Beverage"?: string[];
     "Safety & Convenience"?: string[];
-  }
-
-  export enum RoomType {
-    SINGLE = "SINGLE",
-    DOUBLE = "DOUBLE",
-    DELUXE = "DELUXE",
-    SUITE = "SUITE",
-    PRESIDENTIAL_SUITE = "PRESIDENTIAL_SUITE",
-    ACCESSIBLE = "ACCESSIBLE",
-  }
-
-  export enum Tech {
-    WIFI = "WIFI",
-    HIGH_SPEED_WIFI = "HIGH_SPEED_WIFI",
-    TV = "TV",
-    SMART_TV_STREAMING = "SMART_TV_STREAMING",
-    UNIVERSAL_SOCKETS = "UNIVERSAL_SOCKETS",
-    USB_C_PORTS = "USB_C_PORTS",
-    SMART_LIGHTS = "SMART_LIGHTS",
-  }
-
-  export enum Comfort {
-    BLACKOUT_CURTAINS = "BLACKOUT_CURTAINS",
-    PILLOW_MENU = "PILLOW_MENU",
-    SOUNDPROOFING = "SOUNDPROOFING",
-    PREMIUM_LINENS = "PREMIUM_LINENS",
-    BATHROBE = "BATHROBE",
-    SLIPPERS = "SLIPPERS",
-    AIR_PURIFIER = "AIR_PURIFIER",
-  }
-
-  export enum Provisions {
-    MINI_BAR = "MINI_BAR",
-    COFFEE_MAKER = "COFFEE_MAKER",
-    ELECTRIC_KETTLE = "ELECTRIC_KETTLE",
-    COMPLIMENTARY_WATER = "COMPLIMENTARY_WATER",
-    KITCHENETTE = "KITCHENETTE",
-    MICROWAVE = "MICROWAVE",
-  }
-
-  export enum Miscellaneous {
-    IRONING_BOARD = "IRONING_BOARD",
-    LUGGAGE_RACK = "LUGGAGE_RACK",
-    WORK_DESK = "WORK_DESK",
-    ERGONOMIC_CHAIR = "ERGONOMIC_CHAIR",
-    BALCONY = "BALCONY",
-    SAFE = "SAFE",
-    YOGA_MAT = "YOGA_MAT",
-    HAIR_DRYER = "HAIR_DRYER",
   }
 }

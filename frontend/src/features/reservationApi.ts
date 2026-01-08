@@ -1,12 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 export const reservationApi = createApi({
   reducerPath: "reservationApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api",
+    baseUrl: API_BASE,
+    credentials: "include",
   }),
   endpoints: (builder) => ({
-    getAllReservations: builder.query({
+    getAllReservations: builder.query<ReservationDTO[], void>({
       query: () => "/reservations",
     }),
     getReservationById: builder.query({

@@ -8,6 +8,18 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
+import {
+  Comfort,
+  ComfortDisplayNames,
+  Miscellaneous,
+  MiscellaneousDisplayNames,
+  Provisions,
+  ProvisionsDisplayNames,
+  RoomTypeDisplayNames,
+  Tech,
+  TechDisplayNames,
+  type RoomType,
+} from "../../types/enum";
 
 interface GridConfig {
   roomNo: { xs: string; sm: string };
@@ -57,7 +69,7 @@ export const RoomItem = ({
         }}
       >
         <Chip
-          label={room.roomDetails.type}
+          label={RoomTypeDisplayNames[room.roomDetails.type as RoomType]}
           size="small"
           color="primary"
           variant="outlined"
@@ -110,10 +122,10 @@ export const RoomItem = ({
           Tech
         </Typography>
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
-          {room.roomDetails.tech.map((a: string) => (
+          {room.roomDetails.tech?.map((a: string) => (
             <Chip
               key={a}
-              label={a}
+              label={TechDisplayNames[a as Tech]}
               size="small"
               variant="filled"
               sx={{ bgcolor: "white", border: "1px solid #ddd" }}
@@ -128,10 +140,10 @@ export const RoomItem = ({
           Comfort
         </Typography>
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
-          {room.roomDetails.comfort.map((a: string) => (
+          {room.roomDetails.comfort?.map((a: string) => (
             <Chip
               key={a}
-              label={a}
+              label={ComfortDisplayNames[a as Comfort]}
               size="small"
               variant="filled"
               sx={{ bgcolor: "white", border: "1px solid #ddd" }}
@@ -146,10 +158,10 @@ export const RoomItem = ({
           Provisions
         </Typography>
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
-          {room.roomDetails.provisions.map((a: string) => (
+          {room.roomDetails.provisions?.map((a: string) => (
             <Chip
               key={a}
-              label={a}
+              label={ProvisionsDisplayNames[a as Provisions]}
               size="small"
               variant="filled"
               sx={{ bgcolor: "white", border: "1px solid #ddd" }}
@@ -164,10 +176,10 @@ export const RoomItem = ({
           Miscellaneous
         </Typography>
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
-          {room.roomDetails.miscellaneous.map((a: string) => (
+          {room.roomDetails.miscellaneous?.map((a: string) => (
             <Chip
               key={a}
-              label={a}
+              label={MiscellaneousDisplayNames[a as Miscellaneous]}
               size="small"
               variant="filled"
               sx={{ bgcolor: "white", border: "1px solid #ddd" }}

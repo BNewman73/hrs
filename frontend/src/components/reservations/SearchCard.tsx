@@ -8,16 +8,17 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
-import { useCreateCheckoutSessionMutation } from "./roomApi";
+import { useCreateCheckoutSessionMutation } from "../../features/roomApi";
 import RoomDetailsModal from "./RoomDetailsModal";
 
 interface Room {
   roomNumber: string;
   pricePerNight: number;
-  image: string;
+  images: string[];
   roomDetails: {
     type: string;
   };
+  description: string;
 }
 
 interface RoomResultCardProps {
@@ -42,12 +43,12 @@ const RoomResultCard = ({
     minimumFractionDigits: 0,
   }).format(room.pricePerNight);
 
-  const formatRoomType = (type: string) => {
+  /*const formatRoomType = (type: string) => {
     return type
       .split("_")
       .map((word) => word.charAt(0) + word.slice(1).toLowerCase())
       .join(" ");
-  };
+  };*/
 
   const calculateNights = () => {
     const checkIn = new Date(checkInDate);
@@ -98,7 +99,7 @@ const RoomResultCard = ({
           objectFit: "cover",
         }}
         src={
-          room.image ||
+          room?.images[0] ||
           "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800"
         }
         alt={`Room ${room.roomNumber}`}
@@ -114,23 +115,10 @@ const RoomResultCard = ({
           minHeight: 120,
         }}
       >
-        <Box>
+        <Box sx={{ display: "flex", gap: "30px" }}>
           <Typography variant="h6" component="h3" gutterBottom>
             Room {room.roomNumber}
           </Typography>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
-            {formatRoomType(room.roomDetails.type)}
-          </Typography>
-        </Box>
-
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            mt: 2,
-          }}
-        >
           <Typography variant="h6" color="primary">
             {formattedPrice}
             <Typography
@@ -142,7 +130,16 @@ const RoomResultCard = ({
               /night
             </Typography>
           </Typography>
+        </Box>
 
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mt: 2,
+          }}
+        >
           <Stack direction="row" spacing={1}>
             <Button
               variant="contained"

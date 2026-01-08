@@ -23,12 +23,11 @@ import {
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-import { useGetComprehensiveRoomDetailsQuery } from "./roomApi";
+import { useGetComprehensiveRoomDetailsQuery } from "../../features/roomApi";
 
 const RoomTypeCard: React.FC<{ roomType: RoomDetailsDTO }> = ({ roomType }) => {
   const navigate = useNavigate();
@@ -134,7 +133,7 @@ const RoomTypeCard: React.FC<{ roomType: RoomDetailsDTO }> = ({ roomType }) => {
                     flexWrap="wrap"
                     sx={{ gap: 1 }}
                   >
-                    {items.map((amenity, index) => (
+                    {items.map((amenity: string, index: number) => (
                       <Chip
                         key={index}
                         label={amenity}

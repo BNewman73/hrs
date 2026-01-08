@@ -13,6 +13,7 @@ import { useRoomTable } from "../../hooks/useRoomTable";
 import { RoomItem } from "./RoomItem";
 import { RoomTableToolbar } from "./RoomTableToolbar";
 import RoomCrudForm from "./RoomCrudForm";
+import type { RoomType } from "../../types/enum";
 
 // Define the grid proportions to ensure header and items align perfectly
 const GRID_CONFIG = {

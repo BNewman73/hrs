@@ -22,6 +22,8 @@ public class RoomResponseDTO {
 
     @NotEmpty
     private List<String> images;
+    @NotBlank
+    private String description;
 
     @NotNull
     private RoomDetails roomDetails;
