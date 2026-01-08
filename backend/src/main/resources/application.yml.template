@@ -1,0 +1,35 @@
+
+spring:
+  application:
+    name: hrs
+
+  profiles:
+    active: dev
+
+  data:
+    mongodb:
+      auto-index-creation: true
+      uuid-representation: standard
+
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_SECRET}
+            scope: read:user, user:email
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_SECRET}
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+stripe:
+  api:
+    key: ${STRIPE_SECRET}
+  webhook:
+    secret: 

@@ -9,8 +9,8 @@ import com.skillstorm.hrs.repository.UserRepository;
 
 @Service
 public class UserService {
-
-    private final UserRepository userRepository;
+    
+    private UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;

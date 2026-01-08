@@ -16,7 +16,6 @@ import { authStart } from "../../features/authSlice";
 import type { AppDispatch, RootState } from "../../shared/store/store";
 
 import LoginPageNavBar from "./LoginPageNavBar";
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function LoginPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -24,7 +23,7 @@ export default function LoginPage() {
 
   const handleLogin = (provider: "google" | "github") => {
     dispatch(authStart(provider));
-    window.location.href = `${API_BASE}/oauth2/authorization/${provider}`;
+    window.location.href = `http://localhost:8080/api/oauth2/authorization/${provider}`;
   };
 
   return (

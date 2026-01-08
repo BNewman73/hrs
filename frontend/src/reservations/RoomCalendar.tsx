@@ -2,7 +2,6 @@ import React, { useState, useMemo } from "react";
 import {
   Box,
   Typography,
-  Paper,
   CircularProgress,
   Alert,
   Chip,
@@ -24,9 +23,6 @@ import {
   isSameDay,
 } from "date-fns";
 
-// we will change to accept prop, hardcoded for now
-const ROOM_NUMBER = "101";
-
 const COLORS: Record<string, string> = {
   available: "transparent",
   selected: "#1976d2",
@@ -38,7 +34,11 @@ const COLORS: Record<string, string> = {
   inherit: "inherit",
 };
 
-const SimpleCalendar: React.FC = () => {
+interface RoomCalendarProps {
+  roomNumber: string;
+}
+
+const SimpleCalendar: React.FC<RoomCalendarProps> = ({ roomNumber }) => {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [checkInDate, setCheckInDate] = useState<Date | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
@@ -56,7 +56,7 @@ const SimpleCalendar: React.FC = () => {
     isLoading,
     error,
   } = useGetRoomReservationsQuery({
-    roomNumber: ROOM_NUMBER,
+    roomNumber: roomNumber,
     startDate,
     endDate,
   });
@@ -147,12 +147,12 @@ const SimpleCalendar: React.FC = () => {
   const handleBooking = () => {
     if (checkInDate && checkOutDate) {
       console.log("Booking:", {
-        roomNumber: ROOM_NUMBER,
+        roomNumber: roomNumber,
         checkIn: format(checkInDate, "yyyy-MM-dd"),
         checkOut: format(checkOutDate, "yyyy-MM-dd"),
       });
       alert(
-        `Booking Room ${ROOM_NUMBER}\nCheck-in: ${format(
+        `Booking Room ${roomNumber}\nCheck-in: ${format(
           checkInDate,
           "MMM dd, yyyy"
         )}\nCheck-out: ${format(checkOutDate, "MMM dd, yyyy")}`
@@ -166,93 +166,84 @@ const SimpleCalendar: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Room {ROOM_NUMBER} Availability
-      </Typography>
+    <Box color="secondary" sx={{ p: 3, maxWidth: 400, mx: "auto" }}>
+      <Box
+        sx={{
+          display: "flex",
+          gap: 2,
+          mb: 2,
+          justifyContent: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        <Chip label="Available" size="small" variant="outlined" />
+        <Chip
+          label="Selected"
+          sx={{ backgroundColor: COLORS.selected, color: COLORS.white }}
+          size="small"
+        />
+        <Chip
+          label="Booked"
+          sx={{ backgroundColor: COLORS.booked, color: COLORS.white }}
+          size="small"
+        />
+        <Chip
+          label="Blocked"
+          sx={{ backgroundColor: COLORS.blocked, color: COLORS.white }}
+          size="small"
+        />
+      </Box>
 
-      <Paper elevation={5} sx={{ p: 3, maxWidth: 400, mx: "auto" }}>
-        {/* Legend */}
-        <Box
-          sx={{
-            display: "flex",
-            gap: 2,
-            mb: 2,
-            justifyContent: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          <Chip label="Available" size="small" variant="outlined" />
-          <Chip
-            label="Selected"
-            sx={{ backgroundColor: COLORS.selected, color: COLORS.white }}
+      {/* Selected dates display */}
+      <Box sx={{ mb: 2, p: 2, backgroundColor: "#f5f5f5", borderRadius: 1 }}>
+        <Typography variant="body2" gutterBottom>
+          <strong>Check-in:</strong>{" "}
+          {checkInDate ? format(checkInDate, "MMM dd, yyyy") : "Not selected"}
+        </Typography>
+        <Typography variant="body2" gutterBottom>
+          <strong>Check-out:</strong>{" "}
+          {checkOutDate ? format(checkOutDate, "MMM dd, yyyy") : "Not selected"}
+        </Typography>
+        <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
+          <Button
+            variant="contained"
             size="small"
-          />
-          <Chip
-            label="Booked"
-            sx={{ backgroundColor: COLORS.booked, color: COLORS.white }}
-            size="small"
-          />
-          <Chip
-            label="Blocked"
-            sx={{ backgroundColor: COLORS.blocked, color: COLORS.white }}
-            size="small"
-          />
+            onClick={handleBooking}
+            disabled={!checkInDate || !checkOutDate}
+            fullWidth
+          >
+            Book Now
+          </Button>
+          <Button variant="outlined" size="small" onClick={handleReset}>
+            Reset
+          </Button>
         </Box>
+      </Box>
 
-        {/* Selected dates display */}
-        <Box sx={{ mb: 2, p: 2, backgroundColor: "#f5f5f5", borderRadius: 1 }}>
-          <Typography variant="body2" gutterBottom>
-            <strong>Check-in:</strong>{" "}
-            {checkInDate ? format(checkInDate, "MMM dd, yyyy") : "Not selected"}
-          </Typography>
-          <Typography variant="body2" gutterBottom>
-            <strong>Check-out:</strong>{" "}
-            {checkOutDate
-              ? format(checkOutDate, "MMM dd, yyyy")
-              : "Not selected"}
-          </Typography>
-          <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
-            <Button
-              variant="contained"
-              size="small"
-              onClick={handleBooking}
-              disabled={!checkInDate || !checkOutDate}
-              fullWidth
-            >
-              Book Now
-            </Button>
-            <Button variant="outlined" size="small" onClick={handleReset}>
-              Reset
-            </Button>
-          </Box>
+      {isLoading && (
+        <Box display="flex" justifyContent="center" py={4}>
+          <CircularProgress />
         </Box>
+      )}
 
-        {isLoading && (
-          <Box display="flex" justifyContent="center" py={4}>
-            <CircularProgress />
-          </Box>
-        )}
+      {error && (
+        <Alert severity="error">
+          Failed to load availability. Please try again.
+        </Alert>
+      )}
 
-        {error && (
-          <Alert severity="error">
-            Failed to load availability. Please try again.
-          </Alert>
-        )}
-
-        {!isLoading && !error && (
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DateCalendar
-              value={null}
-              onChange={() => {}}
-              onMonthChange={(newMonth) => setCurrentMonth(newMonth)}
-              slots={{
-                day: CustomDay,
-              }}
-            />
-          </LocalizationProvider>
-        )}
-      </Paper>
+      {!isLoading && !error && (
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DateCalendar
+            value={null}
+            onChange={() => {}}
+            onMonthChange={(newMonth) => setCurrentMonth(newMonth)}
+            slots={{
+              day: CustomDay,
+            }}
+          />
+        </LocalizationProvider>
+      )}
     </Box>
   );
 };

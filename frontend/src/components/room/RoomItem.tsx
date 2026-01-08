@@ -107,10 +107,64 @@ export const RoomItem = ({
           color="primary"
           sx={{ fontWeight: 900, display: "block" }}
         >
-          Amenities
+          Tech
         </Typography>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
-          {room.roomDetails.amenities.map((a: string) => (
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
+          {room.roomDetails.tech.map((a: string) => (
+            <Chip
+              key={a}
+              label={a}
+              size="small"
+              variant="filled"
+              sx={{ bgcolor: "white", border: "1px solid #ddd" }}
+            />
+          ))}
+        </Box>
+        <Typography
+          variant="overline"
+          color="primary"
+          sx={{ fontWeight: 900, display: "block" }}
+        >
+          Comfort
+        </Typography>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
+          {room.roomDetails.comfort.map((a: string) => (
+            <Chip
+              key={a}
+              label={a}
+              size="small"
+              variant="filled"
+              sx={{ bgcolor: "white", border: "1px solid #ddd" }}
+            />
+          ))}
+        </Box>
+        <Typography
+          variant="overline"
+          color="primary"
+          sx={{ fontWeight: 900, display: "block" }}
+        >
+          Provisions
+        </Typography>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
+          {room.roomDetails.provisions.map((a: string) => (
+            <Chip
+              key={a}
+              label={a}
+              size="small"
+              variant="filled"
+              sx={{ bgcolor: "white", border: "1px solid #ddd" }}
+            />
+          ))}
+        </Box>
+        <Typography
+          variant="overline"
+          color="primary"
+          sx={{ fontWeight: 900, display: "block" }}
+        >
+          Miscellaneous
+        </Typography>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
+          {room.roomDetails.miscellaneous.map((a: string) => (
             <Chip
               key={a}
               label={a}

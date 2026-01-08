@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   Container,
   Paper,
@@ -12,6 +13,8 @@ import { useGetAvailableRoomsQuery } from "./roomApi";
 import RoomList from "./RoomList";
 
 const RoomAvailability: React.FC = () => {
+  const { roomType } = useParams<{ roomType: string }>();
+
   const [checkInDate, setCheckInDate] = useState<string>("");
   const [checkOutDate, setCheckOutDate] = useState<string>("");
   const [guests, setGuests] = useState<number>(1);
@@ -19,6 +22,7 @@ const RoomAvailability: React.FC = () => {
     checkInDate: string;
     checkOutDate: string;
     guests: number;
+    roomType: string;
   } | null>(null);
 
   const {
@@ -30,11 +34,12 @@ const RoomAvailability: React.FC = () => {
   });
 
   const handleSearch = () => {
-    if (checkInDate && checkOutDate) {
+    if (checkInDate && checkOutDate && roomType) {
       setSearchParams({
         checkInDate,
         checkOutDate,
         guests,
+        roomType,
       });
     }
   };
@@ -44,7 +49,8 @@ const RoomAvailability: React.FC = () => {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        Find Available Rooms
+        Find Available {roomType!.charAt(0) + roomType!.slice(1).toLowerCase()}{" "}
+        Rooms
       </Typography>
 
       <Paper elevation={5} sx={{ p: 3, mb: 4 }}>
@@ -116,7 +122,14 @@ const RoomAvailability: React.FC = () => {
         </Grid>
       </Paper>
 
-      <RoomList rooms={rooms} isLoading={isLoading} error={error} />
+      <RoomList
+        rooms={rooms}
+        isLoading={isLoading}
+        error={error}
+        checkInDate={checkInDate}
+        checkOutDate={checkOutDate}
+        guests={guests}
+      />
     </Container>
   );
 };

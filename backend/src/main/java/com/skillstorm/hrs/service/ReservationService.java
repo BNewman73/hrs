@@ -17,6 +17,7 @@ import com.skillstorm.hrs.exception.RoomNotAvailableException;
 import com.skillstorm.hrs.model.Reservation;
 import com.skillstorm.hrs.model.Room;
 import com.skillstorm.hrs.model.Reservation.ReservationType;
+import com.skillstorm.hrs.model.RoomDetails.RoomType;
 import com.skillstorm.hrs.repository.ReservationRepository;
 import com.skillstorm.hrs.repository.RoomRepository;
 import com.skillstorm.hrs.repository.UserRepository;
@@ -105,7 +106,8 @@ public class ReservationService {
       throw new ResourceNotFoundException("User not found with id " + id);
   }
 
-  public List<Room> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, Integer guests) {
+  public List<Room> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, Integer guests,
+      RoomType roomType) {
     List<Room> allRooms = roomRepository.findAll();
 
     List<Reservation> overlappingReservations = reservationRepository.findReservationsInDateRange(checkInDate,
@@ -118,6 +120,7 @@ public class ReservationService {
     List<Room> availableRooms = allRooms.stream()
         .filter(room -> !bookedRoomIds.contains(room.getRoomNumber()))
         .filter(room -> guests == null || room.getRoomDetails().getMaxCapacity() >= guests)
+        .filter(room -> roomType == null || room.getRoomDetails().getType().equals(roomType))
         .collect(Collectors.toList());
 
     return availableRooms;

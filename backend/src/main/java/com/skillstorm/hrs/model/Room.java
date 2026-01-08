@@ -29,7 +29,7 @@ public class Room extends BaseEntity {
     @Field("price_per_night")
     private Integer pricePerNight;
 
-    private List<String> images;
+    private String image;
     @DocumentReference
     private RoomDetails roomDetails;
 }

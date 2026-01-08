@@ -1,21 +1,31 @@
-import { useState, useMemo } from "react";
-import { useGetAllRoomsQuery } from "../reservations/roomApi";
+import { useState, useMemo, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../shared/store/hooks";
+import { fetchRooms } from "../features/roomSlice";
+import { showToast } from "../features/toastSlice";
 
 const collator = new Intl.Collator("en", {
   numeric: true,
   sensitivity: "base",
 });
-
 type SortOrder = "asc" | "desc" | "none";
 
 export function useRoomTable() {
-  const { data: rawRooms = [], isLoading, isError } = useGetAllRoomsQuery();
+  const dispatch = useAppDispatch();
+  const rawRooms = useAppSelector((state) => state.room.items);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("none");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "none">("none");
   const [typeFilter, setTypeFilter] = useState<RoomType | "ALL">("ALL");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  useEffect(() => {
+    dispatch(fetchRooms())
+      .unwrap()
+      .catch(() =>
+        dispatch(showToast({ message: "Sync failed", severity: "error" }))
+      );
+  }, [dispatch]);
 
   const filteredAndSorted = useMemo(() => {
     let result = [...rawRooms].sort((a, b) =>
@@ -30,11 +40,8 @@ export function useRoomTable() {
           r.roomDetails.type.toLowerCase().includes(q)
       );
     }
-
-    if (typeFilter !== "ALL") {
+    if (typeFilter !== "ALL")
       result = result.filter((r) => r.roomDetails.type === typeFilter);
-    }
-
     if (sortOrder !== "none") {
       result.sort((a, b) =>
         sortOrder === "asc"
@@ -42,7 +49,6 @@ export function useRoomTable() {
           : b.pricePerNight - a.pricePerNight
       );
     }
-
     return result;
   }, [rawRooms, searchQuery, sortOrder, typeFilter]);
 
@@ -81,9 +87,6 @@ export function useRoomTable() {
       setPage(0);
     },
     handleReset,
-    isLoading,
-    isError,
-
     isFiltered:
       searchQuery !== "" || sortOrder !== "none" || typeFilter !== "ALL",
   };

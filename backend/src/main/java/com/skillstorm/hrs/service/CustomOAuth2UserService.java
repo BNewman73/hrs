@@ -15,7 +15,7 @@ import com.skillstorm.hrs.security.OAuthUserInfoFactory;
 
 @Service
 public class CustomOAuth2UserService
-        implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+    implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final UserRepository userRepository;
 
@@ -25,18 +25,21 @@ public class CustomOAuth2UserService
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest)
-            throws OAuth2AuthenticationException {
+        throws OAuth2AuthenticationException {
 
-        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
+        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate =
+            new DefaultOAuth2UserService();
 
         OAuth2User oauth2User = delegate.loadUser(userRequest);
 
         User.Provider provider = User.Provider.valueOf(
-                userRequest.getClientRegistration()
-                        .getRegistrationId()
-                        .toUpperCase());
+            userRequest.getClientRegistration()
+                .getRegistrationId()
+                .toUpperCase()
+        );
 
-        OAuthUserInfo userInfo = OAuthUserInfoFactory.getUserInfo(provider, oauth2User.getAttributes());
+        OAuthUserInfo userInfo =
+            OAuthUserInfoFactory.getUserInfo(provider, oauth2User.getAttributes());
 
         if (userInfo.getProviderId() == null) {
             throw new OAuth2AuthenticationException("Missing provider ID");
@@ -50,24 +53,24 @@ public class CustomOAuth2UserService
     private User upsertUser(User.Provider provider, OAuthUserInfo info) {
 
         return userRepository
-                .findByProviderAndProviderId(provider, info.getProviderId())
-                .map(existing -> {
-                    existing.setEmail(info.getEmail());
-                    existing.setFirstName(info.getFirstName());
-                    existing.setLastName(info.getLastName());
-                    existing.setEnabled(true);
-                    return userRepository.save(existing);
-                })
-                .orElseGet(() -> {
-                    User user = new User();
-                    user.setProvider(provider);
-                    user.setProviderId(info.getProviderId());
-                    user.setEmail(info.getEmail());
-                    user.setFirstName(info.getFirstName());
-                    user.setLastName(info.getLastName());
-                    user.setRole(User.UserRole.GUEST);
-                    user.setEnabled(true);
-                    return userRepository.save(user);
-                });
+            .findByProviderAndProviderId(provider, info.getProviderId())
+            .map(existing -> {
+                existing.setEmail(info.getEmail());
+                existing.setFirstName(info.getFirstName());
+                existing.setLastName(info.getLastName());
+                existing.setEnabled(true);
+                return userRepository.save(existing);
+            })
+            .orElseGet(() -> {
+                User user = new User();
+                user.setProvider(provider);
+                user.setProviderId(info.getProviderId());
+                user.setEmail(info.getEmail());
+                user.setFirstName(info.getFirstName());
+                user.setLastName(info.getLastName());
+                user.setRole(User.UserRole.GUEST);
+                user.setEnabled(true);
+                return userRepository.save(user);
+            });
     }
 }
