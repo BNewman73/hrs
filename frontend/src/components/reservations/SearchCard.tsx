@@ -109,27 +109,32 @@ const RoomResultCard = ({
         sx={{
           flex: 1,
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "row",
           justifyContent: "space-between",
           p: 2,
           minHeight: 120,
         }}
       >
-        <Box sx={{ display: "flex", gap: "30px" }}>
-          <Typography variant="h6" component="h3" gutterBottom>
-            Room {room.roomNumber}
-          </Typography>
-          <Typography variant="h6" color="primary">
-            {formattedPrice}
-            <Typography
-              component="span"
-              variant="body2"
-              color="text.secondary"
-              sx={{ ml: 0.5 }}
-            >
-              /night
+        <Box sx={{ display: "flex", flexDirection: "column", width: 3 / 5 }}>
+          <Box sx={{ display: "flex", gap: "30px" }}>
+            <Typography variant="h6" component="h3" gutterBottom>
+              Room {room.roomNumber}
             </Typography>
-          </Typography>
+            <Typography variant="h6" color="primary">
+              {formattedPrice}
+              <Typography
+                component="span"
+                variant="body2"
+                color="text.secondary"
+                sx={{ ml: 0.5 }}
+              >
+                /night
+              </Typography>
+            </Typography>
+          </Box>
+          <Box>
+            <Typography>{room.description}</Typography>
+          </Box>
         </Box>
 
         <Box
@@ -138,9 +143,10 @@ const RoomResultCard = ({
             alignItems: "center",
             justifyContent: "space-between",
             mt: 2,
+            width: 1 / 5,
           }}
         >
-          <Stack direction="row" spacing={1}>
+          <Stack direction="column" spacing={1}>
             <Button
               variant="contained"
               size="small"

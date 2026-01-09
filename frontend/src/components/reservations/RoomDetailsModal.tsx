@@ -23,7 +23,12 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({ roomNumber }) => {
   const handleClose = () => setOpen(false);
   return (
     <>
-      <Button onClick={handleOpen} variant="contained" size="small">
+      <Button
+        sx={{ whiteSpace: "nowrap" }}
+        onClick={handleOpen}
+        variant="contained"
+        size="small"
+      >
         View Availability
       </Button>
       <Modal open={open} onClose={handleClose}>

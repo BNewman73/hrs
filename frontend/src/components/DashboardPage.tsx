@@ -49,6 +49,11 @@ export default function DashboardPage() {
       icon: <EventNoteIcon />,
     },
     { id: "Rooms", label: "Create Room", icon: <AddHomeWorkIcon /> },
+    {
+      id: "Reservations",
+      label: "View Reservations",
+      icon: <AddHomeWorkIcon />,
+    },
   ];
 
   const renderContent = () => {
