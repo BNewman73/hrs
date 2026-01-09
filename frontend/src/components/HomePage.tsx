@@ -9,6 +9,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import RoomAvailability from "./reservations/RoomAvailability";
 import { useNavigate } from "react-router-dom";
+import type { RoomType } from "../types/enum";
 
 const VIDEO_URL = import.meta.env.VITE_HOME_VIDEO_URL;
 export default function HomePage() {
@@ -230,7 +231,7 @@ export default function HomePage() {
                 },
               }}
             >
-              <RoomAvailability />
+              <RoomAvailability roomType={"SINGLE" as RoomType} />
             </Box>
           </Box>
         </Box>

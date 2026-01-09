@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import { Container, Paper, Grid, TextField, Button } from "@mui/material";
 import { SearchOutlined } from "@mui/icons-material";
 import { useGetAvailableRoomsQuery } from "../../features/roomApi";
 import RoomList from "./RoomList";
+import type { RoomType } from "../../types/enum";
 
-const RoomAvailability: React.FC = () => {
-  const { roomType } = useParams<{ roomType: string }>();
+interface RoomAvailabilityProps {
+  roomType: RoomType;
+}
 
+const RoomAvailability: React.FC<RoomAvailabilityProps> = ({ roomType }) => {
   const [checkInDate, setCheckInDate] = useState<string>("");
   const [checkOutDate, setCheckOutDate] = useState<string>("");
   const [guests, setGuests] = useState<number>(1);
