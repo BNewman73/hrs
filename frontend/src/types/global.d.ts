@@ -123,4 +123,8 @@ declare global {
     "Food & Beverage"?: string[];
     "Safety & Convenience"?: string[];
   }
+
+  declare module "swiper/css";
+  declare module "swiper/css/navigation";
+  declare module "swiper/css/pagination";
 }
