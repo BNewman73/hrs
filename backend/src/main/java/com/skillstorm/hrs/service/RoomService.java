@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skillstorm.hrs.dto.roomDTOS.RoomDTO;
 import com.skillstorm.hrs.dto.roomDTOS.RoomResponseDTO;
-import com.skillstorm.hrs.exception.ResourceNotFoundException; // Added
-import com.skillstorm.hrs.exception.RoomNotAvailableException; // Added
+import com.skillstorm.hrs.exception.ResourceNotFoundException;
+import com.skillstorm.hrs.exception.RoomNotAvailableException;
 import com.skillstorm.hrs.model.Room;
 import com.skillstorm.hrs.repository.RoomRepository;
 
