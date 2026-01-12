@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   CssBaseline,
@@ -19,20 +19,36 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AddHomeWorkIcon from "@mui/icons-material/AddHomeWork";
 import BedIcon from "@mui/icons-material/Bed";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import RoomCreateForm from "./room/RoomCrudForm";
 import RoomTable from "./room/RoomTable";
+import { useGetPrincipalQuery } from "../features/userApi";
+import { setUser, clearUser } from "../features/authSlice";
+import { useDispatch } from "react-redux";
 
 const DRAWER_WIDTH = 280;
 
 export default function DashboardPage() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Table");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { data, error } = useGetPrincipalQuery();
 
-  const currentUser = {
-    id: 1,
-    name: "John Doe",
-    email: "TESTTEST@yahoo.com",
+  useEffect(() => {
+    if (data) {
+      dispatch(setUser(data));
+    } else if (error) {
+      dispatch(clearUser());
+    }
+  }, [data, error, dispatch]);
+
+  const currentUser = data || {
+    id: "",
+    name: "Guest User",
+    email: "guest@stormstay.com",
+    avatarUrl: "/static/images/avatar/placeholder.jpg",
   };
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
@@ -92,7 +108,8 @@ export default function DashboardPage() {
         >
           <Avatar
             alt={currentUser.name}
-            src="/static/images/avatar/2.jpg"
+            src={currentUser.avatarUrl}
+            imgProps={{ referrerPolicy: "no-referrer" }} 
             sx={{ width: 44, height: 44, mr: 1.5, bgcolor: "primary.main" }}
           />
           <Box sx={{ overflow: "hidden" }}>
@@ -171,6 +188,7 @@ export default function DashboardPage() {
 
       <Box sx={{ p: 2 }}>
         <ListItemButton
+          onClick={() => navigate("/logout")}
           sx={{
             borderRadius: "12px",
             color: "error.main",

@@ -24,11 +24,9 @@ public class CustomOAuth2UserService
     }
 
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest)
-        throws OAuth2AuthenticationException {
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
-        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate =
-            new DefaultOAuth2UserService();
+        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
 
         OAuth2User oauth2User = delegate.loadUser(userRequest);
 
@@ -38,8 +36,7 @@ public class CustomOAuth2UserService
                 .toUpperCase()
         );
 
-        OAuthUserInfo userInfo =
-            OAuthUserInfoFactory.getUserInfo(provider, oauth2User.getAttributes());
+        OAuthUserInfo userInfo = OAuthUserInfoFactory.getUserInfo(provider, oauth2User.getAttributes());
 
         if (userInfo.getProviderId() == null) {
             throw new OAuth2AuthenticationException("Missing provider ID");

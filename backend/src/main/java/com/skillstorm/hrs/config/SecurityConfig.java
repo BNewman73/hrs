@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .logoutUrl("/logout")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
-                .logoutSuccessUrl("http://localhost:3000/logout")
+                .logoutSuccessUrl("http://localhost:3000/login")
             )
             .build();
     }

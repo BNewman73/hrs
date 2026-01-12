@@ -5,6 +5,7 @@ import LoginPage from "./components/login/LoginPage";
 import Container from "@mui/material/Container";
 import RoomAvailability from "./reservations/RoomAvailability";
 import RoomCalendar from "./reservations/RoomCalendar";
+import LogoutPage from "./components/login/LogoutPage";
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
         <GlobalSnackbar />
         <Container maxWidth="lg">
           <Routes>
-            <Route path="/Login" element={<LoginPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/logout" element={<LogoutPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/rooms" element={<RoomAvailability />} />
             <Route path="/room" element={<RoomCalendar />} />

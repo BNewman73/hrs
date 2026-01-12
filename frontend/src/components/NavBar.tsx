@@ -7,9 +7,10 @@ import HotelIcon from "@mui/icons-material/Hotel";
 
 interface NavBarProps {
   user: {
-    id?: number;
+    id: string;
     name: string;
     email: string;
+    avatarUrl: string;
   };
 }
 
@@ -41,7 +42,11 @@ export default function NavBar({ user }: NavBarProps) {
         </Box>
         <Tooltip title="Account Settings">
           <IconButton sx={{ p: 0 }}>
-            <Avatar alt={user.name} sx={{ bgcolor: "primary.main" }}>
+            <Avatar
+              alt={user.name}
+              src={user.avatarUrl}
+              imgProps={{ referrerPolicy: "no-referrer" }} 
+              sx={{ bgcolor: "primary.main" }}>
               {user.name[0]}
             </Avatar>
           </IconButton>

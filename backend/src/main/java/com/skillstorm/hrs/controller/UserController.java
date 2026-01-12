@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.skillstorm.hrs.dto.userDTOs.UserDTO;
 import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.service.UserService;
 
@@ -22,12 +23,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user-info")
-    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
-        return principal.getAttributes();
+    @GetMapping("/principal")
+    public UserDTO user(@AuthenticationPrincipal OAuth2User principal) {
+        return userService.oauth2UserToUserDto(principal);
     }
 
-    @GetMapping("/me")
+    @GetMapping("/current-user")
     public ResponseEntity<User> getCurrentUser(@AuthenticationPrincipal OAuth2User oauthUser) {
 
         String providerStr = (String) oauthUser.getAttribute("provider");
