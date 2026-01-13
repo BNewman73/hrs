@@ -49,6 +49,14 @@ public class Reservation extends BaseEntity {
 
   private String notes;
 
+  // Stripe payment info
+  @Field("stripe_session_id")
+  private String stripeSessionId;
+  @Field("stripe_payment_intent_id")
+  private String stripePaymentIntentId;
+  @Field("payment_status")
+  private String paymentStatus;
+
   public enum ReservationType {
     GUEST_BOOKING,
     ADMIN_BLOCK

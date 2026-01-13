@@ -85,6 +85,12 @@ export const roomApi = createApi({
       }),
       invalidatesTags: ["Rooms"],
     }),
+    completeReservation: builder.mutation<Reservation, string>({
+      query: (sessionId) => ({
+        url: `/reservations/complete/${sessionId}`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -97,4 +103,5 @@ export const {
   useDeleteRoomMutation,
   useGetComprehensiveRoomDetailsQuery,
   useCreateCheckoutSessionMutation,
+  useCompleteReservationMutation,
 } = roomApi;

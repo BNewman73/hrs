@@ -25,11 +25,11 @@ import {
 
 const COLORS: Record<string, string> = {
   available: "transparent",
-  selected: "#1976d2",
+  selected: "#ff9800",
   selectedBorder: "#0d47a1",
-  selectedHover: "#e3f2fd",
-  booked: "#4caf50",
-  blocked: "#f44336",
+  selectedHover: "#ffac33",
+  booked: "#d32f2f",
+  blocked: "#d32f2f",
   white: "white",
   inherit: "inherit",
 };
@@ -111,12 +111,12 @@ const SimpleCalendar: React.FC<RoomCalendarProps> = ({ roomNumber }) => {
     let color = COLORS.inherit;
     const border = "none";
 
-    if (status === "booked") {
+    if (status === "booked" || status === "blocked") {
       backgroundColor = COLORS.booked;
       color = COLORS.white;
-    } else if (status === "blocked") {
+      /*} else if (status === "blocked") {
       backgroundColor = COLORS.blocked;
-      color = COLORS.white;
+      color = COLORS.white; */
     } else if (isCheckIn || isCheckOut) {
       backgroundColor = COLORS.selected;
       color = COLORS.white;
@@ -182,20 +182,28 @@ const SimpleCalendar: React.FC<RoomCalendarProps> = ({ roomNumber }) => {
           sx={{ backgroundColor: COLORS.selected, color: COLORS.white }}
           size="small"
         />
-        <Chip
+        {/*<Chip
           label="Booked"
           sx={{ backgroundColor: COLORS.booked, color: COLORS.white }}
           size="small"
-        />
+        />*/}
         <Chip
-          label="Blocked"
+          label="Unavailable"
           sx={{ backgroundColor: COLORS.blocked, color: COLORS.white }}
           size="small"
         />
       </Box>
 
       {/* Selected dates display */}
-      <Box sx={{ mb: 2, p: 2, backgroundColor: "#f5f5f5", borderRadius: 1 }}>
+      <Box
+        sx={{
+          mb: 2,
+          p: 2,
+          backgroundColor: "secondary",
+          border: 1,
+          borderRadius: 5,
+        }}
+      >
         <Typography variant="body2" gutterBottom>
           <strong>Check-in:</strong>{" "}
           {checkInDate ? format(checkInDate, "MMM dd, yyyy") : "Not selected"}

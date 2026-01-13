@@ -104,4 +104,14 @@ public class ReservationController {
     List<Room> availableRooms = reservationService.getAvailableRooms(checkInDate, checkOutDate, guests, roomType);
     return new ResponseEntity<>(availableRooms, HttpStatus.OK);
   }
+
+  @PostMapping("/complete/{sessionId}")
+  public ResponseEntity<?> completeReservation(@PathVariable String sessionId) {
+    try {
+      Reservation reservation = reservationService.createReservationFromSessionId(sessionId);
+      return ResponseEntity.ok(reservation);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body("Error creating reservation: " + e.getMessage());
+    }
+  }
 }

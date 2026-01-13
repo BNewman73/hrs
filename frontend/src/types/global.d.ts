@@ -38,6 +38,21 @@ declare global {
     roomType: RoomType;
     description: string;
   }
+  interface Reservation {
+    id: string;
+    publicId: string;
+    roomId: string;
+    startDate: string;
+    endDate: string;
+    numberOfAdults: number;
+    numberOfChildren: number;
+    // numberOfNights: number;
+    totalPrice: number;
+    // guestEmail: string;
+    stripeSessionId: string;
+    stripePaymentIntentId: string;
+    paymentStatus: string;
+  }
   interface ReservationDTO {
     id: string;
     roomId: string;

@@ -21,6 +21,9 @@ import com.skillstorm.hrs.model.RoomDetails.RoomType;
 import com.skillstorm.hrs.repository.ReservationRepository;
 import com.skillstorm.hrs.repository.RoomRepository;
 import com.skillstorm.hrs.repository.UserRepository;
+import com.stripe.exception.StripeException;
+import com.stripe.model.checkout.Session;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -138,4 +141,82 @@ public class ReservationService {
         .collect(Collectors.toList());
   }
 
+  public Reservation createReservationFromStripeSession(
+      String sessionId,
+      String paymentIntentId,
+      String guestEmail,
+      String roomNumber,
+      String checkInDate,
+      String checkOutDate,
+      int numberOfGuests,
+      int totalPrice) {
+
+    // Find the room
+    Room room = roomRepository.findByRoomNumber(roomNumber)
+        .orElseThrow(() -> new RuntimeException("Room not found: " + roomNumber));
+
+    // Calculate number of nights
+    LocalDate checkIn = LocalDate.parse(checkInDate);
+    LocalDate checkOut = LocalDate.parse(checkOutDate);
+
+    // Create reservation
+    Reservation reservation = Reservation.builder()
+        .userId("user123")
+        .roomId(roomNumber)
+        .startDate(checkIn)
+        .endDate(checkOut)
+        .numberOfAdults(numberOfGuests)
+        .numberOfChildren(0)
+        .totalPrice(totalPrice)
+        .stripeSessionId(sessionId)
+        .stripePaymentIntentId(paymentIntentId)
+        .paymentStatus("paid")
+        .type(Reservation.ReservationType.GUEST_BOOKING)
+        .build();
+
+    return reservationRepository.save(reservation);
+  }
+
+  // CREATE RESERVATION AFTER STRIPE SUCCESS
+  public Reservation createReservationFromSessionId(String sessionId) throws StripeException {
+    System.out.println("=== Creating reservation from session ID: " + sessionId + " ===");
+
+    // Fetch session from Stripe
+    Session session = Session.retrieve(sessionId);
+    System.out.println("Session retrieved from Stripe");
+
+    // Check if payment was successful
+    if (!"paid".equals(session.getPaymentStatus())) {
+      throw new RuntimeException("Payment not completed for session: " + sessionId);
+    }
+
+    // Check if reservation already exists (prevent duplicates)
+    if (reservationRepository.findByStripeSessionId(sessionId).isPresent()) {
+      System.out.println("Reservation already exists for this session");
+      return reservationRepository.findByStripeSessionId(sessionId).get();
+    }
+
+    // Extract metadata
+    String roomNumber = session.getMetadata().get("roomNumber");
+    String checkInDate = session.getMetadata().get("checkInDate");
+    String checkOutDate = session.getMetadata().get("checkOutDate");
+    String guests = session.getMetadata().get("guests");
+
+    System.out.println("Metadata extracted:");
+    System.out.println("  Room: " + roomNumber);
+    System.out.println("  Check-in: " + checkInDate);
+    System.out.println("  Check-out: " + checkOutDate);
+    System.out.println("  Guests: " + guests);
+
+    // Create reservation using existing method
+    return createReservationFromStripeSession(
+        session.getId(),
+        session.getPaymentIntent(),
+        session.getCustomerEmail(),
+        roomNumber,
+        checkInDate,
+        checkOutDate,
+        Integer.parseInt(guests),
+        (int) (session.getAmountTotal() / 100.0));
+  }
 }

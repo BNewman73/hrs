@@ -2,6 +2,7 @@ package com.skillstorm.hrs.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -17,6 +18,8 @@ public interface ReservationRepository extends MongoRepository<Reservation, Stri
   List<Reservation> findByRoomId(String roomId);
 
   List<Reservation> findByType(ReservationType type);
+
+  Optional<Reservation> findByStripeSessionId(String stripeSessionId);
 
   // find all reservations for a room within startDate and endDate
   @Query("{ 'room_id': ?0, 'end_date': { $gte: ?1 }, 'start_date' : { $lte: ?2 }}")
