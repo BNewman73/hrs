@@ -4,7 +4,6 @@ import org.modelmapper.Conditions;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration.AccessLevel;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,16 +25,18 @@ public class ModelMapperConfig {
 
         @Bean
         public ModelMapper modelMapper() {
+
                 ModelMapper modelMapper = new ModelMapper();
 
+                // Global configuration
                 modelMapper.getConfiguration()
-                                .setMatchingStrategy(MatchingStrategies.STRICT)
                                 .setFieldMatchingEnabled(true)
                                 .setFieldAccessLevel(AccessLevel.PRIVATE)
                                 .setSkipNullEnabled(true)
-                                .setPropertyCondition(Conditions.isNotNull());
+                                .setPropertyCondition(Conditions.isNotNull())
+                                .setAmbiguityIgnored(true);
 
-                // Define the Converter logic
+                // Shared converter: RoomType -> RoomDetails
                 Converter<RoomType, RoomDetails> typeToDetailsConverter = ctx -> {
                         RoomType source = ctx.getSource();
                         if (source == null)
@@ -43,9 +44,10 @@ public class ModelMapperConfig {
 
                         return roomDetailsRepository.findById(source)
                                         .orElseThrow(() -> new IllegalArgumentException(
-                                                        "No RoomDetails found in DB for type: " + source));
+                                                        "RoomDetails not found for type: " + source));
                 };
 
+                // Apply mappings
                 configureRoomMappings(modelMapper, typeToDetailsConverter);
 
                 return modelMapper;
@@ -54,22 +56,16 @@ public class ModelMapperConfig {
         private void configureRoomMappings(ModelMapper modelMapper,
                         Converter<RoomType, RoomDetails> converter) {
 
-                // Mapping for RoomDTO
-                modelMapper.typeMap(RoomDTO.class, Room.class).addMappings(mapper -> {
-                        mapper.skip(Room::setRoomDetails);
-                        mapper.using(converter).map(RoomDTO::getRoomType, Room::setRoomDetails);
-                });
+                modelMapper.createTypeMap(RoomDTO.class, Room.class)
+                                .addMappings(mapper -> mapper.using(converter)
+                                                .map(RoomDTO::getRoomType, Room::setRoomDetails));
 
-                // Mapping for RoomPutDTO
-                modelMapper.typeMap(RoomPutDTO.class, Room.class).addMappings(mapper -> {
-                        mapper.skip(Room::setRoomDetails);
-                        mapper.using(converter).map(RoomPutDTO::getRoomType, Room::setRoomDetails);
-                });
+                modelMapper.createTypeMap(RoomPutDTO.class, Room.class)
+                                .addMappings(mapper -> mapper.using(converter)
+                                                .map(RoomPutDTO::getRoomType, Room::setRoomDetails));
 
-                // Mapping for RoomPatchDTO
-                modelMapper.typeMap(RoomPatchDTO.class, Room.class).addMappings(mapper -> {
-                        mapper.skip(Room::setRoomDetails);
-                        mapper.using(converter).map(RoomPatchDTO::getRoomType, Room::setRoomDetails);
-                });
+                modelMapper.createTypeMap(RoomPatchDTO.class, Room.class)
+                                .addMappings(mapper -> mapper.using(converter)
+                                                .map(RoomPatchDTO::getRoomType, Room::setRoomDetails));
         }
 }

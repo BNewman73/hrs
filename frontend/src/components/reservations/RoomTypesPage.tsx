@@ -4,7 +4,7 @@ import RoomTypesCarousel from "./RoomTypesCarousel";
 
 const RoomTypesPage: React.FC = () => {
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }} className="page-sweep-in">
+    <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ mb: 4, textAlign: "center" }}>
         <Typography variant="h3" component="h1" gutterBottom>
           Explore Our Rooms

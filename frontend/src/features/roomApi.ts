@@ -65,7 +65,6 @@ export const roomApi = createApi({
           pricePerNight: params.pricePerNight,
           images: params.images,
           roomType: params.roomType,
-          description: params.description,
         },
       }),
       invalidatesTags: ["Rooms"],
