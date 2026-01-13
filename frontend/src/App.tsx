@@ -2,11 +2,12 @@ import GlobalSnackbar from "./components/GlobalSnackbar";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import DashboardPage from "./components/DashboardPage";
 import LoginPage from "./components/login/LoginPage";
-import RoomTypesPage from "./components/reservations/RoomTypesPage";
+
 import BookingCancel from "./components/reservations/BookingCancel";
 import BookingSuccess from "./components/reservations/BookingSuccess";
 import HomePage from "./components/HomePage";
 import BookingPage from "./components/reservations/BookingPage";
+import Temp from "./components/Temp";
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
           <Route path="/Login" element={<LoginPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/rooms/:roomType" element={<BookingPage />} />
-          <Route path="/types" element={<RoomTypesPage />} />
+          <Route path="/types" element={<Temp />} />
           <Route path="/booking-success" element={<BookingSuccess />} />
           <Route path="/booking-cancel" element={<BookingCancel />} />
           <Route path="/home" element={<HomePage />} />
