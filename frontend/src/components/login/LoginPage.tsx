@@ -13,10 +13,10 @@ import {
 import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LoginPageNavBar from "./LoginPageNavBar";
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function LoginPage() {
-
   const handleLogin = (provider: "google" | "github") => {
     window.location.href = `${API_BASE}/oauth2/authorization/${provider}`;
   };
@@ -33,7 +33,6 @@ export default function LoginPage() {
       >
         <CssBaseline />
 
-        {/*App Bar*/}
         <AppBar
           position="static"
           elevation={0}
@@ -50,7 +49,6 @@ export default function LoginPage() {
           </Toolbar>
         </AppBar>
 
-        {/*Content*/}
         <Container
           maxWidth="sm"
           sx={{
@@ -70,36 +68,11 @@ export default function LoginPage() {
               textAlign: "center",
             }}
           >
-            Sign in to manage your hotel inventory and rooms.
-          </Typography>
-
-          <Stack spacing={2}>
-            <Button
-              fullWidth
-              size="large"
-              variant="contained"
-              startIcon={<GoogleIcon />}
-              onClick={() => handleLogin("google")}
-              sx={{
-                fontWeight: 900,
-                letterSpacing: "-0.03em",
-                mb: 1,
-              }}
-            >
-              Welcome
+            <Typography variant="h5" fontWeight={700} mb={1}>
+              Welcome Back
             </Typography>
 
-            <Button
-              fullWidth
-              size="large"
-              variant="outlined"
-              startIcon={<GitHubIcon />}
-              onClick={() => handleLogin("github")}
-              sx={{
-                color: "text.secondary",
-                mb: 4,
-              }}
-            >
+            <Typography variant="body2" color="text.secondary" mb={4}>
               Sign in to manage your hotel inventory and rooms.
             </Typography>
 
@@ -109,7 +82,6 @@ export default function LoginPage() {
                 size="large"
                 variant="contained"
                 startIcon={<GoogleIcon />}
-                disabled={isLoading}
                 onClick={() => handleLogin("google")}
                 sx={{
                   py: 1.5,
@@ -126,7 +98,6 @@ export default function LoginPage() {
                 size="large"
                 variant="outlined"
                 startIcon={<GitHubIcon />}
-                disabled={isLoading}
                 onClick={() => handleLogin("github")}
                 sx={{
                   py: 1.5,
@@ -140,10 +111,10 @@ export default function LoginPage() {
           </Paper>
         </Container>
 
-        {/*Footer*/}
+        {/* Footer */}
         <Box sx={{ py: 2, textAlign: "center" }}>
           <Typography variant="caption" color="text.secondary">
-            {/**/}
+            © {new Date().getFullYear()} Hotel Reservation System
           </Typography>
         </Box>
       </Box>
