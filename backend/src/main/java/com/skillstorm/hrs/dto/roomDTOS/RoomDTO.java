@@ -17,6 +17,8 @@ public class RoomDTO {
     @NotNull
     @Positive
     private Integer pricePerNight;
+    @NotBlank
+    private String description;
 
     @NotNull
     private List<String> images;

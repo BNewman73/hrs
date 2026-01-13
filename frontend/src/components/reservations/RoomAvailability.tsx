@@ -1,17 +1,15 @@
 import { useState } from "react";
-import {
-  Container,
-  Paper,
-  Typography,
-  Grid,
-  TextField,
-  Button,
-} from "@mui/material";
+import { Container, Paper, Grid, TextField, Button } from "@mui/material";
 import { SearchOutlined } from "@mui/icons-material";
-import { useGetAvailableRoomsQuery } from "./roomApi";
+import { useGetAvailableRoomsQuery } from "../../features/roomApi";
 import RoomList from "./RoomList";
+import type { RoomType } from "../../types/enum";
 
-const RoomAvailability: React.FC = () => {
+interface RoomAvailabilityProps {
+  roomType: RoomType;
+}
+
+const RoomAvailability: React.FC<RoomAvailabilityProps> = ({ roomType }) => {
   const [checkInDate, setCheckInDate] = useState<string>("");
   const [checkOutDate, setCheckOutDate] = useState<string>("");
   const [guests, setGuests] = useState<number>(1);
@@ -19,6 +17,7 @@ const RoomAvailability: React.FC = () => {
     checkInDate: string;
     checkOutDate: string;
     guests: number;
+    roomType: string;
   } | null>(null);
 
   const {
@@ -30,11 +29,12 @@ const RoomAvailability: React.FC = () => {
   });
 
   const handleSearch = () => {
-    if (checkInDate && checkOutDate) {
+    if (checkInDate && checkOutDate && roomType) {
       setSearchParams({
         checkInDate,
         checkOutDate,
         guests,
+        roomType,
       });
     }
   };
@@ -43,10 +43,6 @@ const RoomAvailability: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Find Available Rooms
-      </Typography>
-
       <Paper elevation={5} sx={{ p: 3, mb: 4 }}>
         <Grid container spacing={3} alignItems="center">
           <Grid size={{ xs: 12, md: 3 }}>
@@ -116,7 +112,14 @@ const RoomAvailability: React.FC = () => {
         </Grid>
       </Paper>
 
-      <RoomList rooms={rooms} isLoading={isLoading} error={error} />
+      <RoomList
+        rooms={rooms}
+        isLoading={isLoading}
+        error={error}
+        checkInDate={checkInDate}
+        checkOutDate={checkOutDate}
+        guests={guests}
+      />
     </Container>
   );
 };

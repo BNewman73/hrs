@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import type { RoomType } from "../../types/enum";
 
 type SortOrder = "asc" | "desc" | "none";
 

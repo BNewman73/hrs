@@ -8,6 +8,18 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
+import {
+  Comfort,
+  ComfortDisplayNames,
+  Miscellaneous,
+  MiscellaneousDisplayNames,
+  Provisions,
+  ProvisionsDisplayNames,
+  RoomTypeDisplayNames,
+  Tech,
+  TechDisplayNames,
+  type RoomType,
+} from "../../types/enum";
 
 interface GridConfig {
   roomNo: { xs: string; sm: string };
@@ -24,7 +36,7 @@ interface RoomItemProps {
   onEdit: () => void;
 }
 
-export const RoomItem = ({
+export const RoomRow = ({
   room,
   gridConfig,
   isExpanded,
@@ -57,7 +69,7 @@ export const RoomItem = ({
         }}
       >
         <Chip
-          label={room.roomDetails.type}
+          label={RoomTypeDisplayNames[room.roomDetails.type as RoomType]}
           size="small"
           color="primary"
           variant="outlined"
@@ -107,13 +119,67 @@ export const RoomItem = ({
           color="primary"
           sx={{ fontWeight: 900, display: "block" }}
         >
-          Amenities
+          Tech
         </Typography>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
-          {room.roomDetails.amenities.map((a: string) => (
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
+          {room.roomDetails.tech?.map((a: string) => (
             <Chip
               key={a}
-              label={a}
+              label={TechDisplayNames[a as Tech]}
+              size="small"
+              variant="filled"
+              sx={{ bgcolor: "white", border: "1px solid #ddd" }}
+            />
+          ))}
+        </Box>
+        <Typography
+          variant="overline"
+          color="primary"
+          sx={{ fontWeight: 900, display: "block" }}
+        >
+          Comfort
+        </Typography>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
+          {room.roomDetails.comfort?.map((a: string) => (
+            <Chip
+              key={a}
+              label={ComfortDisplayNames[a as Comfort]}
+              size="small"
+              variant="filled"
+              sx={{ bgcolor: "white", border: "1px solid #ddd" }}
+            />
+          ))}
+        </Box>
+        <Typography
+          variant="overline"
+          color="primary"
+          sx={{ fontWeight: 900, display: "block" }}
+        >
+          Provisions
+        </Typography>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
+          {room.roomDetails.provisions?.map((a: string) => (
+            <Chip
+              key={a}
+              label={ProvisionsDisplayNames[a as Provisions]}
+              size="small"
+              variant="filled"
+              sx={{ bgcolor: "white", border: "1px solid #ddd" }}
+            />
+          ))}
+        </Box>
+        <Typography
+          variant="overline"
+          color="primary"
+          sx={{ fontWeight: 900, display: "block" }}
+        >
+          Miscellaneous
+        </Typography>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
+          {room.roomDetails.miscellaneous?.map((a: string) => (
+            <Chip
+              key={a}
+              label={MiscellaneousDisplayNames[a as Miscellaneous]}
               size="small"
               variant="filled"
               sx={{ bgcolor: "white", border: "1px solid #ddd" }}

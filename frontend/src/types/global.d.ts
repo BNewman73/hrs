@@ -1,8 +1,6 @@
 export {};
 
 declare global {
-  type RoomType = "SINGLE" | "DOUBLE" | "DELUXE" | "SUITE";
-
   type Amenity =
     | "WIFI"
     | "TV"
@@ -16,7 +14,10 @@ declare global {
   interface RoomDetails {
     type: RoomType;
     description: string;
-    amenities: Amenity[];
+    tech: Tech[];
+    comfort: Comfort[];
+    provisions: Provisions[];
+    miscellaneous: Miscellaneous[];
     maxCapacity: number;
   }
 
@@ -26,6 +27,7 @@ declare global {
     images: string[];
     roomDetails: RoomDetails;
     publicID: string;
+    description: string;
   }
 
   interface RoomDTO {
@@ -34,6 +36,26 @@ declare global {
     pricePerNight: number;
     images: string[];
     roomType: RoomType;
+    description: string;
+  }
+  interface ReservationDTO {
+    id: string;
+    roomId: string;
+    startDate: string;
+    endDate: string;
+    type: ReservationType;
+    totalPrice?: number;
+    blockReason?: BlockReason;
+    notes?: string;
+  }
+  interface ReservationDTO {
+    id: string;
+    roomId: string;
+    startDate: string;
+    endDate: string;
+    type: "GUEST_BOOKING" | "ADMIN_BLOCK";
+    totalPrice?: number;
+    blockReason?: string;
   }
 
   interface User {
@@ -71,6 +93,7 @@ declare global {
   }
 
   interface RoomAvailabilityRequest {
+    roomType: string;
     checkInDate: string;
     checkOutDate: string;
     guests?: number;
@@ -92,4 +115,25 @@ declare global {
     startDate: string;
     endDate: string;
   }
+
+  export interface RoomDetailsDTO {
+    type: string;
+    description: string;
+    maxCapacity: number;
+    amenitiesByCategory: AmenitiesByCategory;
+    minPrice: number;
+    maxPrice: number;
+    images: string[];
+  }
+
+  export interface AmenitiesByCategory {
+    "Tech & Connectivity"?: string[];
+    "Comfort & Sleep"?: string[];
+    "Food & Beverage"?: string[];
+    "Safety & Convenience"?: string[];
+  }
+
+  declare module "swiper/css";
+  declare module "swiper/css/navigation";
+  declare module "swiper/css/pagination";
 }

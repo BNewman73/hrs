@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.skillstorm.hrs.dto.RoomDetailsDTO;
 import com.skillstorm.hrs.model.RoomDetails;
 import com.skillstorm.hrs.service.RoomDetailsService;
 
@@ -19,22 +20,24 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/room/details")
+@RequestMapping("/room-details")
 public class RoomDetailsController {
     private final RoomDetailsService roomDetailsService;
+
     @PostMapping
     public ResponseEntity<RoomDetails> postRoomDetials(@RequestBody RoomDetails roomDetails) {
-        
-        
-        return new ResponseEntity<>( roomDetailsService.createRoomDetails(roomDetails),HttpStatus.CREATED);
+
+        return new ResponseEntity<>(roomDetailsService.createRoomDetails(roomDetails), HttpStatus.CREATED);
     }
-    
+
     @GetMapping
-    public ResponseEntity<List<RoomDetails>>  getRoom() {
-        return new ResponseEntity<>( roomDetailsService.getRoomDetails(),HttpStatus.CREATED); 
+    public ResponseEntity<List<RoomDetails>> getRoom() {
+        return new ResponseEntity<>(roomDetailsService.getRoomDetails(), HttpStatus.CREATED);
     }
-    
 
-
-    
+    @GetMapping("/comprehensive")
+    public ResponseEntity<List<RoomDetailsDTO>> getComprehensiveRoomDetails() {
+        List<RoomDetailsDTO> roomDetails = roomDetailsService.getComprehensiveRoomDetails();
+        return new ResponseEntity<>(roomDetails, HttpStatus.OK);
+    }
 }

@@ -1,16 +1,25 @@
 import React from "react";
-import { Box, Grid, Typography, CircularProgress, Alert } from "@mui/material";
+import { Box, Typography, CircularProgress, Alert, Stack } from "@mui/material";
 import { type SerializedError } from "@reduxjs/toolkit";
 import { type FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import RoomCard from "./RoomCard";
-
+import SearchCard from "./SearchCard";
 interface RoomListProps {
   rooms?: Room[];
   isLoading: boolean;
   error?: FetchBaseQueryError | SerializedError;
+  checkInDate: string;
+  checkOutDate: string;
+  guests: number;
 }
 
-const RoomList: React.FC<RoomListProps> = ({ rooms, isLoading, error }) => {
+const RoomList: React.FC<RoomListProps> = ({
+  rooms,
+  isLoading,
+  error,
+  checkInDate,
+  checkOutDate,
+  guests,
+}) => {
   if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" py={8}>
@@ -50,13 +59,17 @@ const RoomList: React.FC<RoomListProps> = ({ rooms, isLoading, error }) => {
       <Typography variant="h5" gutterBottom>
         Available Rooms ({rooms.length})
       </Typography>
-      <Grid container spacing={3} sx={{ mt: 1 }}>
+      <Stack spacing={2}>
         {rooms.map((room) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={room.roomNumber}>
-            <RoomCard room={room} />
-          </Grid>
+          <SearchCard
+            key={room.roomNumber}
+            room={room}
+            checkInDate={checkInDate}
+            checkOutDate={checkOutDate}
+            guests={guests}
+          />
         ))}
-      </Grid>
+      </Stack>
     </Box>
   );
 };

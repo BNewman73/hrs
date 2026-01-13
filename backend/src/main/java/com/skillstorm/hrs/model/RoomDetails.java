@@ -14,34 +14,35 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection ="room_details")
+@Document(collection = "room_details")
 public class RoomDetails {
     @Id // Maps to MongoDB's _id field
     private RoomType type;
     private String description;
-    private List<Amenity> amenities;
-    private int maxCapacity; 
+    private List<Tech> tech;
+    private List<Comfort> comfort;
+    private List<Provisions> provisions;
+    private List<Miscellaneous> miscellaneous;
+    private int maxCapacity;
 
-  
-   public enum RoomType {
-    SINGLE, DOUBLE, DELUXE, SUITE, PRESIDENTIAL_SUITE, ACCESSIBLE
-}
+    public enum RoomType {
+        SINGLE, DOUBLE, DELUXE, SUITE, PRESIDENTIAL_SUITE, ACCESSIBLE
+    }
 
-public enum Amenity {
-    // Tech & Connectivity
-    HIGH_SPEED_WIFI, SMART_TV_STREAMING, UNIVERSAL_SOCKETS, USB_C_PORTS, SMART_LIGHTS,
-    
-    // Comfort & Sleep
-    BLACKOUT_CURTAINS, PILLOW_MENU, SOUNDPROOFING, PREMIUM_LINENS, BATHROBE, SLIPPERS,
-    
-    // Wellness & Hygiene
-    ECO_FRIENDLY_TOILETRIES, HAIR_DRYER, MAGNIFYING_MIRROR, YOGA_MAT, AIR_PURIFIER,
-    
-    // Food & Beverage
-    MINI_BAR, NESPRESSO_MACHINE, ELECTRIC_KETTLE, COMPLIMENTARY_WATER, KITCHENETTE,
-    
-    // Safety & Convenience
-    LAPTOP_SAFE, IRONING_BOARD, LUGGAGE_RACK, WORK_DESK, ERGONOMIC_CHAIR,VOICE_CONTROL,WIFI,TV,COFFEE_MAKER,BALCONY,MICROWAVE,SAFE
-}
+    public enum Tech {
+        WIFI, HIGH_SPEED_WIFI, TV, SMART_TV_STREAMING, UNIVERSAL_SOCKETS, USB_C_PORTS, SMART_LIGHTS
+    }
+
+    public enum Comfort {
+        BLACKOUT_CURTAINS, PILLOW_MENU, SOUNDPROOFING, PREMIUM_LINENS, BATHROBE, SLIPPERS, AIR_PURIFIER
+    }
+
+    public enum Provisions {
+        MINI_BAR, COFFEE_MAKER, ELECTRIC_KETTLE, COMPLIMENTARY_WATER, KITCHENETTE, MICROWAVE
+    }
+
+    public enum Miscellaneous {
+        IRONING_BOARD, LUGGAGE_RACK, WORK_DESK, ERGONOMIC_CHAIR, BALCONY, SAFE, YOGA_MAT, HAIR_DRYER
+    }
 
 }

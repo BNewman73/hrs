@@ -1,1 +1,11 @@
-# Production config - to be filled when deploying to AWS
+spring:
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI}
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            redirect-uri: https://d24rfvgips8loh.cloudfront.net/api/login/oauth2/code/google

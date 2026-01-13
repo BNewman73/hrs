@@ -23,6 +23,9 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import RoomCreateForm from "./room/RoomCrudForm";
 import RoomTable from "./room/RoomTable";
+import ReservationTable from "./room/ReservationTable";
+import EventNoteIcon from "@mui/icons-material/EventNote";
+import { useNavigate } from "react-router-dom";
 import { useGetPrincipalQuery } from "../features/userApi";
 import { setUser, clearUser } from "../features/userSlice";
 import { useDispatch } from "react-redux";
@@ -54,12 +57,23 @@ export default function DashboardPage() {
     provider: "",
     role: "guest",
   };
-
+  const handleNavigation = useNavigate();
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
   const menuItems = [
     { id: "Table", label: "View Inventory", icon: <BedIcon /> },
+
+    {
+      id: "Reservations",
+      label: "View Reservations",
+      icon: <EventNoteIcon />,
+    },
     { id: "Rooms", label: "Create Room", icon: <AddHomeWorkIcon /> },
+    {
+      id: "Reservations",
+      label: "View Reservations",
+      icon: <AddHomeWorkIcon />,
+    },
   ];
 
   const renderContent = () => {
@@ -68,6 +82,8 @@ export default function DashboardPage() {
         return <AccountCard />;
       case "Rooms":
         return <RoomCreateForm crud="Create" />;
+      case "Reservations":
+        return <ReservationTable />;
       case "Table":
       default:
         return <RoomTable />;
@@ -211,10 +227,7 @@ export default function DashboardPage() {
           <ListItemIcon sx={{ minWidth: 40, color: "error.main" }}>
             <LogoutIcon />
           </ListItemIcon>
-          <ListItemText
-            primary="Logout"
-            primaryTypographyProps={{ fontWeight: 600 }}
-          />
+          <ListItemText primary="Logout" sx={{ fontWeight: 600 }} />
         </ListItemButton>
       </Box>
     </Box>

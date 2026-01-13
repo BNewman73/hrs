@@ -11,9 +11,11 @@ import lombok.Data;
 public class RoomPatchDTO {
     @Positive
     private Integer pricePerNight;
-    
+
     private List<String> images;
-    
+
+    private String description;
+
     private RoomDetails.RoomType roomType;
 
 }

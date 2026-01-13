@@ -1,22 +1,25 @@
 // Infer the `RootState` and `AppDispatch` types from the store itself
 
 import { configureStore } from "@reduxjs/toolkit";
-import roomReducer from "../../features/roomSlice";
+
 import toastReducer from "../../features/toastSlice";
 import userReducer from "../../features/userSlice";
-import { roomApi } from "../../reservations/roomApi";
+import { roomApi } from "../../features/roomApi";
+import { reservationApi } from "../../features/reservationApi";
 import { userApi } from "../../features/userApi";
 
 export const store = configureStore({
   reducer: {
-    room: roomReducer,
     toast: toastReducer,
     user: userReducer,
     [userApi.reducerPath]: userApi.reducer,
     [roomApi.reducerPath]: roomApi.reducer,
+    [reservationApi.reducerPath]: reservationApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(userApi.middleware).concat(roomApi.middleware),
+    getDefaultMiddleware()
+      .concat(userApi.middleware).concat(roomApi.middleware)
+      .concat(reservationApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
