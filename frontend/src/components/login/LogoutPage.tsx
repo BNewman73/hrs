@@ -12,7 +12,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import LoginPageNavBar from "../login/LoginPageNavBar";
-import { clearUser } from "../../features/authSlice";
+import { clearUser } from "../../features/userSlice";
 
 export default function LogoutPage() {
   const dispatch = useDispatch();

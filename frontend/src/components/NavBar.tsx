@@ -4,17 +4,10 @@ import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import HotelIcon from "@mui/icons-material/Hotel";
+import type { User } from "../features/userSlice";
 
-interface NavBarProps {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    avatarUrl: string;
-  };
-}
+export default function NavBar({ user }: { user: User }) {
 
-export default function NavBar({ user }: NavBarProps) {
   return (
     <Box
       sx={{
@@ -34,7 +27,7 @@ export default function NavBar({ user }: NavBarProps) {
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
         <Box sx={{ display: { xs: "none", md: "block" }, textAlign: "right" }}>
           <Typography variant="body2" sx={{ fontWeight: 600 }}>
-            {user.name}
+            {user.firstName} {user.lastName}
           </Typography>
           <Typography variant="caption" color="text.secondary">
             {user.email}
@@ -43,11 +36,12 @@ export default function NavBar({ user }: NavBarProps) {
         <Tooltip title="Account Settings">
           <IconButton sx={{ p: 0 }}>
             <Avatar
-              alt={user.name}
+              alt={user.firstName}
               src={user.avatarUrl}
-              imgProps={{ referrerPolicy: "no-referrer" }} 
-              sx={{ bgcolor: "primary.main" }}>
-              {user.name[0]}
+              imgProps={{ referrerPolicy: "no-referrer" }}
+              sx={{ bgcolor: "primary.main" }}
+            >
+              {user.firstName[0]}
             </Avatar>
           </IconButton>
         </Tooltip>

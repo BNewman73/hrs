@@ -24,8 +24,9 @@ import NavBar from "./NavBar";
 import RoomCreateForm from "./room/RoomCrudForm";
 import RoomTable from "./room/RoomTable";
 import { useGetPrincipalQuery } from "../features/userApi";
-import { setUser, clearUser } from "../features/authSlice";
+import { setUser, clearUser } from "../features/userSlice";
 import { useDispatch } from "react-redux";
+import AccountCard from "./account/AccountCard";
 
 const DRAWER_WIDTH = 280;
 
@@ -46,9 +47,12 @@ export default function DashboardPage() {
 
   const currentUser = data || {
     id: "",
-    name: "Guest User",
+    firstName: "Guest",
+    lastName: "User",
     email: "guest@stormstay.com",
     avatarUrl: "/static/images/avatar/placeholder.jpg",
+    provider: "",
+    role: "guest",
   };
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
@@ -60,6 +64,8 @@ export default function DashboardPage() {
 
   const renderContent = () => {
     switch (activeTab) {
+      case "Account":
+        return <AccountCard />;
       case "Rooms":
         return <RoomCreateForm crud="Create" />;
       case "Table":
@@ -93,8 +99,13 @@ export default function DashboardPage() {
 
       <Box sx={{ px: 2, pb: 2 }}>
         <ListItem
+          onClick={() => {
+            setActiveTab("Account");
+            setMobileOpen(false);
+          }}
           sx={{
-            bgcolor: "white",
+            bgcolor: activeTab === "Account" ? "primary.main" : "white",
+            color: activeTab === "Account" ? "white" : "inherit",
             borderRadius: "16px",
             boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
             mb: 2,
@@ -107,14 +118,14 @@ export default function DashboardPage() {
           }}
         >
           <Avatar
-            alt={currentUser.name}
+            alt={currentUser.firstName}
             src={currentUser.avatarUrl}
             imgProps={{ referrerPolicy: "no-referrer" }} 
             sx={{ width: 44, height: 44, mr: 1.5, bgcolor: "primary.main" }}
           />
           <Box sx={{ overflow: "hidden" }}>
             <Typography variant="subtitle2" noWrap sx={{ fontWeight: 700 }}>
-              {currentUser.name}
+              {currentUser.firstName} {currentUser.lastName}
             </Typography>
             <Typography
               variant="caption"
@@ -309,15 +320,13 @@ export default function DashboardPage() {
                 mb: 0.5,
               }}
             >
-              {activeTab === "Rooms" ? "Room Management" : "Hotel Inventory"}
+              {activeTab === "Account" ? "Account Settings" : activeTab === "Rooms" ? "Room Management" : "Hotel Inventory"}
             </Typography>
             <Typography
               variant="body1"
               sx={{ color: "text.secondary", fontSize: "1rem" }}
             >
-              {activeTab === "Rooms"
-                ? "Add new rooms to your hotel."
-                : "Manage and update your current available rooms."}
+              {activeTab === "Rooms" ? "Add new rooms to your hotel." : activeTab === "Account" ? "" : "Manage and update your current available rooms."}
             </Typography>
           </Box>
 

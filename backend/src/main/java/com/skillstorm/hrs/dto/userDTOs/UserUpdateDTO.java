@@ -1,11 +1,8 @@
 package com.skillstorm.hrs.dto.userDTOs;
 
-public record UserDTO(
-    String id,
+public record UserUpdateDTO(
     String firstName,
     String lastName,
     String email,
-    String avatarUrl,
-    String provider,
-    String role
+    String avatarUrl
 ) {}

@@ -6,17 +6,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.skillstorm.hrs.service.CustomOAuth2UserService;
+import com.skillstorm.hrs.security.CustomAuthenticationSucessHandler;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomAuthenticationSucessHandler customAuthenticationSucessHandler;
 
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
-        this.customOAuth2UserService = customOAuth2UserService;
+    public SecurityConfig(CustomAuthenticationSucessHandler customAuthenticationSucessHandler) {
+        this.customAuthenticationSucessHandler = customAuthenticationSucessHandler;
     }
 
     @Bean
@@ -30,10 +30,8 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth -> oauth
-                .userInfoEndpoint(userInfo ->
-                    userInfo.userService(customOAuth2UserService)
-                )
                 .defaultSuccessUrl("http://localhost:3000/dashboard", true)
+                .successHandler(customAuthenticationSucessHandler)
             )
             .logout(logout -> logout
                 .logoutUrl("/logout")
@@ -44,5 +42,3 @@ public class SecurityConfig {
             .build();
     }
 }
-
-

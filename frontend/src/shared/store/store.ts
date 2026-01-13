@@ -3,7 +3,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import roomReducer from "../../features/roomSlice";
 import toastReducer from "../../features/toastSlice";
-import authReducer from "../../features/authSlice";
+import userReducer from "../../features/userSlice";
 import { roomApi } from "../../reservations/roomApi";
 import { userApi } from "../../features/userApi";
 
@@ -11,7 +11,7 @@ export const store = configureStore({
   reducer: {
     room: roomReducer,
     toast: toastReducer,
-    auth: authReducer,
+    user: userReducer,
     [userApi.reducerPath]: userApi.reducer,
     [roomApi.reducerPath]: roomApi.reducer,
   },
