@@ -43,7 +43,10 @@ const RoomAvailability: React.FC<RoomAvailabilityProps> = ({ roomType }) => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Paper elevation={5} sx={{ p: 3, mb: 4 }}>
+      <Paper
+        elevation={5}
+        sx={{ p: 3, mb: 4, position: "sticky", top: "145px", zIndex: 2 }}
+      >
         <Grid container spacing={3} alignItems="center">
           <Grid size={{ xs: 12, md: 3 }}>
             <TextField

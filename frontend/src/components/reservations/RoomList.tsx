@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Typography, CircularProgress, Alert, Stack } from "@mui/material";
 import { type SerializedError } from "@reduxjs/toolkit";
 import { type FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import SearchCard from "./SearchCard";
+import RoomCard from "./RoomCard";
 interface RoomListProps {
   rooms?: Room[];
   isLoading: boolean;
@@ -61,7 +61,7 @@ const RoomList: React.FC<RoomListProps> = ({
       </Typography>
       <Stack spacing={2}>
         {rooms.map((room) => (
-          <SearchCard
+          <RoomCard
             key={room.roomNumber}
             room={room}
             checkInDate={checkInDate}

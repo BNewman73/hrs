@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
-  CardMedia,
   Typography,
   Box,
   Button,
@@ -28,6 +27,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import { useGetComprehensiveRoomDetailsQuery } from "../../features/roomApi";
+import RoomTypePics from "./RoomPicsCarousel";
 
 const RoomTypeCard: React.FC<{ roomType: RoomDetailsDTO }> = ({ roomType }) => {
   const navigate = useNavigate();
@@ -44,10 +44,10 @@ const RoomTypeCard: React.FC<{ roomType: RoomDetailsDTO }> = ({ roomType }) => {
   }).format(roomType.maxPrice);
 
   // Use first image or placeholder
-  const roomImage =
-    roomType.images && roomType.images.length > 0
-      ? roomType.images[0]
-      : "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&auto=format&fit=crop&q=60";
+  // const roomImage =
+  //   roomType.images && roomType.images.length > 0
+  //     ? roomType.images[0]
+  //     : "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&auto=format&fit=crop&q=60";
 
   return (
     <Card
@@ -59,16 +59,23 @@ const RoomTypeCard: React.FC<{ roomType: RoomDetailsDTO }> = ({ roomType }) => {
         mx: "auto",
       }}
     >
-      <CardMedia
+      {/* <CardMedia
         component="img"
         height="220"
         image={roomImage}
         alt={roomType.type}
         sx={{ objectFit: "cover" }}
-      />
+      /> */}
+      <Box sx={{ width: "100%", maxWidth: "100%" }}>
+        <RoomTypePics pics={roomType.images} />
+      </Box>
 
       <CardContent
-        sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+        }}
       >
         <Typography variant="h4" component="h2" gutterBottom>
           {roomType.type
@@ -152,6 +159,7 @@ const RoomTypeCard: React.FC<{ roomType: RoomDetailsDTO }> = ({ roomType }) => {
           <Button
             onClick={() => navigate(`/rooms/${roomType.type}`)}
             variant="contained"
+            color="primary"
             fullWidth
             size="large"
           >
@@ -215,6 +223,7 @@ const RoomTypesCarousel: React.FC = () => {
       navigation
       pagination={{ clickable: false }}
       loop={true}
+      className="types"
       style={{
         paddingBottom: "40px",
         paddingLeft: "40px",
