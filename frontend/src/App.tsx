@@ -7,6 +7,7 @@ import BookingCancel from "./components/reservations/BookingCancel";
 import BookingSuccess from "./components/reservations/BookingSuccess";
 import HomePage from "./components/HomePage";
 import BookingPage from "./components/reservations/BookingPage";
+import LogoutPage from "./components/login/LogoutPage";
 
 function App() {
   return (
@@ -15,7 +16,8 @@ function App() {
         <GlobalSnackbar />
 
         <Routes>
-          <Route path="/Login" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/logout" element={<LogoutPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/rooms/:roomType" element={<BookingPage />} />
           <Route path="/types" element={<RoomTypesPage />} />

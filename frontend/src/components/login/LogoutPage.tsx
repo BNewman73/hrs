@@ -5,19 +5,26 @@ import {
   Typography,
   Container,
   Paper,
-  Stack,
   AppBar,
   Toolbar,
 } from "@mui/material";
-import GoogleIcon from "@mui/icons-material/Google";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import LoginPageNavBar from "./LoginPageNavBar";
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
+import LogoutIcon from "@mui/icons-material/Logout";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import LoginPageNavBar from "../login/LoginPageNavBar";
+import { clearUser } from "../../features/userSlice";
 
-export default function LoginPage() {
+export default function LogoutPage() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleLogin = (provider: "google" | "github") => {
-    window.location.href = `${API_BASE}/oauth2/authorization/${provider}`;
+  const handleLogout = () => {
+    dispatch(clearUser());
+    window.location.href = "http://localhost:8080/api/logout";
+  };
+
+  const handleCancel = () => {
+    navigate("/dashboard");
   };
 
   return (
@@ -31,7 +38,7 @@ export default function LoginPage() {
     >
       <CssBaseline />
 
-      {/*App Bar*/}
+      {/* App Bar */}
       <AppBar
         position="static"
         elevation={0}
@@ -48,7 +55,7 @@ export default function LoginPage() {
         </Toolbar>
       </AppBar>
 
-      {/*Content*/}
+      {/* Content */}
       <Container
         maxWidth="sm"
         sx={{
@@ -68,6 +75,14 @@ export default function LoginPage() {
             textAlign: "center",
           }}
         >
+          <LogoutIcon
+            sx={{
+              fontSize: 48,
+              color: "error.main",
+              mb: 2,
+            }}
+          />
+
           <Typography
             variant="h4"
             sx={{
@@ -76,7 +91,7 @@ export default function LoginPage() {
               mb: 1,
             }}
           >
-            Welcome
+            Sign out?
           </Typography>
 
           <Typography
@@ -86,50 +101,42 @@ export default function LoginPage() {
               mb: 4,
             }}
           >
-            Sign in to manage your hotel inventory and rooms.
+            You’ll be logged out of your Storm Hotels dashboard.
           </Typography>
 
-          <Stack spacing={2}>
+          <Box sx={{ display: "flex", gap: 2 }}>
             <Button
               fullWidth
+              variant="outlined"
               size="large"
-              variant="contained"
-              startIcon={<GoogleIcon />}
-              onClick={() => handleLogin("google")}
+              onClick={handleCancel}
               sx={{
                 py: 1.5,
-                fontWeight: 600,
                 borderRadius: "12px",
-                boxShadow: "0 6px 16px rgba(25,118,210,0.3)",
+                fontWeight: 600,
               }}
             >
-              Continue with Google
+              Cancel
             </Button>
 
             <Button
               fullWidth
+              variant="contained"
+              color="error"
               size="large"
-              variant="outlined"
-              startIcon={<GitHubIcon />}
-              onClick={() => handleLogin("github")}
+              onClick={handleLogout}
               sx={{
                 py: 1.5,
-                fontWeight: 600,
                 borderRadius: "12px",
+                fontWeight: 700,
+                boxShadow: "0 6px 16px rgba(211,47,47,0.35)",
               }}
             >
-              Continue with GitHub
+              Logout
             </Button>
-          </Stack>
+          </Box>
         </Paper>
       </Container>
-
-      {/*Footer*/}
-      <Box sx={{ py: 2, textAlign: "center" }}>
-        <Typography variant="caption" color="text.secondary">
-          {/**/}
-        </Typography>
-      </Box>
     </Box>
   );
 }
