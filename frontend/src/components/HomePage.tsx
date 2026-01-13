@@ -6,17 +6,12 @@ import {
   Toolbar,
   Typography,
   Container,
-  Card,
-  CardContent,
-  CardMedia,
-  Chip,
   alpha,
   Paper,
   Slide,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ShieldIcon from "@mui/icons-material/Shield";
 import LanguageIcon from "@mui/icons-material/Language";
@@ -24,6 +19,7 @@ import StarIcon from "@mui/icons-material/Star";
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import "./StormButton.css";
+import RoomTypesCarousel from "./reservations/RoomTypesCarousel";
 
 const VIDEO_URL = import.meta.env.VITE_HOME_VIDEO_URL;
 
@@ -36,30 +32,6 @@ export default function HomePage() {
     setStorm(true);
     setTimeout(() => navigate("/types"), 320);
   };
-
-  const suites = [
-    {
-      name: "Cloud Suite",
-      price: 450,
-      image:
-        "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80",
-      features: ["City View", "King Bed", "45 m²"],
-    },
-    {
-      name: "Storm Suite",
-      price: 680,
-      image:
-        "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80",
-      features: ["Ocean View", "Premium", "65 m²"],
-    },
-    {
-      name: "Aurora Penthouse",
-      price: 1200,
-      image:
-        "https://images.unsplash.com/photo-1591088398332-8a7791972843?w=1200&q=80",
-      features: ["360° View", "Private Terrace", "120 m²"],
-    },
-  ];
 
   const experiences = [
     {
@@ -272,74 +244,9 @@ export default function HomePage() {
               textAlign: "center",
             }}
           >
-            Signature Suites
+            Room Options
           </Typography>
-
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: { xs: "1fr", md: "repeat(3,1fr)" },
-              gap: 4,
-            }}
-          >
-            {suites.map((suite) => (
-              <Card
-                key={suite.name}
-                sx={{
-                  bgcolor: alpha("#fff", 0.05),
-                  borderRadius: 4,
-                  overflow: "hidden",
-                  backdropFilter: "blur(20px)",
-                }}
-              >
-                <CardMedia component="img" image={suite.image} height="260" />
-                <CardContent>
-                  <Typography
-                    variant="h5"
-                    fontWeight={800}
-                    color="white"
-                    mb={1}
-                  >
-                    {suite.name}
-                  </Typography>
-
-                  <Typography sx={{ color: alpha("#fff", 0.6), mb: 2 }}>
-                    ${suite.price}/night
-                  </Typography>
-
-                  <Box
-                    sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 3 }}
-                  >
-                    {suite.features.map((f) => (
-                      <Chip
-                        key={f}
-                        label={f}
-                        size="small"
-                        sx={{
-                          bgcolor: alpha("#FF6B35", 0.15),
-                          color: "#FF6B35",
-                        }}
-                      />
-                    ))}
-                  </Box>
-
-                  <Button
-                    fullWidth
-                    onClick={handleStormNav}
-                    endIcon={<ArrowForwardIcon />}
-                    sx={{
-                      color: "white",
-                      fontWeight: 700,
-                      borderRadius: 2,
-                      border: `1px solid ${alpha("#fff", 0.2)}`,
-                    }}
-                  >
-                    View Details
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </Box>
+          <RoomTypesCarousel />
         </Container>
       </Box>
 
