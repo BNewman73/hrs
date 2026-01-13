@@ -6,17 +6,17 @@ import {
   Toolbar,
   Typography,
   Container,
-  // Card,
-  // CardContent,
-  // CardMedia,
-  // Chip,
+  Card,
+  CardContent,
+  CardMedia,
+  Chip,
   alpha,
   Paper,
   Slide,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-// import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ShieldIcon from "@mui/icons-material/Shield";
 import LanguageIcon from "@mui/icons-material/Language";
@@ -24,7 +24,6 @@ import StarIcon from "@mui/icons-material/Star";
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import "./StormButton.css";
-import RoomTypesCarousel from "./reservations/RoomTypesCarousel";
 
 const VIDEO_URL = import.meta.env.VITE_HOME_VIDEO_URL;
 
@@ -38,29 +37,29 @@ export default function HomePage() {
     setTimeout(() => navigate("/types"), 320);
   };
 
-  // const suites = [
-  //   {
-  //     name: "Cloud Suite",
-  //     price: 450,
-  //     image:
-  //       "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80",
-  //     features: ["City View", "King Bed", "45 m²"],
-  //   },
-  //   {
-  //     name: "Storm Suite",
-  //     price: 680,
-  //     image:
-  //       "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80",
-  //     features: ["Ocean View", "Premium", "65 m²"],
-  //   },
-  //   {
-  //     name: "Aurora Penthouse",
-  //     price: 1200,
-  //     image:
-  //       "https://images.unsplash.com/photo-1591088398332-8a7791972843?w=1200&q=80",
-  //     features: ["360° View", "Private Terrace", "120 m²"],
-  //   },
-  // ];
+  const suites = [
+    {
+      name: "Cloud Suite",
+      price: 450,
+      image:
+        "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80",
+      features: ["City View", "King Bed", "45 m²"],
+    },
+    {
+      name: "Storm Suite",
+      price: 680,
+      image:
+        "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80",
+      features: ["Ocean View", "Premium", "65 m²"],
+    },
+    {
+      name: "Aurora Penthouse",
+      price: 1200,
+      image:
+        "https://images.unsplash.com/photo-1591088398332-8a7791972843?w=1200&q=80",
+      features: ["360° View", "Private Terrace", "120 m²"],
+    },
+  ];
 
   const experiences = [
     {
@@ -262,24 +261,21 @@ export default function HomePage() {
       </Box>
 
       {/* SUITES */}
-      <Box
-        color="primary.main"
-        ref={nextSectionRef}
-        sx={{ backgroundColor: "#0F1229", py: 16 }}
-      >
+      <Box ref={nextSectionRef} sx={{ bgcolor: "#0F1229", py: 16 }}>
         <Container maxWidth="lg">
           <Typography
             variant="h2"
             sx={{
+              color: "white",
               fontWeight: 900,
               mb: 8,
               textAlign: "center",
             }}
           >
-            Our Room Options
+            Signature Suites
           </Typography>
-          <RoomTypesCarousel />
-          {/* <Box
+
+          <Box
             sx={{
               display: "grid",
               gridTemplateColumns: { xs: "1fr", md: "repeat(3,1fr)" },
@@ -343,7 +339,7 @@ export default function HomePage() {
                 </CardContent>
               </Card>
             ))}
-          </Box> */}
+          </Box>
         </Container>
       </Box>
 
@@ -376,6 +372,135 @@ export default function HomePage() {
                 </Typography>
               </Paper>
             ))}
+          </Box>
+        </Container>
+      </Box>
+      {/* ABOUT US SECTION */}
+      <Box
+        sx={{
+          bgcolor: "#0A0E27",
+          py: { xs: 10, md: 16 },
+          borderBottom: `1px solid ${alpha("#fff", 0.05)}`,
+        }}
+      >
+        <Container maxWidth="lg">
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            {/* Left Side: Visual/Image */}
+            <Box sx={{ flex: 1, position: "relative" }}>
+              <Box
+                sx={{
+                  position: "relative",
+                  borderRadius: 4,
+                  overflow: "hidden",
+                  boxShadow: `0 20px 40px ${alpha("#000", 0.4)}`,
+                  "&::after": {
+                    content: '""',
+                    position: "absolute",
+                    inset: 0,
+                    background:
+                      "linear-gradient(to bottom right, rgba(255,107,53,0.2), transparent)",
+                  },
+                }}
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80"
+                  alt="Storm Stay Luxury Interior"
+                  style={{ width: "100%", display: "block" }}
+                />
+              </Box>
+              {/* Floating Stat Card */}
+              <Paper
+                sx={{
+                  position: "absolute",
+                  bottom: -20,
+                  right: -20,
+                  p: 3,
+                  bgcolor: "#FF6B35",
+                  color: "white",
+                  borderRadius: 2,
+                  display: { xs: "none", sm: "block" },
+                }}
+              >
+                <Typography variant="h4" fontWeight={900}>
+                  15+
+                </Typography>
+                <Typography variant="body2" fontWeight={600}>
+                  Global Awards
+                </Typography>
+              </Paper>
+            </Box>
+
+            {/* Right Side: Content */}
+            <Box sx={{ flex: 1.2 }}>
+              <Typography
+                variant="overline"
+                sx={{ color: "#FF6B35", fontWeight: 700, letterSpacing: 3 }}
+              >
+                The Storm Stay Philosophy
+              </Typography>
+              <Typography
+                variant="h2"
+                sx={{
+                  color: "white",
+                  fontWeight: 900,
+                  mt: 2,
+                  mb: 4,
+                  fontSize: { xs: "2.5rem", md: "3.5rem" },
+                  lineHeight: 1.1,
+                }}
+              >
+                Redefining the <br />
+                <span style={{ color: alpha("#fff", 0.7) }}>
+                  Modern Sanctuary
+                </span>
+              </Typography>
+              <Typography
+                sx={{
+                  color: alpha("#fff", 0.7),
+                  fontSize: "1.1rem",
+                  lineHeight: 1.8,
+                  mb: 4,
+                }}
+              >
+                Founded on the principle that luxury should be as dynamic as the
+                world we live in, Storm Stay creates immersive environments for
+                the modern traveler. We blend cutting-edge automation with the
+                warmth of traditional hospitality to ensure your stay isn't just
+                a visit, it's an experience.
+              </Typography>
+
+              <Box sx={{ display: "flex", gap: 4 }}>
+                <Box>
+                  <Typography variant="h6" color="white" fontWeight={800}>
+                    Vision
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: alpha("#fff", 0.5) }}
+                  >
+                    To pioneer the next generation of smart-living hospitality.
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography variant="h6" color="white" fontWeight={800}>
+                    Mission
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: alpha("#fff", 0.5) }}
+                  >
+                    Seamless service powered by tech, perfected by humans.
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
           </Box>
         </Container>
       </Box>

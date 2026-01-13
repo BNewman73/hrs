@@ -8,7 +8,7 @@ const GRID_CONFIG = {
   room: "20%",
   dates: "35%",
   type: "20%",
-  total: "15%",
+  status: "15%",
   expand: "10%",
 };
 
@@ -31,7 +31,7 @@ export default function ReservationTable() {
           { label: "Room", width: GRID_CONFIG.room },
           { label: "Dates", width: GRID_CONFIG.dates },
           { label: "Type", width: GRID_CONFIG.type },
-          { label: "Total", width: GRID_CONFIG.total },
+          { label: "Status", width: GRID_CONFIG.status },
           { label: "", width: GRID_CONFIG.expand },
         ]}
         rows={paginated}

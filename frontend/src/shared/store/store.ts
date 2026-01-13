@@ -3,20 +3,22 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import toastReducer from "../../features/toastSlice";
-import authReducer from "../../features/authSlice";
+import userReducer from "../../features/userSlice";
 import { roomApi } from "../../features/roomApi";
 import { reservationApi } from "../../features/reservationApi";
+import { userApi } from "../../features/userApi";
 
 export const store = configureStore({
   reducer: {
     toast: toastReducer,
-    auth: authReducer,
+    user: userReducer,
+    [userApi.reducerPath]: userApi.reducer,
     [roomApi.reducerPath]: roomApi.reducer,
     [reservationApi.reducerPath]: reservationApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
-      .concat(roomApi.middleware)
+      .concat(userApi.middleware).concat(roomApi.middleware)
       .concat(reservationApi.middleware),
 });
 

@@ -20,6 +20,11 @@ export const ReservationRow = ({
   onToggle,
 }: ReservationRowProps) => {
   const isGuestBooking = reservation.type === "GUEST_BOOKING";
+  function formatEnum(content: string): string {
+    return content
+      .replace("_", " ")
+      .replace(/^./, (char) => char.toUpperCase());
+  }
 
   return (
     <Box sx={{ borderBottom: "1px solid #f5f5f5" }}>
@@ -34,7 +39,7 @@ export const ReservationRow = ({
       >
         {/* Room */}
         <Typography sx={{ width: "20%", fontWeight: 700 }}>
-          {reservation.roomId}
+          {formatEnum(reservation.roomId)}
         </Typography>
 
         {/* Dates */}
@@ -45,17 +50,18 @@ export const ReservationRow = ({
         {/* Type */}
         <Box sx={{ width: "20%" }}>
           <Chip
-            label={reservation.type}
+            label={formatEnum(reservation.type)}
             color={isGuestBooking ? "success" : "warning"}
             size="small"
           />
         </Box>
 
         {/* Price / Block Reason */}
-        <Typography sx={{ width: "15%" }}>
-          {isGuestBooking
-            ? `$${reservation.totalPrice}`
-            : reservation.blockReason}
+        <Typography
+          sx={{ width: "15%" }}
+          color={isGuestBooking ? "success" : "warning"}
+        >
+          {isGuestBooking ? "AVAILABLE" : reservation.blockReason}
         </Typography>
 
         {/* Expand */}
@@ -91,7 +97,7 @@ export const ReservationRow = ({
           </Typography>
 
           <Typography variant="body2" color="text.secondary">
-            Room ID: {reservation.roomId}
+            Room ID: {formatEnum(reservation.roomId)}
           </Typography>
 
           <Typography variant="body2" color="text.secondary">
