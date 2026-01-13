@@ -5,258 +5,516 @@ import {
   IconButton,
   Toolbar,
   Typography,
+  Container,
+  Card,
+  CardContent,
+  CardMedia,
+  Chip,
+  alpha,
+  Paper,
+  Slide,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import RoomAvailability from "./reservations/RoomAvailability";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import ShieldIcon from "@mui/icons-material/Shield";
+import LanguageIcon from "@mui/icons-material/Language";
+import StarIcon from "@mui/icons-material/Star";
 import { useNavigate } from "react-router-dom";
-import type { RoomType } from "../types/enum";
+import { useRef, useState } from "react";
+import "./StormButton.css";
 
 const VIDEO_URL = import.meta.env.VITE_HOME_VIDEO_URL;
+
 export default function HomePage() {
   const navigate = useNavigate();
+  const nextSectionRef = useRef<HTMLDivElement | null>(null);
+  const [storm, setStorm] = useState(false);
 
-  const handleNavigation = (route: string) => {
-    navigate(route);
+  const handleStormNav = () => {
+    setStorm(true);
+    setTimeout(() => navigate("/types"), 320);
   };
+
+  const suites = [
+    {
+      name: "Cloud Suite",
+      price: 450,
+      image:
+        "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80",
+      features: ["City View", "King Bed", "45 m²"],
+    },
+    {
+      name: "Storm Suite",
+      price: 680,
+      image:
+        "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80",
+      features: ["Ocean View", "Premium", "65 m²"],
+    },
+    {
+      name: "Aurora Penthouse",
+      price: 1200,
+      image:
+        "https://images.unsplash.com/photo-1591088398332-8a7791972843?w=1200&q=80",
+      features: ["360° View", "Private Terrace", "120 m²"],
+    },
+  ];
+
+  const experiences = [
+    {
+      icon: <ShieldIcon sx={{ fontSize: 40 }} />,
+      title: "Contactless Check-in",
+      desc: "Arrive on your terms, depart with ease.",
+    },
+    {
+      icon: <LanguageIcon sx={{ fontSize: 40 }} />,
+      title: "Worldwide Locations",
+      desc: "Curated destinations across the globe.",
+    },
+    {
+      icon: <StarIcon sx={{ fontSize: 40 }} />,
+      title: "24/7 Concierge",
+      desc: "Always attentive. Always available.",
+    },
+  ];
+
   return (
     <>
-      <AppBar
-        position="fixed"
-        elevation={0}
-        sx={{
-          background: "rgba(14,16,61,0.55)",
-          backdropFilter: "blur(16px)",
-          borderBottom: "1px solid rgba(255,255,255,0.12)",
-        }}
-      >
-        <Toolbar
-          sx={{
-            minHeight: { xs: 64, sm: 72, md: 80 },
-          }}
-        >
-          <IconButton
-            size="large"
-            edge="start"
-            aria-label="menu"
-            sx={{
-              color: "white",
-              mr: 2,
-              "&:hover": { color: "#FF8533" },
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-
-          <Button
-            onClick={() => handleNavigation("/home")}
-            sx={{
-              color: "white",
-              fontWeight: 700,
-              fontSize: "1rem",
-              textTransform: "none",
-              "&:hover": { color: "#FF8533", background: "transparent" },
-            }}
-          >
-            Home
-          </Button>
+      <AppBar position="fixed" elevation={0} sx={{ background: "transparent" }}>
+        <Toolbar sx={{ minHeight: { xs: 64, md: 80 } }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Box
+              sx={{
+                width: 40,
+                height: 40,
+                borderRadius: "50%",
+                background: "linear-gradient(135deg,#FF6B35 0%,#F7931E 100%)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <AutoAwesomeIcon sx={{ color: "white" }} />
+            </Box>
+            <Typography fontWeight={900} letterSpacing={1} color="white">
+              STORM STAY
+            </Typography>
+          </Box>
 
           <Box sx={{ flexGrow: 1 }} />
 
           <Button
-            onClick={() => handleNavigation("/login")}
+            onClick={() => navigate("/login")}
             sx={{
               color: "white",
+              px: 4,
+              py: 1.5,
+              borderRadius: 999,
+              background: "linear-gradient(135deg,#FF6B35 0%,#F7931E 100%)",
               fontWeight: 700,
-              fontSize: "1rem",
               textTransform: "none",
-              px: 3,
-              py: 1,
-              borderRadius: "999px",
-              border: "2px solid #FF8533",
-              background:
-                "linear-gradient(135deg, rgba(255,133,51,0.15), rgba(255,133,51,0.05))",
-              "&:hover": {
-                background: "#FF8533",
-                color: "#0E103D",
-              },
             }}
           >
             Login
           </Button>
+
+          <IconButton sx={{ color: "white", ml: 2 }}>
+            <MenuIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
 
-      <Box sx={{ bgcolor: "#0E103D", minHeight: "100vh", overflow: "hidden" }}>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          position: "relative",
+        }}
+      >
+        <Toolbar></Toolbar>
         <Box
+          component="video"
+          autoPlay
+          muted
+          loop
+          playsInline
           sx={{
-            position: "relative",
+            position: "absolute",
+            inset: 0,
             width: "100%",
-            minHeight: "100vh",
-            pt: { xs: "64px", sm: "72px", md: "80px" },
-            display: "flex",
-            alignItems: "center",
-            clipPath: "ellipse(120% 100% at 50% 0%)",
-            justifyContent: "center",
+            height: "100%",
+            objectFit: "cover",
           }}
         >
-          <Box
-            component="video"
-            autoPlay
-            muted
-            loop
-            playsInline
-            sx={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              zIndex: 0,
-            }}
-          >
-            <source src={`${VIDEO_URL}`} type="video/mp4" />
-          </Box>
-
-          <Box
-            sx={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "radial-gradient(circle, rgba(14,16,61,0.35) 0%, rgba(14,16,61,0.9) 100%)",
-              zIndex: 1,
-            }}
-          />
-
-          <Box
-            sx={{
-              position: "relative",
-              zIndex: 2,
-              textAlign: "center",
-              width: "100%",
-              px: 2,
-            }}
-          >
-            <Typography
-              variant="overline"
-              sx={{
-                color: "#FF8533",
-                letterSpacing: 6,
-                fontWeight: 700,
-                fontSize: "1.1rem",
-              }}
-            >
-              Welcome to the future of luxury
-            </Typography>
-
-            <Typography
-              component="h1"
-              sx={{
-                fontSize: { xs: "3.5rem", md: "5.5rem" },
-                fontWeight: 900,
-                color: "white",
-                lineHeight: 1,
-                mb: 6,
-                textShadow: "0px 10px 30px rgba(0,0,0,0.6)",
-              }}
-            >
-              STORM <span style={{ color: "#FF8533" }}>STAY</span>
-            </Typography>
-
-            <Box
-              sx={{
-                maxWidth: "1100px",
-                margin: "0 auto",
-
-                "& .MuiPaper-root": {
-                  bgcolor: "rgba(255,255,255,0.15)",
-                  backdropFilter: "blur(18px)",
-                  border: "1px solid rgba(255,255,255,0.25)",
-                  boxShadow: "0 25px 60px rgba(0,0,0,0.4)",
-                  borderRadius: "22px",
-                  p: 4,
-                },
-
-                "& .MuiTypography-h4": { display: "none" },
-
-                /* INPUT BACKGROUND */
-                "& .MuiOutlinedInput-root": {
-                  backgroundColor: "#FFFFFF",
-                  borderRadius: "14px",
-                  fontWeight: 600,
-
-                  "& fieldset": {
-                    borderColor: "#0E103D",
-                    borderWidth: 2,
-                  },
-
-                  "&:hover fieldset": {
-                    borderColor: "#FF8533",
-                  },
-
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#9F2042",
-                    borderWidth: 2,
-                  },
-                },
-
-                "& .MuiInputBase-input": {
-                  color: "#0E103D",
-                  fontSize: "1.05rem",
-                },
-
-                /* LABEL */
-                "& .MuiInputLabel-root": {
-                  color: "#FFFFFF",
-                  fontWeight: 800,
-                  fontSize: "0.95rem",
-                  backgroundColor: "rgba(14,16,61,0.9)",
-                  padding: "2px 10px",
-                  borderRadius: "8px",
-                  transform: "translate(14px, -10px) scale(1)",
-                },
-
-                "& .MuiInputLabel-root.Mui-focused": {
-                  backgroundColor: "#9F2042",
-                  color: "#FFFFFF",
-                },
-
-                /* BUTTON */
-                "& .MuiButton-root": {
-                  bgcolor: "#9F2042",
-                  height: "56px",
-                  fontSize: "1.1rem",
-                  fontWeight: 700,
-                  borderRadius: "14px",
-                  "&:hover": { bgcolor: "#FF8533" },
-                },
-              }}
-            >
-              <RoomAvailability roomType={"SINGLE" as RoomType} />
-            </Box>
-          </Box>
+          <source src={VIDEO_URL} type="video/mp4" />
         </Box>
+
         <Box
-          component="section"
           sx={{
-            height: "100vh",
-            backgroundColor: "#FFFF",
-            clipPath: "ellipse(130% 100% at 15% 100%)",
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(circle at 30% 40%, rgba(255,107,53,0.2), rgba(14,16,61,0.95))",
           }}
-        ></Box>
-        <Box
-          component="footer"
+        />
+
+        <Container
+          maxWidth="lg"
           sx={{
-            bgcolor: "#090A2E",
-            color: "white",
-            py: 4,
+            position: "relative",
+            zIndex: 2,
+            minHeight: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
             textAlign: "center",
           }}
         >
-          <Typography fontWeight={700}>STORM STAY</Typography>
-          <Typography variant="body2" sx={{ opacity: 0.7 }}>
+          <Slide
+            in={!storm}
+            direction={`${storm ? "left" : "down"}`}
+            mountOnEnter
+            unmountOnExit
+            timeout={Number(`${storm ? 1500 : 1000}`)}
+          >
+            <Box>
+              <Typography
+                component="h1"
+                sx={{
+                  fontSize: { xs: "4rem", md: "5rem", lg: "6.5rem" },
+                  fontWeight: 900,
+                  lineHeight: 1,
+                  mb: 3,
+                  background: `
+                    linear-gradient(
+                      135deg,
+                      #ffffff 0%,
+                      #ffffff 35%,
+                      #FF9A5A 55%,
+                      #FF6B35 75%,
+                      #F7931E 100%
+                    )
+                  `,
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  textShadow: `
+                    0 2px 10px rgba(255,255,255,0.15),
+                    0 20px 60px rgba(255,107,53,0.25)
+                  `,
+                }}
+              >
+                Welcome To The Future Of
+                <br />
+                Luxury
+              </Typography>
+
+              <Typography
+                sx={{
+                  color: alpha("#fff", 0.8),
+                  maxWidth: 820,
+                  mx: "auto",
+                  mb: 8,
+                  fontSize: "1.3rem",
+                }}
+              >
+                Thoughtfully designed stays blending modern technology with
+                timeless comfort.
+              </Typography>
+
+              <button
+                className="storm-btn"
+                disabled={storm}
+                onClick={handleStormNav}
+              >
+                Secure Your Suite
+              </button>
+            </Box>
+          </Slide>
+
+          <Box sx={{ mt: 10, display: "flex", justifyContent: "center" }}>
+            <IconButton
+              onClick={() =>
+                nextSectionRef.current?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                })
+              }
+              sx={{
+                color: alpha("#fff", 0.4),
+                animation: "bounce 2s ease-in-out infinite",
+                "&:hover": {
+                  color: "#FF6B35",
+                  transform: "translateY(4px)",
+                },
+                transition: "all 0.3s ease",
+                "@keyframes bounce": {
+                  "0%, 100%": { transform: "translateY(0)" },
+                  "50%": { transform: "translateY(-10px)" },
+                },
+              }}
+            >
+              <KeyboardArrowDownIcon sx={{ fontSize: 48 }} />
+            </IconButton>
+          </Box>
+        </Container>
+      </Box>
+
+      {/* SUITES */}
+      <Box ref={nextSectionRef} sx={{ bgcolor: "#0F1229", py: 16 }}>
+        <Container maxWidth="lg">
+          <Typography
+            variant="h2"
+            sx={{
+              color: "white",
+              fontWeight: 900,
+              mb: 8,
+              textAlign: "center",
+            }}
+          >
+            Signature Suites
+          </Typography>
+
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "repeat(3,1fr)" },
+              gap: 4,
+            }}
+          >
+            {suites.map((suite) => (
+              <Card
+                key={suite.name}
+                sx={{
+                  bgcolor: alpha("#fff", 0.05),
+                  borderRadius: 4,
+                  overflow: "hidden",
+                  backdropFilter: "blur(20px)",
+                }}
+              >
+                <CardMedia component="img" image={suite.image} height="260" />
+                <CardContent>
+                  <Typography
+                    variant="h5"
+                    fontWeight={800}
+                    color="white"
+                    mb={1}
+                  >
+                    {suite.name}
+                  </Typography>
+
+                  <Typography sx={{ color: alpha("#fff", 0.6), mb: 2 }}>
+                    ${suite.price}/night
+                  </Typography>
+
+                  <Box
+                    sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 3 }}
+                  >
+                    {suite.features.map((f) => (
+                      <Chip
+                        key={f}
+                        label={f}
+                        size="small"
+                        sx={{
+                          bgcolor: alpha("#FF6B35", 0.15),
+                          color: "#FF6B35",
+                        }}
+                      />
+                    ))}
+                  </Box>
+
+                  <Button
+                    fullWidth
+                    onClick={handleStormNav}
+                    endIcon={<ArrowForwardIcon />}
+                    sx={{
+                      color: "white",
+                      fontWeight: 700,
+                      borderRadius: 2,
+                      border: `1px solid ${alpha("#fff", 0.2)}`,
+                    }}
+                  >
+                    View Details
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </Box>
+        </Container>
+      </Box>
+
+      {/* EXPERIENCE */}
+      <Box sx={{ py: 16, bgcolor: "#0A0E27" }}>
+        <Container maxWidth="lg">
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "repeat(3,1fr)" },
+              gap: 6,
+            }}
+          >
+            {experiences.map((exp) => (
+              <Paper
+                key={exp.title}
+                sx={{
+                  p: 6,
+                  textAlign: "center",
+                  bgcolor: alpha("#fff", 0.04),
+                  borderRadius: 4,
+                }}
+              >
+                <Box sx={{ color: "#FF6B35", mb: 3 }}>{exp.icon}</Box>
+                <Typography variant="h5" color="white" fontWeight={800} mb={2}>
+                  {exp.title}
+                </Typography>
+                <Typography sx={{ color: alpha("#fff", 0.6) }}>
+                  {exp.desc}
+                </Typography>
+              </Paper>
+            ))}
+          </Box>
+        </Container>
+      </Box>
+      {/* ABOUT US SECTION */}
+      <Box
+        sx={{
+          bgcolor: "#0A0E27",
+          py: { xs: 10, md: 16 },
+          borderBottom: `1px solid ${alpha("#fff", 0.05)}`,
+        }}
+      >
+        <Container maxWidth="lg">
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            {/* Left Side: Visual/Image */}
+            <Box sx={{ flex: 1, position: "relative" }}>
+              <Box
+                sx={{
+                  position: "relative",
+                  borderRadius: 4,
+                  overflow: "hidden",
+                  boxShadow: `0 20px 40px ${alpha("#000", 0.4)}`,
+                  "&::after": {
+                    content: '""',
+                    position: "absolute",
+                    inset: 0,
+                    background:
+                      "linear-gradient(to bottom right, rgba(255,107,53,0.2), transparent)",
+                  },
+                }}
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80"
+                  alt="Storm Stay Luxury Interior"
+                  style={{ width: "100%", display: "block" }}
+                />
+              </Box>
+              {/* Floating Stat Card */}
+              <Paper
+                sx={{
+                  position: "absolute",
+                  bottom: -20,
+                  right: -20,
+                  p: 3,
+                  bgcolor: "#FF6B35",
+                  color: "white",
+                  borderRadius: 2,
+                  display: { xs: "none", sm: "block" },
+                }}
+              >
+                <Typography variant="h4" fontWeight={900}>
+                  15+
+                </Typography>
+                <Typography variant="body2" fontWeight={600}>
+                  Global Awards
+                </Typography>
+              </Paper>
+            </Box>
+
+            {/* Right Side: Content */}
+            <Box sx={{ flex: 1.2 }}>
+              <Typography
+                variant="overline"
+                sx={{ color: "#FF6B35", fontWeight: 700, letterSpacing: 3 }}
+              >
+                The Storm Stay Philosophy
+              </Typography>
+              <Typography
+                variant="h2"
+                sx={{
+                  color: "white",
+                  fontWeight: 900,
+                  mt: 2,
+                  mb: 4,
+                  fontSize: { xs: "2.5rem", md: "3.5rem" },
+                  lineHeight: 1.1,
+                }}
+              >
+                Redefining the <br />
+                <span style={{ color: alpha("#fff", 0.7) }}>
+                  Modern Sanctuary
+                </span>
+              </Typography>
+              <Typography
+                sx={{
+                  color: alpha("#fff", 0.7),
+                  fontSize: "1.1rem",
+                  lineHeight: 1.8,
+                  mb: 4,
+                }}
+              >
+                Founded on the principle that luxury should be as dynamic as the
+                world we live in, Storm Stay creates immersive environments for
+                the modern traveler. We blend cutting-edge automation with the
+                warmth of traditional hospitality to ensure your stay isn't just
+                a visit, it's an experience.
+              </Typography>
+
+              <Box sx={{ display: "flex", gap: 4 }}>
+                <Box>
+                  <Typography variant="h6" color="white" fontWeight={800}>
+                    Vision
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: alpha("#fff", 0.5) }}
+                  >
+                    To pioneer the next generation of smart-living hospitality.
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography variant="h6" color="white" fontWeight={800}>
+                    Mission
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: alpha("#fff", 0.5) }}
+                  >
+                    Seamless service powered by tech, perfected by humans.
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        </Container>
+      </Box>
+
+      {/* FOOTER */}
+      <Box sx={{ bgcolor: "#090A2E", py: 6 }}>
+        <Container maxWidth="lg">
+          <Typography
+            align="center"
+            sx={{ color: alpha("#fff", 0.6), fontWeight: 500 }}
+          >
             © 2026 Storm Stay Luxury Group. All rights reserved.
           </Typography>
-        </Box>
+        </Container>
       </Box>
     </>
   );
