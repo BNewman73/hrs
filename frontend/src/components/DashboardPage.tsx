@@ -19,7 +19,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AddHomeWorkIcon from "@mui/icons-material/AddHomeWork";
 import BedIcon from "@mui/icons-material/Bed";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useNavigate } from "react-router-dom";
+
 import NavBar from "./NavBar";
 import RoomCreateForm from "./room/RoomCrudForm";
 import RoomTable from "./room/RoomTable";
@@ -57,7 +57,7 @@ export default function DashboardPage() {
     provider: "",
     role: "guest",
   };
-  const handleNavigation = useNavigate();
+
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
   const menuItems = [
@@ -69,11 +69,6 @@ export default function DashboardPage() {
       icon: <EventNoteIcon />,
     },
     { id: "Rooms", label: "Create Room", icon: <AddHomeWorkIcon /> },
-    {
-      id: "Reservations",
-      label: "View Reservations",
-      icon: <AddHomeWorkIcon />,
-    },
   ];
 
   const renderContent = () => {
@@ -136,7 +131,7 @@ export default function DashboardPage() {
           <Avatar
             alt={currentUser.firstName}
             src={currentUser.avatarUrl}
-            imgProps={{ referrerPolicy: "no-referrer" }} 
+            imgProps={{ referrerPolicy: "no-referrer" }}
             sx={{ width: 44, height: 44, mr: 1.5, bgcolor: "primary.main" }}
           />
           <Box sx={{ overflow: "hidden" }}>
@@ -333,13 +328,21 @@ export default function DashboardPage() {
                 mb: 0.5,
               }}
             >
-              {activeTab === "Account" ? "Account Settings" : activeTab === "Rooms" ? "Room Management" : "Hotel Inventory"}
+              {activeTab === "Account"
+                ? "Account Settings"
+                : activeTab === "Rooms"
+                ? "Room Management"
+                : "Hotel Inventory"}
             </Typography>
             <Typography
               variant="body1"
               sx={{ color: "text.secondary", fontSize: "1rem" }}
             >
-              {activeTab === "Rooms" ? "Add new rooms to your hotel." : activeTab === "Account" ? "" : "Manage and update your current available rooms."}
+              {activeTab === "Rooms"
+                ? "Add new rooms to your hotel."
+                : activeTab === "Account"
+                ? ""
+                : "Manage and update your current available rooms."}
             </Typography>
           </Box>
 

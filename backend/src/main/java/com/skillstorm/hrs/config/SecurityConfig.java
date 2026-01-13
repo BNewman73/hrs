@@ -12,21 +12,20 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.skillstorm.hrs.security.CustomAuthenticationSucessHandler;
-import com.skillstorm.hrs.service.CustomOAuth2UserService;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
-        private final CustomOAuth2UserService customOAuth2UserService;
+        private final CustomAuthenticationSucessHandler customAuthenticationSucessHandler;
 
         @Value("${app.frontend.url}")
         private String frontendUrl;
 
-    public SecurityConfig(CustomAuthenticationSucessHandler customAuthenticationSucessHandler) {
-        this.customAuthenticationSucessHandler = customAuthenticationSucessHandler;
-    }
+        public SecurityConfig(CustomAuthenticationSucessHandler customAuthenticationSucessHandler) {
+                this.customAuthenticationSucessHandler = customAuthenticationSucessHandler;
+        }
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -38,13 +37,12 @@ public class SecurityConfig {
                                                 .requestMatchers("/oauth2/**", "/login/**").permitAll()
                                                 .anyRequest().authenticated())
                                 .oauth2Login(oauth -> oauth
-                                                .defaultSuccessUrl("http://localhost:3000/dashboard", true)
-                                                .successHandler(customAuthenticationSucessHandler)
+                                                .successHandler(customAuthenticationSucessHandler))
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")
                                                 .invalidateHttpSession(true)
                                                 .clearAuthentication(true)
-                                                .logoutSuccessUrl(frontendUrl + "/login")))
+                                                .logoutSuccessUrl(frontendUrl + "/login"))
                                 .build();
         }
 
