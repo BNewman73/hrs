@@ -14,6 +14,7 @@ import javax.net.ssl.TrustManagerFactory;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
@@ -24,6 +25,7 @@ import com.mongodb.MongoClientSettings;
 
 @Configuration
 @EnableMongoAuditing
+@Profile("prod")
 @EnableMongoRepositories(basePackages = "com.skillstorm.hrs.repository")
 public class DocumentDBConfig extends AbstractMongoClientConfiguration {
 
