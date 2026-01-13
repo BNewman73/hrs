@@ -22,13 +22,13 @@ public class User extends BaseEntity {
   private Provider provider;
   private String providerId;
 
-  private String email;
-  // Must match name in DB
   @Field("first_name")
   private String firstName;
-  // Must match name in DB
   @Field("last_name")
   private String lastName;
+
+  private String email;
+  private String avatarUrl;
 
   private UserRole role;
   private boolean enabled;
@@ -36,7 +36,7 @@ public class User extends BaseEntity {
   public enum UserRole {
     GUEST,
     ADMIN,
-    MANAGERJk
+    MANAGER
   }
 
   public enum Provider {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   CssBaseline,
@@ -19,25 +19,45 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AddHomeWorkIcon from "@mui/icons-material/AddHomeWork";
 import BedIcon from "@mui/icons-material/Bed";
 import LogoutIcon from "@mui/icons-material/Logout";
+
 import NavBar from "./NavBar";
 import RoomCreateForm from "./room/RoomCrudForm";
 import RoomTable from "./room/RoomTable";
 import ReservationTable from "./room/ReservationTable";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import { useNavigate } from "react-router-dom";
+import { useGetPrincipalQuery } from "../features/userApi";
+import { setUser, clearUser } from "../features/userSlice";
+import { useDispatch } from "react-redux";
+import AccountCard from "./account/AccountCard";
 
 const DRAWER_WIDTH = 280;
 
 export default function DashboardPage() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Table");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { data, error } = useGetPrincipalQuery();
 
-  const currentUser = {
-    id: 1,
-    name: "Jevaughn Stewart",
-    email: "jevaughnstewart100@gmail.com",
+  useEffect(() => {
+    if (data) {
+      dispatch(setUser(data));
+    } else if (error) {
+      dispatch(clearUser());
+    }
+  }, [data, error, dispatch]);
+
+  const currentUser = data || {
+    id: "",
+    firstName: "Guest",
+    lastName: "User",
+    email: "guest@stormstay.com",
+    avatarUrl: "/static/images/avatar/placeholder.jpg",
+    provider: "",
+    role: "guest",
   };
-  const handleNavigation = useNavigate();
+
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
   const menuItems = [
@@ -53,6 +73,8 @@ export default function DashboardPage() {
 
   const renderContent = () => {
     switch (activeTab) {
+      case "Account":
+        return <AccountCard />;
       case "Rooms":
         return <RoomCreateForm crud="Create" />;
       case "Reservations":
@@ -88,8 +110,13 @@ export default function DashboardPage() {
 
       <Box sx={{ px: 2, pb: 2 }}>
         <ListItem
+          onClick={() => {
+            setActiveTab("Account");
+            setMobileOpen(false);
+          }}
           sx={{
-            bgcolor: "white",
+            bgcolor: activeTab === "Account" ? "primary.main" : "white",
+            color: activeTab === "Account" ? "white" : "inherit",
             borderRadius: "16px",
             boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
             mb: 2,
@@ -102,13 +129,14 @@ export default function DashboardPage() {
           }}
         >
           <Avatar
-            alt={currentUser.name}
-            src="/static/images/avatar/2.jpg"
+            alt={currentUser.firstName}
+            src={currentUser.avatarUrl}
+            imgProps={{ referrerPolicy: "no-referrer" }}
             sx={{ width: 44, height: 44, mr: 1.5, bgcolor: "primary.main" }}
           />
           <Box sx={{ overflow: "hidden" }}>
             <Typography variant="subtitle2" noWrap sx={{ fontWeight: 700 }}>
-              {currentUser.name}
+              {currentUser.firstName} {currentUser.lastName}
             </Typography>
             <Typography
               variant="caption"
@@ -182,7 +210,7 @@ export default function DashboardPage() {
 
       <Box sx={{ p: 2 }}>
         <ListItemButton
-          onClick={() => handleNavigation("/home")}
+          onClick={() => navigate("/logout")}
           sx={{
             borderRadius: "12px",
             color: "error.main",
@@ -300,7 +328,11 @@ export default function DashboardPage() {
                 mb: 0.5,
               }}
             >
-              {activeTab === "Rooms" ? "Room Management" : "Hotel Inventory"}
+              {activeTab === "Account"
+                ? "Account Settings"
+                : activeTab === "Rooms"
+                ? "Room Management"
+                : "Hotel Inventory"}
             </Typography>
             <Typography
               variant="body1"
@@ -308,6 +340,8 @@ export default function DashboardPage() {
             >
               {activeTab === "Rooms"
                 ? "Add new rooms to your hotel."
+                : activeTab === "Account"
+                ? ""
                 : "Manage and update your current available rooms."}
             </Typography>
           </Box>

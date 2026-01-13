@@ -12,19 +12,12 @@ import {
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import { useDispatch, useSelector } from "react-redux";
-import { authStart } from "../../features/authSlice";
-import type { AppDispatch, RootState } from "../../shared/store/store";
-
 import LoginPageNavBar from "./LoginPageNavBar";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function LoginPage() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { isLoading } = useSelector((state: RootState) => state.auth);
 
   const handleLogin = (provider: "google" | "github") => {
-    dispatch(authStart(provider));
     window.location.href = `${API_BASE}/oauth2/authorization/${provider}`;
   };
 
@@ -77,8 +70,16 @@ export default function LoginPage() {
               textAlign: "center",
             }}
           >
-            <Typography
-              variant="h4"
+            Sign in to manage your hotel inventory and rooms.
+          </Typography>
+
+          <Stack spacing={2}>
+            <Button
+              fullWidth
+              size="large"
+              variant="contained"
+              startIcon={<GoogleIcon />}
+              onClick={() => handleLogin("google")}
               sx={{
                 fontWeight: 900,
                 letterSpacing: "-0.03em",
@@ -88,8 +89,12 @@ export default function LoginPage() {
               Welcome
             </Typography>
 
-            <Typography
-              variant="body1"
+            <Button
+              fullWidth
+              size="large"
+              variant="outlined"
+              startIcon={<GitHubIcon />}
+              onClick={() => handleLogin("github")}
               sx={{
                 color: "text.secondary",
                 mb: 4,
