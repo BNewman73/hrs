@@ -130,7 +130,7 @@ public class UserService {
      * @param principal OAuth2User object
      * @return User entity
      */
-    private User oauth2UserToUser(OAuth2User principal) {
+    public User oauth2UserToUser(OAuth2User principal) {
         Map<String, Object> attributes = principal.getAttributes();
         String id = parseAttributes(attributes, "sub", "id");
         String issuer = parseAttributes(attributes, "iss", "url");

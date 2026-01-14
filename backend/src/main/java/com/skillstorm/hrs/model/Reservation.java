@@ -32,8 +32,7 @@ public class Reservation extends BaseEntity {
   @Field("end_date")
   private LocalDate endDate;
 
-  @Field("user_id")
-  private String userId;
+  private User user;
 
   @Field("number_of_adults")
   private Integer numberOfAdults; // null for admin blocks
@@ -86,7 +85,7 @@ public class Reservation extends BaseEntity {
         .roomId(request.getRoomId())
         .startDate(request.getStartDate())
         .endDate(request.getEndDate())
-        .userId(request.getUserId())
+        // .userId(request.getUserId())
         .numberOfAdults(request.getNumberOfAdults())
         .numberOfChildren(request.getNumberOfChildren())
         .totalPrice(request.getTotalPrice())
