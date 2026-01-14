@@ -44,7 +44,7 @@ jobs:
         run: npm ci
 
       - name: Build frontend
-        working-directory: hrs/frontend
+        working-directory: /home/runner/work/hrs/hrs/frontend
         run: npm run build
 
       ############################
@@ -58,9 +58,9 @@ jobs:
           cache: maven
 
       - name: Make mvnw executable
-        working-directory: hrs/backend
+        working-directory: /home/runner/work/hrs/hrs/backend
         run: chmod +x mvnw
 
       - name: Build backend
-        working-directory: hrs/backend
+        working-directory: /home/runner/work/hrs/hrs/backend
         run: ./mvnw clean package
