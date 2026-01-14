@@ -18,6 +18,7 @@ import com.skillstorm.hrs.model.Reservation;
 import com.skillstorm.hrs.model.Room;
 import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.model.Reservation.ReservationType;
+import com.skillstorm.hrs.model.Room;
 import com.skillstorm.hrs.model.RoomDetails.RoomType;
 import com.skillstorm.hrs.repository.ReservationRepository;
 import com.skillstorm.hrs.repository.RoomRepository;
