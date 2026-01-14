@@ -16,6 +16,7 @@ import com.skillstorm.hrs.exception.ResourceNotFoundException;
 import com.skillstorm.hrs.exception.RoomNotAvailableException;
 import com.skillstorm.hrs.model.Reservation;
 import com.skillstorm.hrs.model.Room;
+import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.model.Reservation.ReservationType;
 import com.skillstorm.hrs.model.RoomDetails.RoomType;
 import com.skillstorm.hrs.repository.ReservationRepository;
@@ -149,7 +150,8 @@ public class ReservationService {
       String checkInDate,
       String checkOutDate,
       int numberOfGuests,
-      int totalPrice) {
+      int totalPrice,
+      User user) {
 
     // Find the room
     Room room = roomRepository.findByRoomNumber(roomNumber)
@@ -161,7 +163,7 @@ public class ReservationService {
 
     // Create reservation
     Reservation reservation = Reservation.builder()
-        .userId("user123")
+        .user(user)
         .roomId(roomNumber)
         .startDate(checkIn)
         .endDate(checkOut)
@@ -178,7 +180,7 @@ public class ReservationService {
   }
 
   // CREATE RESERVATION AFTER STRIPE SUCCESS
-  public Reservation createReservationFromSessionId(String sessionId) throws StripeException {
+  public Reservation createReservationFromSessionId(String sessionId, User user) throws StripeException {
     System.out.println("=== Creating reservation from session ID: " + sessionId + " ===");
 
     // Fetch session from Stripe
@@ -217,6 +219,7 @@ public class ReservationService {
         checkInDate,
         checkOutDate,
         Integer.parseInt(guests),
-        (int) (session.getAmountTotal() / 100.0));
+        (int) (session.getAmountTotal() / 100.0),
+        user);
   }
 }

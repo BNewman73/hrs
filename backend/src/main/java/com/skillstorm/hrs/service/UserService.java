@@ -38,7 +38,8 @@ public class UserService {
     }
 
     /**
-     * Converts an OAuth2User to a UserDTO by fetching the corresponding User from the database.
+     * Converts an OAuth2User to a UserDTO by fetching the corresponding User from
+     * the database.
      * 
      * @param user OAuth2User object
      * @return UserDTO representation of the user
@@ -48,18 +49,17 @@ public class UserService {
         User user = oauth2UserToUser(principal);
 
         return new UserDTO(
-            user.getId(),
-            user.getFirstName(),
-            user.getLastName(),
-            user.getEmail(),
-            user.getAvatarUrl(),    
-            user.getProvider().name(),
-            user.getRole().name()
-        );
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getAvatarUrl(),
+                user.getProvider().name(),
+                user.getRole().name());
     }
 
     public UserDTO updateUserFromOAuth2User(OAuth2User principal, UserUpdateDTO userUpdateDTO) {
-        
+
         User user = oauth2UserToUser(principal);
 
         user.setFirstName(userUpdateDTO.firstName());
@@ -70,17 +70,17 @@ public class UserService {
         User updatedUser = userRepository.save(user);
 
         return new UserDTO(
-            updatedUser.getId(),
-            updatedUser.getFirstName(),
-            updatedUser.getLastName(),
-            updatedUser.getEmail(),
-            updatedUser.getAvatarUrl(),    
-            updatedUser.getProvider().name(),
-            updatedUser.getRole().name()
-        );
+                updatedUser.getId(),
+                updatedUser.getFirstName(),
+                updatedUser.getLastName(),
+                updatedUser.getEmail(),
+                updatedUser.getAvatarUrl(),
+                updatedUser.getProvider().name(),
+                updatedUser.getRole().name());
     }
 
-    public User findOrCreateUser(User.Provider provider, String providerId, String email, String firstName, String lastName, String avatar){
+    public User findOrCreateUser(User.Provider provider, String providerId, String email, String firstName,
+            String lastName, String avatar) {
         return userRepository
                 .findByProviderAndProviderId(provider, providerId)
                 .orElseGet(() -> {
@@ -94,16 +94,17 @@ public class UserService {
                             .role(User.UserRole.GUEST)
                             .enabled(true)
                             .build();
-                        
+
                     return userRepository.save(newUser);
                 });
     }
 
     /**
      * 
-     * Checks if an attribute exists in the map. Returns null if the attribute doesn't exist.
+     * Checks if an attribute exists in the map. Returns null if the attribute
+     * doesn't exist.
      * 
-     * @param map Attribute map
+     * @param map  Attribute map
      * @param keys Attribute
      * @return String representation of associated value or null
      */
@@ -130,7 +131,7 @@ public class UserService {
      * @param principal OAuth2User object
      * @return User entity
      */
-    private User oauth2UserToUser(OAuth2User principal) {
+    public User oauth2UserToUser(OAuth2User principal) {
         Map<String, Object> attributes = principal.getAttributes();
         String id = parseAttributes(attributes, "sub", "id");
         String issuer = parseAttributes(attributes, "iss", "url");

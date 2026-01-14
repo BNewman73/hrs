@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +22,11 @@ import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
 import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.model.Reservation;
 import com.skillstorm.hrs.model.Room;
+import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.model.Reservation.ReservationType;
 import com.skillstorm.hrs.model.RoomDetails.RoomType;
 import com.skillstorm.hrs.service.ReservationService;
+import com.skillstorm.hrs.service.UserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReservationController {
   private final ReservationService reservationService;
+  private final UserService userService;
 
   @GetMapping
   public ResponseEntity<List<Reservation>> getAllReservations() {
@@ -106,9 +111,11 @@ public class ReservationController {
   }
 
   @PostMapping("/complete/{sessionId}")
-  public ResponseEntity<?> completeReservation(@PathVariable String sessionId) {
+  public ResponseEntity<?> completeReservation(@PathVariable String sessionId,
+      @AuthenticationPrincipal OAuth2User principal) {
     try {
-      Reservation reservation = reservationService.createReservationFromSessionId(sessionId);
+      User user = userService.oauth2UserToUser(principal);
+      Reservation reservation = reservationService.createReservationFromSessionId(sessionId, user);
       return ResponseEntity.ok(reservation);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body("Error creating reservation: " + e.getMessage());
