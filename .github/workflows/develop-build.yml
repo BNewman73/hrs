@@ -1,12 +1,23 @@
 name: Build Backend & Frontend
 
 on:
+
   push:
     branches:
       - develop
+      
   pull_request:
     branches:
       - develop
+      
+  workflow_dispatch:
+     inputs:
+      branch_name:
+        description: 'The name of the branch to build'
+        required: true
+        default: 'develop'
+        type: string
+        
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,7 +30,12 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch_name }}
 
+      - name: List root directory
+        run: ls -R /home/runner/work/hrs/hrs/
+        
       ############################
       # Frontend
       ############################
@@ -27,15 +43,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: npm
-          cache-dependency-path: hrs/frontend/package-lock.json
-
+      
       - name: Install frontend dependencies
-        working-directory: hrs/frontend
+        working-directory: /home/runner/work/hrs/hrs/frontend
         run: npm ci
 
       - name: Build frontend
-        working-directory: hrs/frontend
+        working-directory: /home/runner/work/hrs/hrs/frontend
         run: npm run build
 
       ############################
@@ -49,9 +63,9 @@ jobs:
           cache: maven
 
       - name: Make mvnw executable
-        working-directory: hrs/backend
+        working-directory: /home/runner/work/hrs/hrs/backend
         run: chmod +x mvnw
 
       - name: Build backend
-        working-directory: hrs/backend
+        working-directory: /home/runner/work/hrs/hrs/backend
         run: ./mvnw clean package
