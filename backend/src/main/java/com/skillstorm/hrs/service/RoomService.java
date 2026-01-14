@@ -28,6 +28,15 @@ public class RoomService {
         if (roomRepository.findByRoomNumber(room.getRoomNumber()).isPresent()) {
             throw new RoomNotAvailableException("Room number " + room.getRoomNumber() + " already exists!");
         }
+        try {
+            System.out.println("ATTEMPTING TO SEND EMAIL TO: ");
+
+            System.out.println("EMAIL SEND REQUEST SUBMITTED");
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send reservation confirmation email", e);
+        }
+
         return convertToDto(roomRepository.save(convertToRoom(room)), RoomResponseDTO.class);
     }
 
