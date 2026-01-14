@@ -28,6 +28,9 @@ jobs:
         with:
           ref: ${{ github.event.inputs.branch_name }}
 
+      - name: List root directory
+        run: ls -R /home/runner/work/hrs/hrs/
+        
       ############################
       # Frontend
       ############################
@@ -37,11 +40,11 @@ jobs:
           node-version: 24
       
       - name: Install frontend dependencies
-        working-directory: /frontend
+        working-directory: /home/runner/work/hrs/hrs/frontend
         run: npm ci
 
       - name: Build frontend
-        working-directory: /frontend
+        working-directory: hrs/frontend
         run: npm run build
 
       ############################
@@ -55,7 +58,7 @@ jobs:
           cache: maven
 
       - name: Make mvnw executable
-        working-directory: /backend
+        working-directory: hrs/backend
         run: chmod +x mvnw
 
       - name: Build backend
