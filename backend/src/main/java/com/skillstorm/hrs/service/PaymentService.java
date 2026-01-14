@@ -10,7 +10,7 @@ import com.stripe.param.checkout.SessionCreateParams;
 @Service
 public class PaymentService {
 
-        private final String baseUrl = "https://d24rfvgips8loh.cloudfront.net";
+        private final String baseUrl = "http://localhost:3000"; // "https://d24rfvgips8loh.cloudfront.net";
 
         public Session createCheckoutSession(CheckoutRequest request) throws StripeException {
                 long amountInCents = (long) (request.getTotalPrice() * 100);
