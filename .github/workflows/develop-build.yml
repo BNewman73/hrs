@@ -79,3 +79,16 @@ jobs:
       - name: Build backend
         working-directory: /home/runner/work/hrs/hrs/backend
         run: ./mvnw clean package
+
+      - name: Rename jar to fixed name
+        working-directory: /home/runner/work/hrs/hrs/backend/target
+        run: |
+          ls
+          cp hrs-0.0.1-SNAPSHOT.jar hrs-backend.jar
+
+      - name: Upload backend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hrs-backend
+          path: /home/runner/work/hrs/hrs/backend/target/hrs-backend.jar
+          retention-days: 7
