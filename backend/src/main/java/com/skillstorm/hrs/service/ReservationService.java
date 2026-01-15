@@ -6,11 +6,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.skillstorm.hrs.dto.CalendarEventDTO;
 import com.skillstorm.hrs.dto.reservation.BlockRequestDTO;
 import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
+import com.skillstorm.hrs.dto.reservation.RefundResponseDTO;
 import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.exception.ResourceNotFoundException;
 import com.skillstorm.hrs.exception.RoomNotAvailableException;
@@ -18,7 +20,6 @@ import com.skillstorm.hrs.model.Reservation;
 import com.skillstorm.hrs.model.Reservation.ReservationType;
 import com.skillstorm.hrs.model.Room;
 import com.skillstorm.hrs.model.RoomDetails.RoomType;
-import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.repository.ReservationRepository;
 import com.skillstorm.hrs.repository.RoomRepository;
 import com.skillstorm.hrs.repository.UserRepository;
@@ -39,6 +40,7 @@ public class ReservationService {
   private final ReservationRepository reservationRepository;
   private final RoomRepository roomRepository;
   private final ReservationEmailService emailService;
+  private final ModelMapper modelMapper;
 
   public Reservation getReservationById(String id) {
     Optional<Reservation> reservation = reservationRepository.findById(id);
@@ -181,7 +183,7 @@ public class ReservationService {
         .type(Reservation.ReservationType.GUEST_BOOKING)
         .build();
     Reservation savedReservation = reservationRepository.save(reservation);
-  
+
     emailService.sendBookingConfirmation(receiptUrl, guestEmail, roomNumber, checkInDate, checkOutDate, guests,
         totalPrice);
     return savedReservation;
@@ -259,7 +261,7 @@ public class ReservationService {
         .findByUserIdAndEndDateLessThanOrderByEndDateDesc(userId, today);
   }
 
-  public Refund postRefund(String paymentIntentId) {
+  public RefundResponseDTO postRefund(String paymentIntentId) {
     try {
 
       PaymentIntent paymentIntent = PaymentIntent.retrieve(paymentIntentId);
@@ -281,8 +283,8 @@ public class ReservationService {
 
       reservation.setPaymentStatus("refunded");
       reservationRepository.save(reservation);
-
-      return refund;
+      RefundResponseDTO refundResponse = modelMapper.map(refund, RefundResponseDTO.class);
+      return refundResponse;
 
     } catch (StripeException e) {
       throw new RuntimeException("Stripe refund failed: " + e.getMessage(), e);
