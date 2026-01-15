@@ -20,7 +20,7 @@ export default function LogoutPage() {
 
   const handleLogout = () => {
     dispatch(clearUser());
-    window.location.href = `${API_BASE}/api/logout`;
+    window.location.href = `${API_BASE}/logout`;
   };
 
   const handleCancel = () => {

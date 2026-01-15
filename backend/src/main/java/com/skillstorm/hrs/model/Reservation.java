@@ -32,8 +32,7 @@ public class Reservation extends BaseEntity {
   @Field("end_date")
   private LocalDate endDate;
 
-  @Field("user_id")
-  private String userId;
+  private User user;
 
   private Integer guests; // null for admin blocks
 
