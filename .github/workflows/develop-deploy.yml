@@ -1,0 +1,57 @@
+name: Deploy Frontend to S3
+
+on:
+  workflow_run:
+    workflows: ["Build Backend & Frontend"]
+    types:
+      - completed
+
+  workflow_dispatch: 
+    inputs: 
+      artifact_run_id: 
+        description: "Workflow run ID to deploy (optional)" 
+        required: false
+        
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+
+      - name: Select workflow run
+        id: run
+        run: |
+          if [ -n "${{ github.event.inputs.artifact_run_id }}" ]; then
+            echo "run_id=${{ github.event.inputs.artifact_run_id }}" >> $GITHUB_OUTPUT
+          else
+            echo "run_id=${{ github.event.workflow_run.id }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download frontend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: dist
+          run-id: ${{ steps.run.outputs.run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Upload to S3
+        run: |
+          aws s3 sync dist s3://${{ secrets.AWS_S3_BUCKET }} --delete
+          aws s3 cp dist/index.html s3://${{ secrets.AWS_S3_BUCKET }}/index.html --cache-control no-cache
+
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
