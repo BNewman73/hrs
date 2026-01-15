@@ -25,6 +25,7 @@ public class ReservationEmailService {
     private String from;
 
     public void sendBookingConfirmation(
+            String receiptUrl,
             String to,
             String roomNumber,
             String checkInDate,
@@ -37,7 +38,7 @@ public class ReservationEmailService {
                 checkInDate,
                 checkOutDate,
                 guests,
-                totalPrice);
+                totalPrice, receiptUrl);
 
         SendEmailRequest request = SendEmailRequest.builder()
                 .source(from) // must be a VERIFIED SES identity
@@ -59,14 +60,16 @@ public class ReservationEmailService {
                 .build();
 
         sesClient.sendEmail(request);
+        System.out.println(request);
     }
 
     private String buildHtml(
+
             String roomNumber,
             String checkInDate,
             String checkOutDate,
             int guests,
-            int totalPrice) {
+            int totalPrice, String receiptUrl) {
         String html = loadTemplate("booking-confirmation.html");
 
         return html
@@ -74,7 +77,8 @@ public class ReservationEmailService {
                 .replace("{{checkInDate}}", checkInDate)
                 .replace("{{checkOutDate}}", checkOutDate)
                 .replace("{{guests}}", String.valueOf(guests))
-                .replace("{{totalPrice}}", String.valueOf(totalPrice));
+                .replace("{{totalPrice}}", String.valueOf(totalPrice))
+                .replace("{{receiptUrl}}", receiptUrl);
     }
 
     private String loadTemplate(String name) {

@@ -13,14 +13,14 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import LoginPageNavBar from "../login/LoginPageNavBar";
 import { clearUser } from "../../features/userSlice";
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 export default function LogoutPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     dispatch(clearUser());
-    window.location.href = "http://localhost:8080/api/logout";
+    window.location.href = `${API_BASE}/api/logout`;
   };
 
   const handleCancel = () => {
