@@ -1,5 +1,6 @@
 package com.skillstorm.hrs.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skillstorm.hrs.dto.CheckoutRequest;
@@ -8,9 +9,11 @@ import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 
 @Service
+
 public class PaymentService {
 
-        private final String baseUrl = "http://localhost:3000"; // "https://d24rfvgips8loh.cloudfront.net";
+        @Value("${APP_FRONTEND_URL:http://localhost:3000}")
+        private String baseUrl;
 
         public Session createCheckoutSession(CheckoutRequest request) throws StripeException {
                 long amountInCents = (long) (request.getTotalPrice() * 100);

@@ -15,14 +15,16 @@ import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.exception.ResourceNotFoundException;
 import com.skillstorm.hrs.exception.RoomNotAvailableException;
 import com.skillstorm.hrs.model.Reservation;
-import com.skillstorm.hrs.model.Room;
-import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.model.Reservation.ReservationType;
+import com.skillstorm.hrs.model.Room;
 import com.skillstorm.hrs.model.RoomDetails.RoomType;
+import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.repository.ReservationRepository;
 import com.skillstorm.hrs.repository.RoomRepository;
 import com.skillstorm.hrs.repository.UserRepository;
 import com.stripe.exception.StripeException;
+import com.stripe.model.Charge;
+import com.stripe.model.PaymentIntent;
 import com.stripe.model.checkout.Session;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,7 @@ public class ReservationService {
   private final UserRepository userRepository;
   private final ReservationRepository reservationRepository;
   private final RoomRepository roomRepository;
+  private final ReservationEmailService emailService;
 
   public Reservation getReservationById(String id) {
     Optional<Reservation> reservation = reservationRepository.findById(id);
@@ -143,6 +146,7 @@ public class ReservationService {
   }
 
   public Reservation createReservationFromStripeSession(
+      String receiptUrl,
       String sessionId,
       String paymentIntentId,
       String guestEmail,
@@ -174,8 +178,11 @@ public class ReservationService {
         .paymentStatus("paid")
         .type(Reservation.ReservationType.GUEST_BOOKING)
         .build();
-
-    return reservationRepository.save(reservation);
+    Reservation savedReservation = reservationRepository.save(reservation);
+    System.out.println("\n\n\n\n\n\n\nEMAILLLLLLLLLLL" + guestEmail + "\n\n\n\n\n\n");
+    emailService.sendBookingConfirmation(receiptUrl, guestEmail, roomNumber, checkInDate, checkOutDate, guests,
+        totalPrice);
+    return savedReservation;
   }
 
   // CREATE RESERVATION AFTER STRIPE SUCCESS
@@ -208,12 +215,21 @@ public class ReservationService {
     System.out.println("  Check-in: " + checkInDate);
     System.out.println("  Check-out: " + checkOutDate);
     System.out.println("  Guests: " + guests);
+    PaymentIntent paymentIntent = PaymentIntent.retrieve(session.getPaymentIntent());
+    String latestChargeId = paymentIntent.getLatestCharge();
+    if (latestChargeId == null) {
+      throw new RuntimeException("No Stripe charge found for payment intent");
+    }
+
+    Charge charge = Charge.retrieve(latestChargeId);
+    String receiptUrl = charge.getReceiptUrl();
 
     // Create reservation using existing method
     return createReservationFromStripeSession(
+        receiptUrl,
         session.getId(),
         session.getPaymentIntent(),
-        session.getCustomerEmail(),
+        session.getCustomerDetails().getEmail(),
         roomNumber,
         checkInDate,
         checkOutDate,
