@@ -21,12 +21,13 @@ import com.skillstorm.hrs.dto.reservation.BlockRequestDTO;
 import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
 import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.model.Reservation;
-import com.skillstorm.hrs.model.Room;
-import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.model.Reservation.ReservationType;
+import com.skillstorm.hrs.model.Room;
 import com.skillstorm.hrs.model.RoomDetails.RoomType;
+import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.service.ReservationService;
 import com.skillstorm.hrs.service.UserService;
+import com.stripe.model.Refund;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -121,4 +122,11 @@ public class ReservationController {
       return ResponseEntity.badRequest().body("Error creating reservation: " + e.getMessage());
     }
   }
+
+  @PostMapping("/refund/{paymentId}")
+  public ResponseEntity<Refund> createBooking(@PathVariable String paymentId) {
+    Refund refund = reservationService.postRefund(paymentId);
+    return new ResponseEntity<>(refund, HttpStatus.CREATED);
+  }
+
 }
