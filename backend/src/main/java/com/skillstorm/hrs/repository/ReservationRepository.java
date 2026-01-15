@@ -21,6 +21,18 @@ public interface ReservationRepository extends MongoRepository<Reservation, Stri
 
   Optional<Reservation> findByStripeSessionId(String stripeSessionId);
 
+  List<Reservation> findByUserIdOrderByStartDateDesc(String userId);
+
+  // Upcoming reservations (check-in date is today or in the future)
+  List<Reservation> findByUserIdAndEndDateGreaterThanEqualOrderByStartDateAsc(
+      String userId,
+      LocalDate currentDate);
+
+  // Past reservations (check-out date is before today)
+  List<Reservation> findByUserIdAndEndDateLessThanOrderByEndDateDesc(
+      String userId,
+      LocalDate currentDate);
+
   // find all reservations for a room within startDate and endDate
   @Query("{ 'room_id': ?0, 'end_date': { $gte: ?1 }, 'start_date' : { $lte: ?2 }}")
   List<Reservation> findByRoomIdAndDateRange(String roomId, LocalDate startDate, LocalDate endDate);

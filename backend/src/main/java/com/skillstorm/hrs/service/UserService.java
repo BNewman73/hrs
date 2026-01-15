@@ -141,4 +141,8 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    public String principalToUserId(OAuth2User principal) {
+        return oauth2UserToUser(principal).getProviderId();
+    }
+
 }

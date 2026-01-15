@@ -129,8 +129,7 @@ const BookingSuccess: React.FC = () => {
               <strong>Check-out:</strong> {data.endDate}
             </Typography>
             <Typography variant="body2" sx={{ mb: 1 }}>
-              <strong>Guests:</strong>{" "}
-              {data.numberOfAdults + data.numberOfChildren}
+              <strong>Guests:</strong> {data.guests}
             </Typography>
             <Typography variant="body2">
               <strong>Total:</strong> ${data.totalPrice.toFixed(2)}

@@ -44,8 +44,7 @@ declare global {
     roomId: string;
     startDate: string;
     endDate: string;
-    numberOfAdults: number;
-    numberOfChildren: number;
+    guests: number;
     // numberOfNights: number;
     totalPrice: number;
     // guestEmail: string;

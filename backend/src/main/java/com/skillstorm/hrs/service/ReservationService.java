@@ -149,9 +149,9 @@ public class ReservationService {
       String roomNumber,
       String checkInDate,
       String checkOutDate,
-      int numberOfGuests,
+      int guests,
       int totalPrice,
-      User user) {
+      String userId) {
 
     // Find the room
     Room room = roomRepository.findByRoomNumber(roomNumber)
@@ -163,12 +163,11 @@ public class ReservationService {
 
     // Create reservation
     Reservation reservation = Reservation.builder()
-        .user(user)
+        .userId(userId)
         .roomId(roomNumber)
         .startDate(checkIn)
         .endDate(checkOut)
-        .numberOfAdults(numberOfGuests)
-        .numberOfChildren(0)
+        .guests(guests)
         .totalPrice(totalPrice)
         .stripeSessionId(sessionId)
         .stripePaymentIntentId(paymentIntentId)
@@ -180,7 +179,7 @@ public class ReservationService {
   }
 
   // CREATE RESERVATION AFTER STRIPE SUCCESS
-  public Reservation createReservationFromSessionId(String sessionId, User user) throws StripeException {
+  public Reservation createReservationFromSessionId(String sessionId, String userId) throws StripeException {
     System.out.println("=== Creating reservation from session ID: " + sessionId + " ===");
 
     // Fetch session from Stripe
@@ -220,6 +219,25 @@ public class ReservationService {
         checkOutDate,
         Integer.parseInt(guests),
         (int) (session.getAmountTotal() / 100.0),
-        user);
+        userId);
+  }
+
+  // get reservations associated with User providerId
+  public List<Reservation> getUserReservations(String userId) {
+    return reservationRepository.findByUserIdOrderByStartDateDesc(userId);
+  }
+
+  // let repository compare dates
+  public List<Reservation> getUpcomingReservations(String userId) {
+    LocalDate today = LocalDate.now();
+    return reservationRepository
+        .findByUserIdAndEndDateGreaterThanEqualOrderByStartDateAsc(userId, today);
+  }
+
+  // let repository compare dates
+  public List<Reservation> getPastReservations(String userId) {
+    LocalDate today = LocalDate.now();
+    return reservationRepository
+        .findByUserIdAndEndDateLessThanOrderByEndDateDesc(userId, today);
   }
 }
