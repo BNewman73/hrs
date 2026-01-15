@@ -116,13 +116,35 @@ public class ReservationController {
       @AuthenticationPrincipal OAuth2User principal) {
     try {
       User user = userService.oauth2UserToUser(principal);
-      Reservation reservation = reservationService.createReservationFromSessionId(sessionId, user);
+      Reservation reservation = reservationService.createReservationFromSessionId(sessionId, user.getProviderId());
       return ResponseEntity.ok(reservation);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body("Error creating reservation: " + e.getMessage());
     }
   }
 
+  @GetMapping("/mine")
+  public ResponseEntity<List<Reservation>> getMyReservations(@AuthenticationPrincipal OAuth2User principal) {
+    String userId = userService.principalToUserId(principal);
+    List<Reservation> reservations = reservationService.getUserReservations(userId);
+    return new ResponseEntity<>(reservations, HttpStatus.OK);
+  }
+
+  @GetMapping("/mine/upcoming")
+  public ResponseEntity<List<Reservation>> getMyUpcomingReservations(
+      @AuthenticationPrincipal OAuth2User principal) {
+    String userId = userService.principalToUserId(principal);
+    List<Reservation> reservations = reservationService.getUpcomingReservations(userId);
+    return ResponseEntity.ok(reservations);
+  }
+
+  @GetMapping("/mine/past")
+  public ResponseEntity<List<Reservation>> getMyPastReservations(
+      @AuthenticationPrincipal OAuth2User principal) {
+    String userId = userService.principalToUserId(principal);
+    List<Reservation> reservations = reservationService.getPastReservations(userId);
+    return ResponseEntity.ok(reservations);
+  }
   @PostMapping("/refund/{paymentId}")
   public ResponseEntity<Refund> createBooking(@PathVariable String paymentId) {
     Refund refund = reservationService.postRefund(paymentId);
