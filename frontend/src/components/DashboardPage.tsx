@@ -14,6 +14,7 @@ import {
   AppBar,
   ListItemIcon,
   Divider,
+  Button,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AddHomeWorkIcon from "@mui/icons-material/AddHomeWork";
@@ -30,6 +31,7 @@ import { useGetPrincipalQuery } from "../features/userApi";
 import { setUser, clearUser } from "../features/userSlice";
 import { useDispatch } from "react-redux";
 import AccountCard from "./account/AccountCard";
+import { useRefundReservationMutation } from "../features/reservationApi";
 
 const DRAWER_WIDTH = 280;
 
@@ -39,6 +41,11 @@ export default function DashboardPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { data, error } = useGetPrincipalQuery();
+  const [postRefund] = useRefundReservationMutation();
+
+  const handleRefund = () => {
+    postRefund("pi_3SpvHVHVq6JDmmdb03fV9MNY");
+  };
 
   useEffect(() => {
     if (data) {
@@ -351,6 +358,7 @@ export default function DashboardPage() {
           </Box>
         </Box>
       </Box>
+      <Button onClick={() => handleRefund()}> REFUND</Button>
     </Box>
   );
 }

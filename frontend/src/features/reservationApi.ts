@@ -48,6 +48,12 @@ export const reservationApi = createApi({
         method: "DELETE",
       }),
     }),
+    refundReservation: builder.mutation<RefundResponse, string>({
+      query: (id) => ({
+        url: `/reservations/refund/${id}`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -60,4 +66,5 @@ export const {
   useCreateGuestBookingMutation,
   useCreateAdminBlockMutation,
   useDeleteReservationMutation,
+  useRefundReservationMutation,
 } = reservationApi;
