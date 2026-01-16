@@ -1,21 +1,10 @@
-name: Build Backend & Frontend
+name: Build Frontend & Backend (Workflow Call)
 
 on:
-
-  push:
-    branches:
-      - develop
-      
-  pull_request:
-    branches:
-      - develop
-      
-  workflow_dispatch:
-     inputs:
+  workflow_call:
+    inputs:
       branch_name:
-        description: 'The name of the branch to build'
         required: true
-        default: 'develop'
         type: string
         
 jobs:
@@ -40,8 +29,9 @@ jobs:
         run: ls -R /home/runner/work/hrs/hrs/
         
       ############################
-      # Frontend
+      # Build Frontend
       ############################
+      
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -55,16 +45,10 @@ jobs:
         working-directory: /home/runner/work/hrs/hrs/frontend
         run: npm run build
 
-      - name: Upload frontend build
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-dist
-          path: /home/runner/work/hrs/hrs/frontend/dist
-          retention-days: 7
+      ############################
+      # Build Backend
+      ############################
 
-      ############################
-      # Backend
-      ############################
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -86,9 +70,23 @@ jobs:
           ls
           cp hrs-0.0.1-SNAPSHOT.jar hrs-backend.jar
 
+      ############################
+      # Upload Artifacts    
+      ############################
+
+      - name: Upload frontend build
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: /home/runner/work/hrs/hrs/frontend/dist
+          retention-days: 7
+
       - name: Upload backend artifact
         uses: actions/upload-artifact@v4
         with:
           name: backend-target
           path: /home/runner/work/hrs/hrs/backend/target/hrs-backend.jar
           retention-days: 7
+
+    outputs:
+      build_run_id: ${{ github.run_id }}

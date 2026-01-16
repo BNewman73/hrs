@@ -1,17 +1,25 @@
-name: Deploy Frontend to S3
+name: Deploy Frontend (Workflow Call)
 
 on:
-  workflow_run:
-    workflows: ["Build Backend & Frontend"]
-    types:
-      - completed
+  workflow_call:
+    inputs:
+      build_run_id:
+        description: "GitHub Actions run ID of the build workflow"
+        required: true
+        type: string
 
-  workflow_dispatch: 
-    inputs: 
-      artifact_run_id: 
-        description: "Workflow run ID to deploy (optional)" 
-        required: false
-        
+    secrets:
+      AWS_ROLE_ARN:
+        required: true
+      AWS_REGION:
+        required: true
+      AWS_S3_BUCKET:
+        required: true
+      CLOUDFRONT_DISTRIBUTION_ID:
+        required: true
+      GITHUB_TOKEN:
+        required: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,22 +29,12 @@ jobs:
       contents: read
 
     steps:
-
-      - name: Select workflow run
-        id: run
-        run: |
-          if [ -n "${{ github.event.inputs.artifact_run_id }}" ]; then
-            echo "run_id=${{ github.event.inputs.artifact_run_id }}" >> $GITHUB_OUTPUT
-          else
-            echo "run_id=${{ github.event.workflow_run.id }}" >> $GITHUB_OUTPUT
-          fi
-
       - name: Download frontend artifact
         uses: actions/download-artifact@v4
         with:
           name: frontend-dist
           path: dist
-          run-id: ${{ steps.run.outputs.run_id }}
+          run-id: ${{ inputs.build_run_id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configure AWS credentials (OIDC)
@@ -48,7 +46,7 @@ jobs:
       - name: Upload to S3
         run: |
           aws s3 sync dist/assets s3://${{ secrets.AWS_S3_BUCKET }}/assets --delete
-          aws s3 cp dist/index.html s3://${{ secrets.AWS_S3_BUCKET }}/index.html --cache-control no-cache          
+          aws s3 cp dist/index.html s3://${{ secrets.AWS_S3_BUCKET }}/index.html --cache-control no-cache
 
       - name: Invalidate CloudFront
         run: |

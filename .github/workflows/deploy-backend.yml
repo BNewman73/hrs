@@ -1,12 +1,25 @@
-name: Manual Deploy Backend to Elastic Beanstalk
+name: Deploy Backend (Workflow Call)
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       build_run_id:
         description: "GitHub Actions run ID of the build workflow"
         required: true
         type: string
+      deploy_to_eb:
+        description: "Whether to deploy to Elastic Beanstalk"
+        required: false
+        type: boolean
+        default: false
+        
+    secrets:
+      AWS_ROLE_ARN:
+        required: true
+      AWS_REGION:
+        required: true
+      GITHUB_TOKEN:
+        required: true
 
 jobs:
   deploy:
@@ -19,14 +32,8 @@ jobs:
     env:
       EB_APPLICATION_NAME: ${{ vars.EB_APPLICATION_NAME }}
       EB_ENVIRONMENT_NAME: ${{ vars.EB_ENVIRONMENT_NAME }}
-      JAR_NAME: hrs-backend.jar
 
     steps:
-      - name: Configure AWS credentials (OIDC)
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Download backend artifact
         uses: actions/download-artifact@v4
@@ -36,12 +43,18 @@ jobs:
           run-id: ${{ inputs.build_run_id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
       - name: Verify artifact exists
         run: |
           ls -l ./target
           test -f ./target/${{ env.JAR_NAME }}
 
-      - name: Upload jar to S3
+      - name: Upload to S3
         run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
           aws s3 cp ./target/${{ env.JAR_NAME }} \
@@ -55,8 +68,8 @@ jobs:
             --version-label "manual-${{ inputs.build_run_id }}" \
             --source-bundle S3Bucket="elasticbeanstalk-${{ secrets.AWS_REGION }}-${ACCOUNT_ID}",S3Key="hrs-backend.jar"
 
-      - name: Deploy to environment
-        run: |
-          aws elasticbeanstalk update-environment \
-            --environment-name "$EB_ENVIRONMENT_NAME" \
-            --version-label "manual-${{ inputs.build_run_id }}"
+      # - name: Deploy to Elastic Beanstalk
+      #   run: |
+      #     aws elasticbeanstalk update-environment \
+      #       --environment-name "$EB_ENVIRONMENT_NAME" \
+      #       --version-label "manual-${{ inputs.build_run_id }}"
