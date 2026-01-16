@@ -13,7 +13,7 @@ const GRID_CONFIG = {
 };
 
 export default function ReservationTable() {
-  const { data: reservations = [] } = useGetAllReservationsQuery();
+  const { data: reservations = [], isLoading } = useGetAllReservationsQuery();
 
   const [expanded, setExpanded] = useState<string | null>(null);
   const [page, setPage] = useState(0);
@@ -41,6 +41,7 @@ export default function ReservationTable() {
         onPageChange={setPage}
         onRowsPerPageChange={setRowsPerPage}
         emptyMessage="No reservations found."
+        isLoading={isLoading}
         renderRow={(reservation) => (
           <ReservationRow
             key={reservation.id}

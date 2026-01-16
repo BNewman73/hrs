@@ -21,12 +21,14 @@ function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/logout" element={<LogoutPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
+
             <Route path="/rooms/:roomType" element={<BookingPage />} />
             <Route path="/booking-success" element={<BookingSuccess />} />
             <Route path="/booking-cancel" element={<BookingCancel />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="" element={<HomePage />} />
+
+            <Route path="/dashboard" element={<DashboardPage />} />
           </Routes>
         </BrowserRouter>
       </CssBaseline>
