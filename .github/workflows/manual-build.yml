@@ -8,7 +8,7 @@ on:
         required: true
         default: main
         type: string
-
+jobs:
   build:
     name: Build Frontend & Backend
     uses: ./.github/workflows/build.yml
