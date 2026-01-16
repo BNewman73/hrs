@@ -1,0 +1,14 @@
+name: Verify Build (CI)
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  
+  build:
+    name: Build Frontend & Backend
+    uses: ./.github/workflows/build.yml
+    with:
+      branch_name: main
