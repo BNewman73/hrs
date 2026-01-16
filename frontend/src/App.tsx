@@ -10,6 +10,7 @@ import BookingPage from "./components/reservations/BookingPage";
 import LogoutPage from "./components/login/LogoutPage";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./components/reservations/theme.ts";
+import UserHomePage from "./components/UserHomePage.tsx";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="" element={<HomePage />} />
 
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/user-home" element={<UserHomePage /> } />
           </Routes>
         </BrowserRouter>
       </CssBaseline>
