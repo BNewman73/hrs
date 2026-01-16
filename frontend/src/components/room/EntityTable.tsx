@@ -1,4 +1,11 @@
-import { Box, Paper, Typography, List, TablePagination } from "@mui/material";
+import {
+  Box,
+  Paper,
+  Typography,
+  List,
+  TablePagination,
+  CircularProgress,
+} from "@mui/material";
 
 interface TitleColumn {
   label: string;
@@ -16,6 +23,7 @@ interface EntityTableProps<T> {
   onPageChange: (p: number) => void;
   onRowsPerPageChange: (n: number) => void;
   emptyMessage?: string;
+  isLoading: boolean;
 }
 
 export function EntityTable<T>({
@@ -28,6 +36,7 @@ export function EntityTable<T>({
   onPageChange,
   onRowsPerPageChange,
   emptyMessage = "No records found.",
+  isLoading,
 }: EntityTableProps<T>) {
   return (
     <Paper
@@ -68,10 +77,16 @@ export function EntityTable<T>({
       <List disablePadding>
         {rows.map(renderRow)}
 
-        {rows.length === 0 && (
+        {isLoading ? (
           <Box sx={{ p: 6, textAlign: "center" }}>
-            <Typography color="text.secondary">{emptyMessage}</Typography>
+            <CircularProgress size="3rem" />
           </Box>
+        ) : (
+          rows.length === 0 && (
+            <Box sx={{ p: 6, textAlign: "center" }}>
+              <Typography color="text.secondary">{emptyMessage}</Typography>
+            </Box>
+          )
         )}
       </List>
 

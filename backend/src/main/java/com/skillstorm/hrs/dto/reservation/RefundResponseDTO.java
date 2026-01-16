@@ -14,7 +14,7 @@ public class RefundResponseDTO {
     private String refundId;
     private String paymentIntentId;
     private String chargeId;
-    private Integer amount;
+    private Long amount;
     private String currency;
     private String status;
     private Long created;

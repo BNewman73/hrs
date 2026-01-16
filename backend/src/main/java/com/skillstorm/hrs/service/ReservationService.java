@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.skillstorm.hrs.dto.CalendarEventDTO;
@@ -40,7 +39,6 @@ public class ReservationService {
   private final ReservationRepository reservationRepository;
   private final RoomRepository roomRepository;
   private final ReservationEmailService emailService;
-  private final ModelMapper modelMapper;
 
   public Reservation getReservationById(String id) {
     Optional<Reservation> reservation = reservationRepository.findById(id);
@@ -263,7 +261,6 @@ public class ReservationService {
 
   public RefundResponseDTO postRefund(String paymentIntentId) {
     try {
-
       PaymentIntent paymentIntent = PaymentIntent.retrieve(paymentIntentId);
 
       String latestChargeId = paymentIntent.getLatestCharge();
@@ -283,8 +280,16 @@ public class ReservationService {
 
       reservation.setPaymentStatus("refunded");
       reservationRepository.save(reservation);
-      RefundResponseDTO refundResponse = modelMapper.map(refund, RefundResponseDTO.class);
-      return refundResponse;
+
+      return RefundResponseDTO.builder()
+          .refundId(refund.getId())
+          .paymentIntentId(paymentIntentId)
+          .chargeId(latestChargeId)
+          .amount(refund.getAmount())
+          .currency(refund.getCurrency())
+          .status(refund.getStatus())
+          .created(refund.getCreated())
+          .build();
 
     } catch (StripeException e) {
       throw new RuntimeException("Stripe refund failed: " + e.getMessage(), e);

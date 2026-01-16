@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import "./StormButton.css";
 import RoomTypesCarousel from "./reservations/RoomTypesCarousel";
+import FooterPage from "./FooterPage";
 
 const VIDEO_URL = import.meta.env.VITE_HOME_VIDEO_URL;
 
@@ -411,18 +412,7 @@ export default function HomePage() {
           </Box>
         </Container>
       </Box>
-
-      {/* FOOTER */}
-      <Box sx={{ bgcolor: "#090A2E", py: 6 }}>
-        <Container maxWidth="lg">
-          <Typography
-            align="center"
-            sx={{ color: alpha("#fff", 0.6), fontWeight: 500 }}
-          >
-            © 2026 Storm Stay Luxury Group. All rights reserved.
-          </Typography>
-        </Container>
-      </Box>
+      <FooterPage />
     </>
   );
 }

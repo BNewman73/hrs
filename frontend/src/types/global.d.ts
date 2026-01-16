@@ -92,15 +92,8 @@ declare global {
     totalPrice?: number;
     blockReason?: BlockReason;
     notes?: string;
-  }
-  interface ReservationDTO {
-    id: string;
-    roomId: string;
-    startDate: string;
-    endDate: string;
-    type: "GUEST_BOOKING" | "ADMIN_BLOCK";
-    totalPrice?: number;
-    blockReason?: string;
+    paymentStatus?: string;
+    stripePaymentIntentId: string;
   }
 
   interface User {
