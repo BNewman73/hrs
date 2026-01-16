@@ -6,10 +6,18 @@ on:
       branch_name:
         required: true
         type: string
+
+    outputs:
+      build_run_id:
+        description: "Run ID of the build workflow"
+        value: ${{ jobs.build.outputs.build_run_id }}
         
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    outputs:
+      build_run_id: ${{ steps.set-output.outputs.build_run_id }}
 
     env:
       GITHUB_CLIENT_SECRET: ${{ secrets.GITHUB_CLIENT_SECRET }}
@@ -88,5 +96,7 @@ jobs:
           path: /home/runner/work/hrs/hrs/backend/target/hrs-backend.jar
           retention-days: 7
 
-    outputs:
-      build_run_id: ${{ github.run_id }}
+      - name: Set build run id
+        id: set-output
+        run: |
+          echo "build_run_id=${GITHUB_RUN_ID}" >> "$GITHUB_OUTPUT"
