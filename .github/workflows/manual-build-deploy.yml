@@ -29,9 +29,11 @@ jobs:
     with:
       build_run_id: ${{ needs.build.outputs.build_run_id }}
       deploy_to_eb: ${{ inputs.deploy_to_eb }}
+    secrets: inherit
 
   deploy-frontend:
     needs: [build, deploy-backend]
     uses: ./.github/workflows/deploy-frontend.yml
     with:
       build_run_id: ${{ needs.build.outputs.build_run_id }}
+    secrets: inherit

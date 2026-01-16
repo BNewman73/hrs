@@ -19,9 +19,12 @@ jobs:
     with:
       build_run_id: ${{ inputs.build_run_id }}
       deploy_to_eb: ${{ inputs.deploy_to_eb }}
+    secrets: inherit
+    
 
   deploy-frontend:
     needs: deploy-backend
     uses: ./.github/workflows/deploy-frontend.yml
     with:
-      build_run_id: ${{ inputs.build_run_id }}
+      build_run_id: ${{ github.event.inputs.build_run_id }}
+    secrets: inherit
