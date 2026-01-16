@@ -19,7 +19,6 @@ jobs:
     env:
       EB_APPLICATION_NAME: ${{ vars.EB_APPLICATION_NAME }}
       EB_ENVIRONMENT_NAME: ${{ vars.EB_ENVIRONMENT_NAME }}
-      ARTIFACT_NAME: backend-target
       JAR_NAME: hrs-backend.jar
 
     steps:
@@ -29,12 +28,13 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Download artifact from build run
+      - name: Download backend artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_NAME }}
+          name: backend-target
+          path: target
           run-id: ${{ inputs.build_run_id }}
-          path: ./target
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Verify artifact exists
         run: |
