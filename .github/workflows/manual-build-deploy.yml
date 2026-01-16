@@ -17,18 +17,17 @@ on:
 
 jobs:
   
-  build frontend & backend:
+  build:
     name: Build Frontend & Backend
     uses: ./.github/workflows/build.yml
-    id: build_job
     with:
       branch_name: ${{ inputs.branch_name }}
 
   deploy-backend:
-    needs: build frontend & backend
+    needs: build
     uses: ./.github/workflows/deploy-backend.yml
     with:
-      build_run_id: ${{ needs.build frontend & backend.outputs.build_run_id }}
+      build_run_id: ${{ needs.build.outputs.build_run_id }}
       deploy_to_eb: ${{ github.event.inputs.deploy_to_eb }}
     secrets:
       AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
@@ -36,10 +35,10 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deploy-frontend:
-    needs: deploy-backend
+    needs: [build, deploy-backend]
     uses: ./.github/workflows/deploy-frontend.yml
     with:
-      build_run_id: ${{ needs.build frontend & backend.outputs.build_run_id }}
+      build_run_id: ${{ needs.build.outputs.build_run_id }}
     secrets:
       AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
       AWS_REGION: ${{ secrets.AWS_REGION }}

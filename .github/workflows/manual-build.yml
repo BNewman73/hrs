@@ -9,10 +9,8 @@ on:
         default: main
         type: string
 
-jobs:
-
-  build backend & frontend:
-    name: Build Backend & Frontend
+  build:
+    name: Build Frontend & Backend
     uses: ./.github/workflows/build.yml
     with:
       branch_name: ${{ inputs.branch_name }}

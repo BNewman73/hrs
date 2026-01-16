@@ -52,12 +52,12 @@ jobs:
       - name: Verify artifact exists
         run: |
           ls -l ./target
-          test -f ./target/${{ env.JAR_NAME }}
+          test -f ./target/hrs-backend.jar
 
       - name: Upload to S3
         run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-          aws s3 cp ./target/${{ env.JAR_NAME }} \
+          aws s3 cp ./target/hrs-backend.jar \
             s3://elasticbeanstalk-${{ secrets.AWS_REGION }}-${ACCOUNT_ID}/hrs-backend.jar
 
       - name: Create application version
@@ -68,8 +68,8 @@ jobs:
             --version-label "manual-${{ inputs.build_run_id }}" \
             --source-bundle S3Bucket="elasticbeanstalk-${{ secrets.AWS_REGION }}-${ACCOUNT_ID}",S3Key="hrs-backend.jar"
 
-      # - name: Deploy to Elastic Beanstalk
-      #   run: |
-      #     aws elasticbeanstalk update-environment \
-      #       --environment-name "$EB_ENVIRONMENT_NAME" \
-      #       --version-label "manual-${{ inputs.build_run_id }}"
+      - name: Deploy to Elastic Beanstalk
+        run: |
+          aws elasticbeanstalk update-environment \
+            --environment-name "$EB_ENVIRONMENT_NAME" \
+            --version-label "manual-${{ inputs.build_run_id }}"
