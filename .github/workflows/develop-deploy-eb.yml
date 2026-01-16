@@ -55,8 +55,8 @@ jobs:
             --version-label "manual-${{ inputs.build_run_id }}" \
             --source-bundle S3Bucket="elasticbeanstalk-${{ secrets.AWS_REGION }}-${ACCOUNT_ID}",S3Key="hrs-backend.jar"
 
-      # - name: Deploy to environment
-      #   run: |
-      #     aws elasticbeanstalk update-environment \
-      #       --environment-name "$EB_ENVIRONMENT_NAME" \
-      #       --version-label "manual-${{ inputs.build_run_id }}"
+      - name: Deploy to environment
+        run: |
+          aws elasticbeanstalk update-environment \
+            --environment-name "$EB_ENVIRONMENT_NAME" \
+            --version-label "manual-${{ inputs.build_run_id }}"
