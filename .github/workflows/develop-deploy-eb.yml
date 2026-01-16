@@ -20,8 +20,8 @@ jobs:
       AWS_REGION: ${{ secrets.AWS_REGION }}
       EB_APPLICATION_NAME: ${{ vars.EB_APPLICATION_NAME }}
       EB_ENVIRONMENT_NAME: ${{ vars.EB_ENVIRONMENT_NAME }}
-      ARTIFACT_NAME: hrs-backend
-      JAR_NAME: hrs-backend.jar
+      ARTIFACT_NAME: backend/target
+      JAR_NAME: target/hrs-backend.jar
 
     steps:
       - name: Configure AWS credentials (OIDC)
@@ -35,7 +35,7 @@ jobs:
         with:
           name: ${{ env.ARTIFACT_NAME }}
           run-id: ${{ inputs.build_run_id }}
-          path: .
+          path: /target
 
       - name: Verify artifact exists
         run: |
