@@ -1,0 +1,59 @@
+name: Manual Deploy Backend to Elastic Beanstalk
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_run_id:
+        description: "GitHub Actions run ID of the build workflow"
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    env:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      EB_APPLICATION_NAME: ${{ vars.EB_APPLICATION_NAME }}
+      EB_ENVIRONMENT_NAME: ${{ vars.EB_ENVIRONMENT_NAME }}
+      ARTIFACT_NAME: hrs-backend
+      JAR_NAME: hrs-backend.jar
+
+    steps:
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Download artifact from build run
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          run-id: ${{ inputs.build_run_id }}
+          path: .
+
+      - name: Verify artifact exists
+        run: |
+          ls -l
+          test -f ${{ env.JAR_NAME }}
+
+      - name: Upload jar to S3
+        run: |
+          aws s3 cp ${{ env.JAR_NAME }} \
+            s3://elasticbeanstalk-${AWS_REGION}-$(aws sts get-caller-identity --query Account --output text)/hrs-backend.jar
+
+      - name: Create application version
+        run: |
+          aws elasticbeanstalk create-application-version \
+            --application-name "$EB_APPLICATION_NAME" \
+            --version-label "manual-${{ inputs.build_run_id }}" \
+            --source-bundle S3Bucket="elasticbeanstalk-${AWS_REGION}-$(aws sts get-caller-identity --query Account --output text)",S3Key="hrs-backend.jar"
+
+
+
+            
