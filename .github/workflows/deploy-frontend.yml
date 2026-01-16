@@ -8,18 +8,6 @@ on:
         required: true
         type: string
 
-    secrets:
-      AWS_ROLE_ARN:
-        required: true
-      AWS_REGION:
-        required: true
-      AWS_S3_BUCKET:
-        required: true
-      CLOUDFRONT_DISTRIBUTION_ID:
-        required: true
-      GITHUB_TOKEN:
-        required: true
-
 jobs:
   deploy:
     runs-on: ubuntu-latest

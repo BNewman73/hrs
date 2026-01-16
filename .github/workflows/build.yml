@@ -23,7 +23,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.branch_name }}
+          ref: ${{ inputs.branch_name }}
 
       - name: List root directory
         run: ls -R /home/runner/work/hrs/hrs/

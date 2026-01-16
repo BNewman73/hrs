@@ -17,21 +17,11 @@ jobs:
   deploy-backend:
     uses: ./.github/workflows/deploy-backend.yml
     with:
-      build_run_id: ${{ github.event.inputs.build_run_id }}
-      deploy_to_eb: ${{ github.event.inputs.deploy_to_eb }}
-    secrets:
-      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      build_run_id: ${{ inputs.build_run_id }}
+      deploy_to_eb: ${{ inputs.deploy_to_eb }}
 
   deploy-frontend:
     needs: deploy-backend
     uses: ./.github/workflows/deploy-frontend.yml
     with:
-      build_run_id: ${{ github.event.inputs.build_run_id }}
-    secrets:
-      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-      CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      build_run_id: ${{ inputs.build_run_id }}
