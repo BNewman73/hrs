@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.skillstorm.hrs.dto.reservation.BlockRequestDTO;
 import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
+import com.skillstorm.hrs.dto.reservation.ReservationResponseDTO;
 import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.model.Reservation;
 import com.skillstorm.hrs.model.Room;
@@ -130,18 +131,34 @@ public class ReservationController {
   }
 
   @GetMapping("/mine/upcoming")
-  public ResponseEntity<List<Reservation>> getMyUpcomingReservations(
+  public ResponseEntity<List<ReservationResponseDTO>> getMyUpcomingReservations(
       @AuthenticationPrincipal OAuth2User principal) {
     String userId = userService.principalToUserId(principal);
-    List<Reservation> reservations = reservationService.getUpcomingReservations(userId);
-    return ResponseEntity.ok(reservations);
+    List<ReservationResponseDTO> reservations = reservationService.getUpcomingReservations(userId);
+    return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 
   @GetMapping("/mine/past")
-  public ResponseEntity<List<Reservation>> getMyPastReservations(
+  public ResponseEntity<List<ReservationResponseDTO>> getMyPastReservations(
       @AuthenticationPrincipal OAuth2User principal) {
     String userId = userService.principalToUserId(principal);
-    List<Reservation> reservations = reservationService.getPastReservations(userId);
-    return ResponseEntity.ok(reservations);
+    List<ReservationResponseDTO> reservations = reservationService.getPastReservations(userId);
+    return new ResponseEntity<>(reservations, HttpStatus.OK);
+  }
+
+  @GetMapping("/mine/past/test")
+  public ResponseEntity<List<Reservation>> getMyPastReservationsTest(
+      @AuthenticationPrincipal OAuth2User principal) {
+    String userId = "107082386102921512899";
+    List<Reservation> reservations = reservationService.getPastReservationsTest(userId);
+    return new ResponseEntity<>(reservations, HttpStatus.OK);
+  }
+
+  @GetMapping("/mine/upcoming/test")
+  public ResponseEntity<List<Reservation>> getMyUpcomingReservationsTest(
+      @AuthenticationPrincipal OAuth2User principal) {
+    String userId = "107082386102921512899";
+    List<Reservation> reservations = reservationService.getUpcomingReservationsTest(userId);
+    return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 }

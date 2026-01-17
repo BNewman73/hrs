@@ -6,6 +6,7 @@ import {
   Alert,
   Chip,
   Button,
+  IconButton,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -22,6 +23,8 @@ import {
   isWithinInterval,
   isSameDay,
 } from "date-fns";
+import { useBooking } from "../../hooks/useBooking";
+import { Add, Remove } from "@mui/icons-material";
 
 const COLORS: Record<string, string> = {
   available: "transparent",
@@ -36,12 +39,20 @@ const COLORS: Record<string, string> = {
 
 interface RoomCalendarProps {
   roomNumber: string;
+  pricePerNight: number;
+  capacity: number;
 }
 
-const SimpleCalendar: React.FC<RoomCalendarProps> = ({ roomNumber }) => {
+const SimpleCalendar: React.FC<RoomCalendarProps> = ({
+  roomNumber,
+  pricePerNight,
+  capacity,
+}) => {
+  const { bookRoom } = useBooking();
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [checkInDate, setCheckInDate] = useState<Date | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
+  const [guests, setGuests] = useState<number>(1);
 
   const startDate = useMemo(() => {
     return format(startOfMonth(currentMonth), "yyyy-MM-dd");
@@ -53,7 +64,7 @@ const SimpleCalendar: React.FC<RoomCalendarProps> = ({ roomNumber }) => {
 
   const {
     data: reservations,
-    isLoading,
+    isLoading: reservationsLoading,
     error,
   } = useGetRoomReservationsQuery({
     roomNumber: roomNumber,
@@ -143,21 +154,15 @@ const SimpleCalendar: React.FC<RoomCalendarProps> = ({ roomNumber }) => {
       />
     );
   };
-
-  const handleBooking = () => {
-    if (checkInDate && checkOutDate) {
-      console.log("Booking:", {
-        roomNumber: roomNumber,
-        checkIn: format(checkInDate, "yyyy-MM-dd"),
-        checkOut: format(checkOutDate, "yyyy-MM-dd"),
+  const handleBooking = async () => {
+    if (checkInDate && checkOutDate)
+      await bookRoom({
+        roomNumber,
+        roomPricePerNight: pricePerNight,
+        checkInDate: format(checkInDate, "yyyy-MM-dd"),
+        checkOutDate: format(checkOutDate, "yyyy-MM-dd"),
+        guests,
       });
-      alert(
-        `Booking Room ${roomNumber}\nCheck-in: ${format(
-          checkInDate,
-          "MMM dd, yyyy"
-        )}\nCheck-out: ${format(checkOutDate, "MMM dd, yyyy")}`
-      );
-    }
   };
 
   const handleReset = () => {
@@ -212,6 +217,37 @@ const SimpleCalendar: React.FC<RoomCalendarProps> = ({ roomNumber }) => {
           <strong>Check-out:</strong>{" "}
           {checkOutDate ? format(checkOutDate, "MMM dd, yyyy") : "Not selected"}
         </Typography>
+        <Box 
+          sx={{ 
+            display: "flex", 
+            alignItems: "center", 
+            gap: 1,
+            justifyContent: "space-between"
+          }}
+        >
+          <Typography variant="body2">
+            <strong>Guests:</strong>
+          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, maxHeight: 10 }}>
+            <IconButton
+              size="small"
+              onClick={() => setGuests(Math.max(1, guests - 1))}
+              disabled={guests == 1}
+            >
+              <Remove fontSize="small" />
+            </IconButton>
+            <Typography variant="body2" sx={{ minWidth: 30, textAlign: "center" }}>
+              {guests}
+            </Typography>
+            <IconButton
+              size="small"
+              onClick={() => setGuests(Math.min(capacity, guests + 1))}
+              disabled={guests == capacity}
+            >
+              <Add fontSize="small" />
+            </IconButton>
+          </Box>
+        </Box>
         <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
           <Button
             variant="contained"
@@ -228,7 +264,7 @@ const SimpleCalendar: React.FC<RoomCalendarProps> = ({ roomNumber }) => {
         </Box>
       </Box>
 
-      {isLoading && (
+      {reservationsLoading && (
         <Box display="flex" justifyContent="center" py={4}>
           <CircularProgress />
         </Box>
@@ -240,7 +276,7 @@ const SimpleCalendar: React.FC<RoomCalendarProps> = ({ roomNumber }) => {
         </Alert>
       )}
 
-      {!isLoading && !error && (
+      {!reservationsLoading && !error && (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DateCalendar
             value={null}

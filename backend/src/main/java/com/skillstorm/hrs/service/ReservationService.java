@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.skillstorm.hrs.dto.CalendarEventDTO;
 import com.skillstorm.hrs.dto.reservation.BlockRequestDTO;
 import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
+import com.skillstorm.hrs.dto.reservation.ReservationResponseDTO;
 import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.exception.ResourceNotFoundException;
 import com.skillstorm.hrs.exception.RoomNotAvailableException;
@@ -179,9 +180,11 @@ public class ReservationService {
         .type(Reservation.ReservationType.GUEST_BOOKING)
         .build();
     Reservation savedReservation = reservationRepository.save(reservation);
-    System.out.println("\n\n\n\n\n\n\nEMAILLLLLLLLLLL" + guestEmail + "\n\n\n\n\n\n");
-    emailService.sendBookingConfirmation(receiptUrl, guestEmail, roomNumber, checkInDate, checkOutDate, guests,
-        totalPrice);
+    // System.out.println("\n\n\n\n\n\n\nEMAILLLLLLLLLLL" + guestEmail +
+    // "\n\n\n\n\n\n");
+    // emailService.sendBookingConfirmation(receiptUrl, guestEmail, roomNumber,
+    // checkInDate, checkOutDate, guests,
+    // totalPrice);
     return savedReservation;
   }
 
@@ -243,17 +246,54 @@ public class ReservationService {
     return reservationRepository.findByUserIdOrderByStartDateDesc(userId);
   }
 
-  // let repository compare dates
-  public List<Reservation> getUpcomingReservations(String userId) {
+  public List<ReservationResponseDTO> getUpcomingReservations(String userId) {
     LocalDate today = LocalDate.now();
-    return reservationRepository
+    List<Reservation> reservations = reservationRepository
         .findByUserIdAndEndDateGreaterThanEqualOrderByStartDateAsc(userId, today);
+    return reservations.stream()
+        .map(this::mapToResponseDTO)
+        .collect(Collectors.toList());
   }
 
-  // let repository compare dates
-  public List<Reservation> getPastReservations(String userId) {
+  public List<ReservationResponseDTO> getPastReservations(String userId) {
     LocalDate today = LocalDate.now();
-    return reservationRepository
+    List<Reservation> reservations = reservationRepository
         .findByUserIdAndEndDateLessThanOrderByEndDateDesc(userId, today);
+
+    return reservations.stream()
+        .map(this::mapToResponseDTO)
+        .collect(Collectors.toList());
+  }
+
+  public List<Reservation> getUpcomingReservationsTest(String userId) {
+    LocalDate today = LocalDate.now();
+    List<Reservation> reservations = reservationRepository
+        .findByUserIdAndEndDateGreaterThanEqualOrderByStartDateAsc(userId, today);
+    return reservations;
+
+  }
+
+  public List<Reservation> getPastReservationsTest(String userId) {
+    LocalDate today = LocalDate.now();
+    List<Reservation> reservations = reservationRepository
+        .findByUserIdAndEndDateLessThanOrderByEndDateDesc(userId, today);
+    return reservations;
+  }
+
+  private ReservationResponseDTO mapToResponseDTO(Reservation reservation) {
+    Room room = roomRepository.findByRoomNumber(reservation.getRoomId())
+        .orElseThrow(() -> new ResourceNotFoundException("Room not found with number " + reservation.getRoomId()));
+
+    return ReservationResponseDTO.builder()
+        .id(reservation.getId())
+        .publicId(reservation.getPublicId())
+        .startDate(reservation.getStartDate())
+        .endDate(reservation.getEndDate())
+        .guests(reservation.getGuests())
+        .totalPrice(reservation.getTotalPrice())
+        .paymentStatus(reservation.getPaymentStatus())
+        .roomNumber(room.getRoomNumber())
+        .roomType(room.getRoomDetails().getType())
+        .build();
   }
 }
