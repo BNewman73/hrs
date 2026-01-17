@@ -155,7 +155,11 @@ const RoomResultCard = ({
             >
               {isLoading ? <CircularProgress size={20} /> : "Book Now"}
             </Button>
-            <RoomDetailsModal roomNumber={room.roomNumber} />
+            <RoomDetailsModal
+              roomNumber={room.roomNumber}
+              guests={guests}
+              pricePerNight={room.pricePerNight}
+            />
           </Stack>
         </Box>
 

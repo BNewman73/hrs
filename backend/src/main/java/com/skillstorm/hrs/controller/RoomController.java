@@ -23,6 +23,8 @@ import com.skillstorm.hrs.dto.roomDTOS.RoomDTO;
 import com.skillstorm.hrs.dto.roomDTOS.RoomPatchDTO;
 import com.skillstorm.hrs.dto.roomDTOS.RoomPutDTO;
 import com.skillstorm.hrs.dto.roomDTOS.RoomResponseDTO;
+import com.skillstorm.hrs.model.Room;
+import com.skillstorm.hrs.model.RoomDetails.RoomType;
 import com.skillstorm.hrs.service.ReservationService;
 import com.skillstorm.hrs.service.RoomService;
 
@@ -50,6 +52,13 @@ public class RoomController {
     public ResponseEntity<List<RoomResponseDTO>> getRooms() {
         List<RoomResponseDTO> allRooms = roomService.retrieveAllRooms();
         return ResponseEntity.ok(allRooms);
+    }
+
+    @GetMapping("/type/{roomType}")
+    public ResponseEntity<List<Room>> getRoomsByType(@PathVariable RoomType roomType) {
+        System.out.println(roomType);
+        List<Room> rooms = roomService.getRoomsByType(roomType);
+        return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
 
     @GetMapping("{publicId}")

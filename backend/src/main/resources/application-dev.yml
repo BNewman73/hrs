@@ -1,5 +1,4 @@
 # Development config
-
 spring:
   data:
     mongodb:

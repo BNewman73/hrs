@@ -95,6 +95,17 @@ declare global {
     paymentStatus?: string;
     stripePaymentIntentId: string;
   }
+  export interface ReservationResponseDTO {
+    id: string;
+    publicId: string;
+    startDate: string;
+    endDate: string;
+    guests: number;
+    totalPrice: number;
+    paymentStatus: string;
+    roomNumber: string;
+    roomType: RoomType;
+  }
 
   interface User {
     id: number;

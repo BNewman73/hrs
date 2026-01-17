@@ -3,6 +3,7 @@ import { Box, Typography, CircularProgress, Alert, Stack } from "@mui/material";
 import { type SerializedError } from "@reduxjs/toolkit";
 import { type FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import RoomCard from "./RoomCard";
+import { getErrorMessage } from "../../features/errorUtils";
 interface RoomListProps {
   rooms?: Room[];
   isLoading: boolean;
@@ -10,6 +11,7 @@ interface RoomListProps {
   checkInDate: string;
   checkOutDate: string;
   guests: number;
+  filtered: boolean;
 }
 
 const RoomList: React.FC<RoomListProps> = ({
@@ -19,6 +21,7 @@ const RoomList: React.FC<RoomListProps> = ({
   checkInDate,
   checkOutDate,
   guests,
+  filtered,
 }) => {
   if (isLoading) {
     return (
@@ -31,7 +34,8 @@ const RoomList: React.FC<RoomListProps> = ({
   if (error) {
     return (
       <Alert severity="error" sx={{ mt: 2 }}>
-        Failed to load available rooms. Please try again later.
+        {/*Failed to load available rooms. Please try again later.*/}
+        {getErrorMessage(error)}
       </Alert>
     );
   }
@@ -67,6 +71,7 @@ const RoomList: React.FC<RoomListProps> = ({
             checkInDate={checkInDate}
             checkOutDate={checkOutDate}
             guests={guests}
+            filtered={filtered}
           />
         ))}
       </Stack>

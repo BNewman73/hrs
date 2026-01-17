@@ -6,8 +6,8 @@ import {
   CircularProgress,
   CardMedia,
 } from "@mui/material";
-import { useCreateCheckoutSessionMutation } from "../../features/roomApi";
 import RoomDetailsModal from "./RoomDetailsModal";
+import { useBooking } from "../../hooks/useBooking";
 
 interface Room {
   roomNumber: string;
@@ -15,6 +15,7 @@ interface Room {
   images: string[];
   roomDetails: {
     type: string;
+    maxCapacity: number;
   };
   description: string;
 }
@@ -24,6 +25,7 @@ interface RoomResultCardProps {
   checkInDate: string;
   checkOutDate: string;
   guests: number;
+  filtered: boolean;
 }
 
 const RoomResultCard = ({
@@ -31,9 +33,9 @@ const RoomResultCard = ({
   checkInDate,
   checkOutDate,
   guests,
+  filtered,
 }: RoomResultCardProps) => {
-  const [createCheckoutSession, { isLoading }] =
-    useCreateCheckoutSessionMutation();
+  const { bookRoom, isLoading } = useBooking();
 
   const formattedPrice = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -41,40 +43,14 @@ const RoomResultCard = ({
     minimumFractionDigits: 0,
   }).format(room.pricePerNight);
 
-  /*const formatRoomType = (type: string) => {
-    return type
-      .split("_")
-      .map((word) => word.charAt(0) + word.slice(1).toLowerCase())
-      .join(" ");
-  };*/
-
-  const calculateNights = () => {
-    const checkIn = new Date(checkInDate);
-    const checkOut = new Date(checkOutDate);
-    const diffTime = Math.abs(checkOut.getTime() - checkIn.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  };
-
   const handleBookNow = async () => {
-    try {
-      const numberOfNights = calculateNights();
-      const totalPrice = room.pricePerNight * numberOfNights;
-
-      const result = await createCheckoutSession({
-        roomNumber: room.roomNumber,
-        checkInDate,
-        checkOutDate,
-        guests,
-        numberOfNights,
-        totalPrice,
-      }).unwrap();
-
-      // Redirect to Stripe Checkout
-      window.location.href = result.url;
-    } catch (err) {
-      console.error("Failed to create checkout session:", err);
-    }
+    await bookRoom({
+      roomNumber: room.roomNumber,
+      roomPricePerNight: room.pricePerNight,
+      checkInDate,
+      checkOutDate,
+      guests,
+    });
   };
 
   return (
@@ -163,15 +139,22 @@ const RoomResultCard = ({
             alignItems: "center",
           }}
         >
-          <Button
-            variant="contained"
-            size="small"
-            onClick={handleBookNow}
-            disabled={isLoading}
-          >
-            {isLoading ? <CircularProgress size={20} /> : "Book Now"}
-          </Button>
-          <RoomDetailsModal roomNumber={room.roomNumber} />
+          {filtered ? (
+            <Button
+              variant="contained"
+              size="small"
+              onClick={handleBookNow}
+              disabled={isLoading}
+            >
+              {isLoading ? <CircularProgress size={20} /> : "Book Now"}
+            </Button>
+          ) : (
+            <RoomDetailsModal
+              roomNumber={room.roomNumber}
+              capacity={room.roomDetails.maxCapacity}
+              pricePerNight={room.pricePerNight}
+            />
+          )}
         </Box>
       </Box>
     </Card>
