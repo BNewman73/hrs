@@ -30,6 +30,7 @@ import { useGetPrincipalQuery } from "../features/userApi";
 import { setUser, clearUser } from "../features/userSlice";
 import { useDispatch } from "react-redux";
 import AccountCard from "./account/AccountCard";
+import OccupancyCard from "./reservations/OccupancyCard";
 
 const DRAWER_WIDTH = 280;
 
@@ -61,7 +62,7 @@ export default function DashboardPage() {
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
   const menuItems = [
-    { id: "Table", label: "View Inventory", icon: <BedIcon /> },
+    { id: "Table", label: "View Rooms", icon: <BedIcon /> },
 
     {
       id: "Reservations",
@@ -69,6 +70,7 @@ export default function DashboardPage() {
       icon: <EventNoteIcon />,
     },
     { id: "Rooms", label: "Create Room", icon: <AddHomeWorkIcon /> },
+    { id: "Occupancy", label: "Occupancy Analysis", icon: <EventNoteIcon /> },
   ];
 
   const renderContent = () => {
@@ -79,6 +81,8 @@ export default function DashboardPage() {
         return <RoomCreateForm crud="Create" />;
       case "Reservations":
         return <ReservationTable />;
+      case "Occupancy":
+        return <OccupancyCard />;
       case "Table":
       default:
         return <RoomTable />;
@@ -321,7 +325,7 @@ export default function DashboardPage() {
         >
           <Box sx={{ mb: 4 }}>
             <Typography
-              variant="h4"
+              variant="h5"
               sx={{
                 fontWeight: 900,
                 letterSpacing: "-0.03em",
@@ -329,10 +333,14 @@ export default function DashboardPage() {
               }}
             >
               {activeTab === "Account"
-                ? "Account Settings"
+                ? ""
                 : activeTab === "Rooms"
                 ? "Room Management"
-                : "Hotel Inventory"}
+                : activeTab === "Reservations"
+                ? "Reservations"
+                : activeTab === "Occupancy"
+                ? "Occupancy Analysis"
+                : "Rooms"}
             </Typography>
             <Typography
               variant="body1"
@@ -341,6 +349,10 @@ export default function DashboardPage() {
               {activeTab === "Rooms"
                 ? "Add new rooms to your hotel."
                 : activeTab === "Account"
+                ? ""
+                : activeTab === "Reservations"
+                ? "View and manage reservations."
+                : activeTab === "Occupancy"
                 ? ""
                 : "Manage and update your current available rooms."}
             </Typography>
