@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.skillstorm.hrs.dto.CalendarEventDTO;
 import com.skillstorm.hrs.dto.reservation.BlockRequestDTO;
 import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
+import com.skillstorm.hrs.dto.reservation.RefundResponseDTO;
 import com.skillstorm.hrs.dto.reservation.ReservationResponseDTO;
 import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.exception.ResourceNotFoundException;
@@ -19,14 +20,15 @@ import com.skillstorm.hrs.model.Reservation;
 import com.skillstorm.hrs.model.Reservation.ReservationType;
 import com.skillstorm.hrs.model.Room;
 import com.skillstorm.hrs.model.RoomDetails.RoomType;
-import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.repository.ReservationRepository;
 import com.skillstorm.hrs.repository.RoomRepository;
 import com.skillstorm.hrs.repository.UserRepository;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.Refund;
 import com.stripe.model.checkout.Session;
+import com.stripe.param.RefundCreateParams;
 
 import lombok.RequiredArgsConstructor;
 
@@ -180,11 +182,9 @@ public class ReservationService {
         .type(Reservation.ReservationType.GUEST_BOOKING)
         .build();
     Reservation savedReservation = reservationRepository.save(reservation);
-    // System.out.println("\n\n\n\n\n\n\nEMAILLLLLLLLLLL" + guestEmail +
-    // "\n\n\n\n\n\n");
-    // emailService.sendBookingConfirmation(receiptUrl, guestEmail, roomNumber,
-    // checkInDate, checkOutDate, guests,
-    // totalPrice);
+
+    emailService.sendBookingConfirmation(receiptUrl, guestEmail, roomNumber, checkInDate, checkOutDate, guests,
+        totalPrice);
     return savedReservation;
   }
 
@@ -296,4 +296,42 @@ public class ReservationService {
         .roomType(room.getRoomDetails().getType())
         .build();
   }
+
+  public RefundResponseDTO postRefund(String paymentIntentId) {
+    try {
+      PaymentIntent paymentIntent = PaymentIntent.retrieve(paymentIntentId);
+
+      String latestChargeId = paymentIntent.getLatestCharge();
+      if (latestChargeId == null) {
+        throw new IllegalStateException("No Stripe charge found for payment intent");
+      }
+
+      RefundCreateParams params = RefundCreateParams.builder()
+          .setCharge(latestChargeId)
+          .build();
+
+      Refund refund = Refund.create(params);
+
+      Reservation reservation = reservationRepository
+          .findByStripePaymentIntentId(paymentIntentId)
+          .orElseThrow(() -> new IllegalStateException("Reservation not found for payment intent"));
+
+      reservation.setPaymentStatus("refunded");
+      reservationRepository.save(reservation);
+
+      return RefundResponseDTO.builder()
+          .refundId(refund.getId())
+          .paymentIntentId(paymentIntentId)
+          .chargeId(latestChargeId)
+          .amount(refund.getAmount())
+          .currency(refund.getCurrency())
+          .status(refund.getStatus())
+          .created(refund.getCreated())
+          .build();
+
+    } catch (StripeException e) {
+      throw new RuntimeException("Stripe refund failed: " + e.getMessage(), e);
+    }
+  }
+
 }

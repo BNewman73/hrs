@@ -50,6 +50,7 @@ export default function RoomTable() {
         rowsPerPage={logic.rowsPerPage}
         onPageChange={logic.setPage}
         onRowsPerPageChange={logic.setRowsPerPage}
+        isLoading={logic.isLoading}
         renderRow={(room) => (
           <RoomRow
             key={room.roomNumber}

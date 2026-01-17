@@ -13,6 +13,7 @@ import com.skillstorm.hrs.model.Reservation.ReservationType;
 
 @Repository
 public interface ReservationRepository extends MongoRepository<Reservation, String> {
+  Optional<Reservation> findByStripePaymentIntentId(String paymentIntentId);
   List<Reservation> findByUserId(String userId);
 
   List<Reservation> findByRoomId(String roomId);

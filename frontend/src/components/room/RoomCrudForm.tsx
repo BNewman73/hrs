@@ -10,7 +10,6 @@ import {
   InputLabel,
   FormControl,
   IconButton,
-  ButtonGroup,
   Dialog,
   DialogActions,
   DialogContent,
@@ -188,6 +187,9 @@ export default function RoomCreateForm({
               label="Description"
               type="text"
               value={room.description}
+              multiline
+              minRows={3}
+              maxRows={5}
               onChange={(e) => handleChange("description", e.target.value)}
               required
             />
@@ -225,30 +227,40 @@ export default function RoomCreateForm({
               </Select>
             </FormControl>
 
-            <ButtonGroup fullWidth sx={{ mt: 1 }}>
+            <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
               <Button
                 type="submit"
                 variant="contained"
                 size="large"
                 disabled={isCreating || isUpdating}
-                sx={{ py: 1.5, borderRadius: "8px 0 0 8px" }}
+                sx={{
+                  flex: 1,
+                  py: 1.4,
+                  borderRadius: 2,
+                  fontWeight: 700,
+                }}
               >
                 {crud}
               </Button>
+
               {crud === "Update" && (
                 <Button
                   type="button"
-                  variant="contained"
+                  variant="outlined"
                   color="error"
                   size="large"
                   disabled={isDeleting}
                   onClick={() => setConfirmOpen(true)}
-                  sx={{ py: 1.5, borderRadius: "0 8px 8px 0" }}
+                  sx={{
+                    px: 3,
+                    borderRadius: 2,
+                    fontWeight: 700,
+                  }}
                 >
                   Delete
                 </Button>
               )}
-            </ButtonGroup>
+            </Box>
           </Box>
         </Box>
       </Container>

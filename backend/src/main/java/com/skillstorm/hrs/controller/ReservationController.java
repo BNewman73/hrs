@@ -19,13 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.skillstorm.hrs.dto.reservation.BlockRequestDTO;
 import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
+import com.skillstorm.hrs.dto.reservation.RefundResponseDTO;
 import com.skillstorm.hrs.dto.reservation.ReservationResponseDTO;
 import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.model.Reservation;
-import com.skillstorm.hrs.model.Room;
-import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.model.Reservation.ReservationType;
+import com.skillstorm.hrs.model.Room;
 import com.skillstorm.hrs.model.RoomDetails.RoomType;
+import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.service.ReservationService;
 import com.skillstorm.hrs.service.UserService;
 
@@ -160,5 +161,11 @@ public class ReservationController {
     String userId = "107082386102921512899";
     List<Reservation> reservations = reservationService.getUpcomingReservationsTest(userId);
     return new ResponseEntity<>(reservations, HttpStatus.OK);
+  }
+
+  @PostMapping("/refund/{paymentId}")
+  public ResponseEntity<RefundResponseDTO> createBooking(@PathVariable String paymentId) {
+    RefundResponseDTO refund = reservationService.postRefund(paymentId);
+    return new ResponseEntity<>(refund, HttpStatus.CREATED);
   }
 }

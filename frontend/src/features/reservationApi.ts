@@ -6,9 +6,11 @@ export const reservationApi = createApi({
     baseUrl: API_BASE,
     credentials: "include",
   }),
+  tagTypes: ["Reservations"],
   endpoints: (builder) => ({
     getAllReservations: builder.query<ReservationDTO[], void>({
       query: () => "/reservations",
+      providesTags: ["Reservations"],
     }),
     getReservationById: builder.query({
       query: (id) => `/reservations/${id}`,
@@ -47,6 +49,14 @@ export const reservationApi = createApi({
         url: `/reservations/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Reservations"],
+    }),
+    refundReservation: builder.mutation<RefundResponse, string>({
+      query: (id) => ({
+        url: `/reservations/refund/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Reservations"],
     }),
   }),
 });
@@ -60,4 +70,5 @@ export const {
   useCreateGuestBookingMutation,
   useCreateAdminBlockMutation,
   useDeleteReservationMutation,
+  useRefundReservationMutation,
 } = reservationApi;

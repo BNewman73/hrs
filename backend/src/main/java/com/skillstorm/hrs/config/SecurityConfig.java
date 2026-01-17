@@ -11,38 +11,42 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.skillstorm.hrs.security.CustomAuthenticationSucessHandler;
+import com.skillstorm.hrs.security.CustomAuthenticationSuccessHandler;
+import com.skillstorm.hrs.service.CustomOAuth2UserService;
+import com.skillstorm.hrs.service.CustomOidcUserService;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
-
-        private final CustomAuthenticationSucessHandler customAuthenticationSucessHandler;
 
         @Value("${app.frontend.url}")
         private String frontendUrl;
 
-        public SecurityConfig(CustomAuthenticationSucessHandler customAuthenticationSucessHandler) {
-                this.customAuthenticationSucessHandler = customAuthenticationSucessHandler;
-        }
+        private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+        private final CustomOAuth2UserService customOAuth2UserService;
+        private final CustomOidcUserService customOidcUserService;
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
                 return http
                                 .csrf(csrf -> csrf.disable())
                                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers("/oauth2/**", "/login/**").permitAll()
-                                                // .requestMatchers("**").permitAll()
+                                                .requestMatchers("/room-details/comprehensive").permitAll()
+
                                                 .anyRequest().authenticated())
                                 .oauth2Login(oauth -> oauth
-                                                .successHandler(customAuthenticationSucessHandler))
+                                                .userInfoEndpoint(userInfo -> userInfo
+                                                                .userService(customOAuth2UserService)
+                                                                .oidcUserService(customOidcUserService))
+                                                .successHandler(customAuthenticationSuccessHandler))
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")
-                                                .invalidateHttpSession(true)
-                                                .clearAuthentication(true)
                                                 .logoutSuccessUrl(frontendUrl + "/login"))
                                 .build();
         }

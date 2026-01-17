@@ -11,6 +11,37 @@ declare global {
     | "COFFEE_MAKER"
     | "MICROWAVE";
 
+  export interface RefundResponse {
+    id: string;
+    object: "refund";
+    amount: number;
+    balance_transaction: string;
+    charge: string;
+    created: number; // unix timestamp (seconds)
+    currency: string;
+
+    destination_details: {
+      type: "card";
+      card: {
+        reference: string;
+        reference_status: "available" | "pending" | "unavailable";
+        reference_type: "acquirer_reference_number";
+        type: "refund";
+      };
+    };
+
+    metadata: Record<string, string>;
+
+    payment_intent: string | null;
+    reason: "duplicate" | "fraudulent" | "requested_by_customer" | null;
+
+    receipt_number: string | null;
+    source_transfer_reversal: string | null;
+    transfer_reversal: string | null;
+
+    status: "pending" | "succeeded" | "failed" | "canceled";
+  }
+
   interface RoomDetails {
     type: RoomType;
     description: string;
@@ -61,15 +92,8 @@ declare global {
     totalPrice?: number;
     blockReason?: BlockReason;
     notes?: string;
-  }
-  interface ReservationDTO {
-    id: string;
-    roomId: string;
-    startDate: string;
-    endDate: string;
-    type: "GUEST_BOOKING" | "ADMIN_BLOCK";
-    totalPrice?: number;
-    blockReason?: string;
+    paymentStatus?: string;
+    stripePaymentIntentId: string;
   }
   export interface ReservationResponseDTO {
     id: string;
