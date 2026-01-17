@@ -16,6 +16,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
+  Label,
 } from "recharts";
 
 const mockData = [
@@ -47,11 +48,8 @@ export default function OccupancyCard() {
       <CardContent>
         {/* Header */}
         <Box sx={{ mb: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 800 }}>
-            Analyze Occupancy
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Review room occupancy trends over selected date ranges.
+          <Typography variant="body1" color="text.secondary">
+            Review trends in total bookings over selected date ranges.
           </Typography>
         </Box>
 
@@ -68,7 +66,7 @@ export default function OccupancyCard() {
         >
           <TextField
             type="date"
-            label="Start Date"
+            label= "From"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             InputLabelProps={{ shrink: true }}
@@ -77,7 +75,7 @@ export default function OccupancyCard() {
 
           <TextField
             type="date"
-            label="End Date"
+            label="Until"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             InputLabelProps={{ shrink: true }}
@@ -102,8 +100,16 @@ export default function OccupancyCard() {
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={mockData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
+              <XAxis dataKey="date" tick={{ fontSize: 12 }} tickMargin={8}/>
+              <YAxis tick={{ fontSize: 14 }} tickMargin={8}>
+                    <Label
+                    value="Occupancy"
+                    angle={-90}
+                    position="insideLeft"
+                    style={{ fontWeight: 500 }}
+                    fontSize={14}
+                    />
+                </YAxis>
               <Tooltip />
               <Line
                 type="monotone"

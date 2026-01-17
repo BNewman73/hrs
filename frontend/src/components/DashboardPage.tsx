@@ -70,7 +70,7 @@ export default function DashboardPage() {
       icon: <EventNoteIcon />,
     },
     { id: "Rooms", label: "Create Room", icon: <AddHomeWorkIcon /> },
-    { id: "Occupancy", label: "Occupancy Analysis", icon: <EventNoteIcon /> },
+    { id: "Occupancy", label: "Occupancy Report", icon: <EventNoteIcon /> },
   ];
 
   const renderContent = () => {
@@ -339,7 +339,7 @@ export default function DashboardPage() {
                 : activeTab === "Reservations"
                 ? "Reservations"
                 : activeTab === "Occupancy"
-                ? "Occupancy Analysis"
+                ? "Occupancy Report"
                 : "Rooms"}
             </Typography>
             <Typography
