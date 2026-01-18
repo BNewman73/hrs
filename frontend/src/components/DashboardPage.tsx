@@ -32,7 +32,7 @@ import { useGetPrincipalQuery } from "../features/userApi";
 import { setUser, clearUser } from "../features/userSlice";
 import { useDispatch } from "react-redux";
 import UserTable from "./user/UserTable";
-import AccountCard from "./account/AccountCard";
+
 import OccupancyCard from "./reservations/OccupancyCard";
 
 const DRAWER_WIDTH = 280;
@@ -289,32 +289,32 @@ export default function DashboardPage() {
               {activeTab === "Account"
                 ? ""
                 : activeTab === "Rooms"
-                ? "Room Management"
-                : activeTab === "Users"
-                ? "Users"
-                : activeTab === "Reservations"
-                ? "Reservations"
-                : activeTab === "Reservations"
-                ? "Reservations"
-                : activeTab === "Occupancy"
-                ? "Occupancy Report"
-                : "Rooms"}
+                  ? "Room Management"
+                  : activeTab === "Users"
+                    ? "Users"
+                    : activeTab === "Reservations"
+                      ? "Reservations"
+                      : activeTab === "Reservations"
+                        ? "Reservations"
+                        : activeTab === "Occupancy"
+                          ? "Occupancy Report"
+                          : "Rooms"}
             </Typography>
 
             <Typography color="text.secondary">
               {activeTab === "Rooms"
                 ? "Add new rooms to your hotel."
                 : activeTab === "Users"
-                ? "View and manage users."
-                : activeTab === "Table"
-                ? "View and manage hotel rooms."
-                : activeTab === "Account"
-                ? ""
-                : activeTab === "Reservations"
-                ? "View and manage reservations."
-                : activeTab === "Occupancy"
-                ? ""
-                : "Manage and update your current available rooms."}
+                  ? "View and manage users."
+                  : activeTab === "Table"
+                    ? "View and manage hotel rooms."
+                    : activeTab === "Account"
+                      ? ""
+                      : activeTab === "Reservations"
+                        ? "View and manage reservations."
+                        : activeTab === "Occupancy"
+                          ? ""
+                          : "Manage and update your current available rooms."}
             </Typography>
           </Box>
 

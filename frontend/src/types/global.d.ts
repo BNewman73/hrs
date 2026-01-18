@@ -125,6 +125,11 @@ declare global {
       role: string;
     };
   }
+  type ToastState = {
+    open: boolean;
+    message: string;
+    severity: "success" | "error" | "info" | "warning";
+  };
 
   interface User {
     id: number;
