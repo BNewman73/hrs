@@ -1,7 +1,7 @@
 package com.skillstorm.hrs.service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -301,14 +301,11 @@ public class ReservationService {
   public Map<LocalDate, Integer> getOccupancyByDay(LocalDate startDate, LocalDate endDate) {
     
     List<Reservation> reservations = reservationRepository.findReservationsInDateRange(startDate, endDate);
-    Map<LocalDate, Integer> occupancyMap = new HashMap<>();
+    Map<LocalDate, Integer> occupancyMap = new LinkedHashMap<>();
 
     for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-      
       int count = 0;
-      
       for (Reservation reservation : reservations) {
-        
         if (!date.isBefore(reservation.getStartDate()) && date.isBefore(reservation.getEndDate())) {
           count++;
         }

@@ -153,9 +153,14 @@ public class ReservationController {
     return new ResponseEntity<>(refund, HttpStatus.CREATED);
   }
 
+  @GetMapping("/occupancy")
+  public ResponseEntity<Map<LocalDate, Integer>> getOccupancy(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate) {
+      return  ResponseEntity.ok(reservationService.getOccupancyByDay(checkInDate, checkOutDate));
+  }
+
   @GetMapping("/occupancy/ytd")
-  public ResponseEntity<Map<LocalDate, Integer>> getOccupancyYTD() {
-      return  ResponseEntity.ok(reservationService.getOccupancyByDay(LocalDate.now().withDayOfYear(1).atTime(0, 0).toLocalDate(), LocalDate.now().atTime(23, 59).toLocalDate()));
+  public ResponseEntity<Map<LocalDate, Integer>> getYearToDateOccupancy() {
+      return  ResponseEntity.ok(reservationService.getOccupancyByDay(LocalDate.now().withDayOfYear(1), LocalDate.now()));
   }
 
 }
