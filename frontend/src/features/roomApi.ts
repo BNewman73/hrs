@@ -63,6 +63,12 @@ export const roomApi = createApi({
         body,
       }),
     }),
+    getTransactions: builder.query<Transaction[], void>({
+      query: () => ({
+        url: "/payment/transactions",
+        method: "GET",
+      }),
+    }),
     getAllRooms: builder.query<Room[], void>({
       query: () => ({
         url: "/rooms",
@@ -148,6 +154,7 @@ export const {
   useGetAvailableRoomsQuery,
   useGetRoomReservationsQuery,
   useGetAllRoomsQuery,
+  useGetTransactionsQuery,
   useUpdateRoomMutation,
   useCreateRoomMutation,
   useDeleteRoomMutation,

@@ -130,7 +130,15 @@ declare global {
     message: string;
     severity: "success" | "error" | "info" | "warning";
   };
-
+  interface Transaction {
+    paymentIntentId: string;
+    amount: number;
+    currency: string; // "usd"
+    status: string;
+    created: string;
+    customerEmail: string;
+    reservation: ReservationDTO;
+  }
   interface User {
     id: number;
     name: string;
@@ -149,6 +157,14 @@ declare global {
     role: "GUEST" | "ADMIN" | "MANAGER";
     enabled?: boolean;
   }
+  export type TransactionStatusFilter =
+    | "ALL"
+    | "succeeded"
+    | "failed"
+    | "canceled"
+    | "refunded";
+
+  export type TransactionSortOrder = "none" | "date_asc" | "date_desc";
 
   interface NavBarProps {
     user: User;

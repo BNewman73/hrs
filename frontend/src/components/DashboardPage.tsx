@@ -32,6 +32,8 @@ import { useGetPrincipalQuery } from "../features/userApi";
 import { useAppSelector } from "../shared/store/hooks";
 import UserTable from "./user/UserTable";
 import OccupancyCard from "./reservations/OccupancyCard";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import TransactionsTable from "../transaction/TransactionsTable";
 
 const DRAWER_WIDTH = 280;
 
@@ -60,6 +62,7 @@ export default function DashboardPage() {
     { id: "Users", label: "View Users", icon: <GroupIcon /> },
     { id: "Rooms", label: "Create Room", icon: <AddHomeWorkIcon /> },
     { id: "Occupancy", label: "Occupancy Report", icon: <EventNoteIcon /> },
+    { id: "Transactions", label: "Transactions", icon: <ReceiptIcon /> },
   ];
 
   const renderContent = () => {
@@ -74,6 +77,8 @@ export default function DashboardPage() {
         return <UserTable />;
       case "Occupancy":
         return <OccupancyCard />;
+      case "Transactions":
+        return <TransactionsTable />;
       case "Table":
       default:
         return <RoomTable />;
@@ -280,7 +285,9 @@ export default function DashboardPage() {
                       ? "Reservations"
                       : activeTab === "Occupancy"
                         ? "Occupancy Report"
-                        : "Rooms"}
+                        : activeTab === "Transactions"
+                          ? "Transactions"
+                          : "Rooms"}
             </Typography>
 
             <Typography color="text.secondary">
@@ -292,7 +299,9 @@ export default function DashboardPage() {
                     ? "View and manage hotel rooms."
                     : activeTab === "Reservations"
                       ? "View and manage reservations."
-                      : ""}
+                      : activeTab === "Transactions"
+                        ? "View Transactions."
+                        : ""}
             </Typography>
           </Box>
 
