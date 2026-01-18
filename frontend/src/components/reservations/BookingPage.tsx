@@ -4,6 +4,9 @@ import type { RoomType } from "../../types/enum";
 import { Box, Container, Fade, Typography } from "@mui/material";
 import FooterPage from "../FooterPage";
 import { useEffect } from "react";
+import { useGetPrincipalQuery } from "../../features/userApi";
+import { useAppSelector } from "../../shared/store/hooks";
+import NavBar from "../NavBar";
 
 const IMAGE =
   "https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg";
@@ -12,10 +15,26 @@ const BookingPage: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useGetPrincipalQuery();
+
+  const currentUser = useAppSelector((s) => s.user.user) || {
+    id: "",
+    firstName: "Guest",
+    lastName: "User",
+    email: "guest@stormstay.com",
+    avatarUrl: "/static/images/avatar/placeholder.jpg",
+    provider: "",
+    role: "guest",
+  };
   return (
     <>
       <Fade in unmountOnExit timeout={1000}>
         <Box component="div" display="flex" sx={{ flexDirection: "column" }}>
+          <Box sx={{ padding: "5px" }}>
+            <NavBar user={currentUser} />
+          </Box>
+
           <Box
             component="div"
             sx={{

@@ -5,8 +5,12 @@ import Avatar from "@mui/material/Avatar";
 
 import type { User } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
-
-export default function NavBar({ user }: { user: User }) {
+import stormIcon from "/stormstay-icon-192.png";
+interface NavBarProps {
+  user: User;
+  color?: string;
+}
+export default function NavBar({ user }: NavBarProps) {
   const navigate = useNavigate();
   return (
     <Box
@@ -15,6 +19,8 @@ export default function NavBar({ user }: { user: User }) {
         alignItems: "center",
         width: "100%",
         justifyContent: "space-between",
+        position: "sticky",
+        zIndex: 99999999,
       }}
     >
       <Box
@@ -23,7 +29,7 @@ export default function NavBar({ user }: { user: User }) {
       >
         <Box
           component="img"
-          src="../public/stormstay-icon-192.png"
+          src={stormIcon}
           alt="Storm Stay"
           sx={{
             width: 55,

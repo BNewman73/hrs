@@ -13,7 +13,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-
+import stormIcon from "/stormstay-icon-192.png";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ShieldIcon from "@mui/icons-material/Shield";
 import LanguageIcon from "@mui/icons-material/Language";
@@ -36,7 +36,6 @@ export default function HomePage() {
   const [storm, setStorm] = useState(false);
 
   const user = useAppSelector((s) => s.user.user);
-  console.log(user);
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [logout] = useLogoutMutation();
@@ -98,7 +97,7 @@ export default function HomePage() {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Box
               component="img"
-              src="../public/stormstay-icon-192.png"
+              src={stormIcon}
               alt="Storm Stay"
               sx={{
                 width: 60,

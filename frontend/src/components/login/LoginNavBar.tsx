@@ -1,8 +1,12 @@
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 
 import { useNavigate } from "react-router-dom";
+import stormIcon from "/stormstay-icon-192.png";
 
-export default function LoginPageNavBar() {
+interface LoginPageNavBarProps {
+  login: boolean;
+}
+export default function LoginPageNavBar({ login }: LoginPageNavBarProps) {
   const handleNavigation = useNavigate();
   return (
     <>
@@ -18,7 +22,7 @@ export default function LoginPageNavBar() {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Box
               component="img"
-              src="../public/stormstay-icon-192.png"
+              src={stormIcon}
               alt="Storm Stay"
               sx={{
                 width: 55,
@@ -38,28 +42,29 @@ export default function LoginPageNavBar() {
           </Box>
 
           <Box sx={{ flexGrow: 1 }} />
-
-          <Button
-            onClick={() => handleNavigation("/home")}
-            sx={{
-              color: "black",
-              fontWeight: 700,
-              fontSize: "1rem",
-              textTransform: "none",
-              px: 3,
-              py: 1,
-              borderRadius: "999px",
-              border: "2px solid #FF8533",
-              background:
-                "linear-gradient(135deg, rgba(255,133,51,0.15), rgba(255,133,51,0.05))",
-              "&:hover": {
-                background: "#FF8533",
-                color: "#0E103D",
-              },
-            }}
-          >
-            Home
-          </Button>
+          {login && (
+            <Button
+              onClick={() => handleNavigation("/home")}
+              sx={{
+                color: "black",
+                fontWeight: 700,
+                fontSize: "1rem",
+                textTransform: "none",
+                px: 3,
+                py: 1,
+                borderRadius: "999px",
+                border: "2px solid #FF8533",
+                background:
+                  "linear-gradient(135deg, rgba(255,133,51,0.15), rgba(255,133,51,0.05))",
+                "&:hover": {
+                  background: "#FF8533",
+                  color: "#0E103D",
+                },
+              }}
+            >
+              Home
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </>
