@@ -32,7 +32,6 @@ import { useGetPrincipalQuery } from "../features/userApi";
 import { setUser, clearUser } from "../features/userSlice";
 import { useDispatch } from "react-redux";
 import UserTable from "./user/UserTable";
-import AccountCard from "./account/AccountCard";
 import OccupancyCard from "./reservations/OccupancyCard";
 
 const DRAWER_WIDTH = 280;

@@ -7,7 +7,7 @@ export const roomApi = createApi({
     baseUrl: API_BASE,
     credentials: "include",
   }),
-  tagTypes: ["Rooms"],
+  tagTypes: ["Rooms", "RoomReservations"],
   endpoints: (builder) => ({
     getAllRoomsByType: builder.query({
       query: (roomType: RoomType) => ({
@@ -38,6 +38,9 @@ export const roomApi = createApi({
           endDate: params.endDate,
         },
       }),
+      providesTags: (result, error, { roomNumber }) => [
+        { type: "RoomReservations", id: roomNumber },
+      ]
     }),
     getComprehensiveRoomDetails: builder.query<RoomDetailsDTO[], void>({
       query: () => ({
@@ -108,7 +111,22 @@ export const roomApi = createApi({
     }),
     getCurrentReservations: builder.query<ReservationResponseDTO[], void>({
       query: () => "/reservations/mine/current",
-    })
+    }),
+createAdminBlock: builder.mutation({
+      query: (block: {
+        roomId: string;
+        startDate: string;
+        endDate: string;
+        blockReason: string;
+      }) => ({
+        url: "/reservations/blocks",
+        method: "POST",
+        body: block,
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: "RoomReservations", id: arg.roomId }
+      ]
+    }),
   }),
 });
 
@@ -125,5 +143,6 @@ export const {
   useCompleteReservationMutation,
   useGetUpcomingReservationsQuery,
   useGetPastReservationsQuery,
-  useGetCurrentReservationsQuery
+  useGetCurrentReservationsQuery,
+  useCreateAdminBlockMutation,
 } = roomApi;
