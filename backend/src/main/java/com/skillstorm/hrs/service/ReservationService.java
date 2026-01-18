@@ -4,16 +4,21 @@ import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.skillstorm.hrs.dto.CalendarEventDTO;
 import com.skillstorm.hrs.dto.reservation.BlockRequestDTO;
 import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
 import com.skillstorm.hrs.dto.reservation.RefundResponseDTO;
+import com.skillstorm.hrs.dto.reservation.ReservationWithGuestDTO;
+import com.skillstorm.hrs.dto.userDTOs.UserDTO;
 import com.skillstorm.hrs.dto.reservation.ReservationResponseDTO;
 import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.exception.ResourceNotFoundException;
@@ -22,6 +27,7 @@ import com.skillstorm.hrs.model.Reservation;
 import com.skillstorm.hrs.model.Reservation.ReservationType;
 import com.skillstorm.hrs.model.Room;
 import com.skillstorm.hrs.model.RoomDetails.RoomType;
+import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.repository.ReservationRepository;
 import com.skillstorm.hrs.repository.RoomRepository;
 import com.skillstorm.hrs.repository.UserRepository;
@@ -42,6 +48,7 @@ public class ReservationService {
   private final ReservationRepository reservationRepository;
   private final RoomRepository roomRepository;
   private final ReservationEmailService emailService;
+  private final ModelMapper modelMapper;
 
   public Reservation getReservationById(String id) {
     Optional<Reservation> reservation = reservationRepository.findById(id);
@@ -71,6 +78,41 @@ public class ReservationService {
 
   public List<Reservation> getAllReservations() {
     return reservationRepository.findAll();
+  }
+
+  public List<ReservationWithGuestDTO> getAllReservationsWithGuests() {
+
+    List<Reservation> reservations = reservationRepository.findAll();
+
+    Set<String> providerIds = reservations.stream()
+        .map(Reservation::getUserId)
+        .filter(Objects::nonNull)
+        .collect(Collectors.toSet());
+
+    Map<String, User> usersByProviderId = userRepository
+        .findByProviderIdIn(providerIds)
+        .stream()
+        .collect(Collectors.toMap(User::getProviderId, Function.identity()));
+
+    return reservations.stream().map(reservation -> {
+
+      ReservationWithGuestDTO dto = new ReservationWithGuestDTO();
+      dto.setReservation(reservation);
+
+      User guest = usersByProviderId.get(reservation.getUserId());
+      if (guest != null) {
+        dto.setGuest(new UserDTO(
+            guest.getId(),
+            guest.getFirstName(),
+            guest.getLastName(),
+            guest.getEmail(),
+            guest.getAvatarUrl(),
+            guest.getProvider().name(),
+            guest.getRole().name()));
+      }
+
+      return dto;
+    }).toList();
   }
 
   public void deleteReservation(String id) {

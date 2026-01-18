@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.skillstorm.hrs.dto.reservation.BlockRequestDTO;
 import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
 import com.skillstorm.hrs.dto.reservation.RefundResponseDTO;
+import com.skillstorm.hrs.dto.reservation.ReservationWithGuestDTO;
 import com.skillstorm.hrs.dto.reservation.ReservationResponseDTO;
 import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.model.Reservation;
@@ -44,6 +45,12 @@ public class ReservationController {
   @GetMapping
   public ResponseEntity<List<Reservation>> getAllReservations() {
     List<Reservation> reservations = reservationService.getAllReservations();
+    return new ResponseEntity<>(reservations, HttpStatus.OK);
+  }
+
+  @GetMapping("/with-guests")
+  public ResponseEntity<List<ReservationWithGuestDTO>> getAllReservationsWithGuest() {
+    List<ReservationWithGuestDTO> reservations = reservationService.getAllReservationsWithGuests();
     return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 
