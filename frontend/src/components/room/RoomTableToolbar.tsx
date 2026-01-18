@@ -10,7 +10,9 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import type { RoomType } from "../../types/enum";
+
+import { RoomType, RoomTypeDisplayNames } from "../../types/enum";
+import type { RoomType as RoomTypeType } from "../../types/enum";
 
 type SortOrder = "asc" | "desc" | "none";
 
@@ -18,8 +20,8 @@ interface ToolbarProps {
   isFiltered: boolean;
   searchQuery: string;
   onSearchChange: (val: string) => void;
-  typeFilter: RoomType | "ALL";
-  onTypeChange: (val: RoomType | "ALL") => void;
+  typeFilter: RoomTypeType | "ALL";
+  onTypeChange: (val: RoomTypeType | "ALL") => void;
   sortOrder: SortOrder;
   onSortChange: (val: SortOrder) => void;
   onReset: () => void;
@@ -35,6 +37,7 @@ export const RoomTableToolbar = ({ isFiltered, ...p }: ToolbarProps) => (
       alignItems: "center",
     }}
   >
+    {/* SEARCH */}
     <TextField
       size="small"
       sx={{
@@ -56,6 +59,7 @@ export const RoomTableToolbar = ({ isFiltered, ...p }: ToolbarProps) => (
       }}
     />
 
+    {/* FILTERS */}
     <Box
       sx={{
         display: "flex",
@@ -65,28 +69,38 @@ export const RoomTableToolbar = ({ isFiltered, ...p }: ToolbarProps) => (
         flexWrap: "wrap",
       }}
     >
+      {/* ROOM TYPE */}
       <FormControl
         size="small"
-        sx={{ minWidth: { xs: "calc(50% - 12px)", sm: 130 }, bgcolor: "white" }}
+        sx={{
+          minWidth: { xs: "calc(50% - 12px)", sm: 160 },
+          bgcolor: "white",
+        }}
       >
         <InputLabel>Type</InputLabel>
         <Select
           value={p.typeFilter}
           label="Type"
-          onChange={(e) => p.onTypeChange(e.target.value as RoomType | "ALL")}
+          onChange={(e) =>
+            p.onTypeChange(e.target.value as RoomTypeType | "ALL")
+          }
         >
           <MenuItem value="ALL">All Types</MenuItem>
-          {["SINGLE", "DOUBLE", "DELUXE", "SUITE"].map((t) => (
-            <MenuItem key={t} value={t}>
-              {t}
+          {Object.values(RoomType).map((type) => (
+            <MenuItem key={type} value={type}>
+              {RoomTypeDisplayNames[type]}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
 
+      {/* PRICE SORT */}
       <FormControl
         size="small"
-        sx={{ minWidth: { xs: "calc(50% - 12px)", sm: 120 }, bgcolor: "white" }}
+        sx={{
+          minWidth: { xs: "calc(50% - 12px)", sm: 140 },
+          bgcolor: "white",
+        }}
       >
         <InputLabel>Price</InputLabel>
         <Select
@@ -95,11 +109,12 @@ export const RoomTableToolbar = ({ isFiltered, ...p }: ToolbarProps) => (
           onChange={(e) => p.onSortChange(e.target.value as SortOrder)}
         >
           <MenuItem value="none">None</MenuItem>
-          <MenuItem value="asc">Low to High</MenuItem>
-          <MenuItem value="desc">High to Low</MenuItem>
+          <MenuItem value="asc">Low → High</MenuItem>
+          <MenuItem value="desc">High → Low</MenuItem>
         </Select>
       </FormControl>
 
+      {/* RESET */}
       {isFiltered && (
         <Button
           variant="text"

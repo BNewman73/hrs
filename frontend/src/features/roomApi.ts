@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import type { RoomType } from "../types/enum";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 export const roomApi = createApi({
   reducerPath: "roomApi",
@@ -8,6 +9,14 @@ export const roomApi = createApi({
   }),
   tagTypes: ["Rooms"],
   endpoints: (builder) => ({
+    getAllRoomsByType: builder.query({
+      query: (roomType: RoomType) => ({
+        url: `/rooms/type/${roomType}`,
+        params: {
+          roomType,
+        },
+      }),
+    }),
     getAvailableRooms: builder.query<Room[], RoomAvailabilityRequest>({
       query: (params) => ({
         url: "/reservations/available",
@@ -91,10 +100,20 @@ export const roomApi = createApi({
         method: "POST",
       }),
     }),
+    getUpcomingReservations: builder.query<ReservationResponseDTO[], void>({
+      query: () => "/reservations/mine/upcoming",
+    }),
+    getPastReservations: builder.query<ReservationResponseDTO[], void>({
+      query: () => "/reservations/mine/past",
+    }),
+    getCurrentReservations: builder.query<ReservationResponseDTO[], void>({
+      query: () => "/reservations/mine/current",
+    })
   }),
 });
 
 export const {
+  useGetAllRoomsByTypeQuery,
   useGetAvailableRoomsQuery,
   useGetRoomReservationsQuery,
   useGetAllRoomsQuery,
@@ -104,4 +123,7 @@ export const {
   useGetComprehensiveRoomDetailsQuery,
   useCreateCheckoutSessionMutation,
   useCompleteReservationMutation,
+  useGetUpcomingReservationsQuery,
+  useGetPastReservationsQuery,
+  useGetCurrentReservationsQuery
 } = roomApi;

@@ -4,6 +4,8 @@ import RoomCalendar from "./RoomCalendar";
 
 interface RoomDetailsModalProps {
   roomNumber: string;
+  capacity: number;
+  pricePerNight: number;
 }
 
 const style = {
@@ -17,7 +19,11 @@ const style = {
   overflow: "autho",
 };
 
-const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({ roomNumber }) => {
+const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
+  roomNumber,
+  capacity,
+  pricePerNight,
+}) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -33,7 +39,11 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({ roomNumber }) => {
       </Button>
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
-          <RoomCalendar roomNumber={roomNumber} />
+          <RoomCalendar
+            roomNumber={roomNumber}
+            capacity={capacity}
+            pricePerNight={pricePerNight}
+          />
         </Box>
       </Modal>
     </>

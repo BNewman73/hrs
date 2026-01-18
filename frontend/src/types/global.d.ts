@@ -11,6 +11,10 @@ declare global {
     | "COFFEE_MAKER"
     | "MICROWAVE";
 
+  type ReservationTypeFilter = "ALL" | "GUEST_BOOKING" | "BLOCKED";
+  type PaymentStatusFilter = "ALL" | "paid" | "canceled";
+  type ReservationSortOrder = "none" | "date_asc" | "date_desc";
+
   export interface RefundResponse {
     id: string;
     object: "refund";
@@ -95,11 +99,50 @@ declare global {
     paymentStatus?: string;
     stripePaymentIntentId: string;
   }
+  export interface ReservationResponseDTO {
+    id: string;
+    publicId: string;
+    startDate: string;
+    endDate: string;
+    guests: number;
+    totalPrice: number;
+    paymentStatus: string;
+    stripePaymentIntentId: string;
+    roomNumber: string;
+    roomType: RoomType;
+    roomCapacity: number;
+    roomPricePerNight: number;
+  }
+
+  interface ReservationWithGuestDTO {
+    reservation: ReservationDTO;
+    guest?: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      avatarUrl?: string;
+      role: string;
+    };
+  }
 
   interface User {
     id: number;
     name: string;
     email: string;
+  }
+  type UserRole = "ADMIN" | "MANAGER" | "GUEST";
+
+  export interface UserDTO {
+    id: string;
+    publicId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    avatarUrl?: string;
+    provider: string;
+    role: "GUEST" | "ADMIN" | "MANAGER";
+    enabled?: boolean;
   }
 
   interface NavBarProps {

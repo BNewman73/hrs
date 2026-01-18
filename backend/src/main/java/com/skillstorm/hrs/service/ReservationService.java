@@ -1,17 +1,25 @@
 package com.skillstorm.hrs.service;
 
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.skillstorm.hrs.dto.CalendarEventDTO;
 import com.skillstorm.hrs.dto.reservation.BlockRequestDTO;
 import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
 import com.skillstorm.hrs.dto.reservation.RefundResponseDTO;
+import com.skillstorm.hrs.dto.reservation.ReservationWithGuestDTO;
+import com.skillstorm.hrs.dto.userDTOs.UserDTO;
+import com.skillstorm.hrs.dto.reservation.ReservationResponseDTO;
 import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.exception.ResourceNotFoundException;
 import com.skillstorm.hrs.exception.RoomNotAvailableException;
@@ -19,6 +27,7 @@ import com.skillstorm.hrs.model.Reservation;
 import com.skillstorm.hrs.model.Reservation.ReservationType;
 import com.skillstorm.hrs.model.Room;
 import com.skillstorm.hrs.model.RoomDetails.RoomType;
+import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.repository.ReservationRepository;
 import com.skillstorm.hrs.repository.RoomRepository;
 import com.skillstorm.hrs.repository.UserRepository;
@@ -39,6 +48,7 @@ public class ReservationService {
   private final ReservationRepository reservationRepository;
   private final RoomRepository roomRepository;
   private final ReservationEmailService emailService;
+  private final ModelMapper modelMapper;
 
   public Reservation getReservationById(String id) {
     Optional<Reservation> reservation = reservationRepository.findById(id);
@@ -68,6 +78,41 @@ public class ReservationService {
 
   public List<Reservation> getAllReservations() {
     return reservationRepository.findAll();
+  }
+
+  public List<ReservationWithGuestDTO> getAllReservationsWithGuests() {
+
+    List<Reservation> reservations = reservationRepository.findAll();
+
+    Set<String> providerIds = reservations.stream()
+        .map(Reservation::getUserId)
+        .filter(Objects::nonNull)
+        .collect(Collectors.toSet());
+
+    Map<String, User> usersByProviderId = userRepository
+        .findByProviderIdIn(providerIds)
+        .stream()
+        .collect(Collectors.toMap(User::getProviderId, Function.identity()));
+
+    return reservations.stream().map(reservation -> {
+
+      ReservationWithGuestDTO dto = new ReservationWithGuestDTO();
+      dto.setReservation(reservation);
+
+      User guest = usersByProviderId.get(reservation.getUserId());
+      if (guest != null) {
+        dto.setGuest(new UserDTO(
+            guest.getId(),
+            guest.getFirstName(),
+            guest.getLastName(),
+            guest.getEmail(),
+            guest.getAvatarUrl(),
+            guest.getProvider().name(),
+            guest.getRole().name()));
+      }
+
+      return dto;
+    }).toList();
   }
 
   public void deleteReservation(String id) {
@@ -121,6 +166,7 @@ public class ReservationService {
 
     List<Reservation> overlappingReservations = reservationRepository.findReservationsInDateRange(checkInDate,
         checkOutDate);
+    System.out.println("overlapping reservations: " + overlappingReservations);
 
     Set<String> bookedRoomIds = overlappingReservations.stream()
         .map(Reservation::getRoomId)
@@ -140,6 +186,7 @@ public class ReservationService {
         .findReservationsInDateRange(startDate, endDate)
         .stream()
         .filter(r -> r.getRoomId().equals(roomNumber))
+        .filter(r -> !"refunded".equals(r.getPaymentStatus()))
         .collect(Collectors.toList());
 
     return reservations.stream()
@@ -245,18 +292,50 @@ public class ReservationService {
     return reservationRepository.findByUserIdOrderByStartDateDesc(userId);
   }
 
-  // let repository compare dates
-  public List<Reservation> getUpcomingReservations(String userId) {
+  public List<ReservationResponseDTO> getUpcomingReservations(String userId) {
     LocalDate today = LocalDate.now();
-    return reservationRepository
-        .findByUserIdAndEndDateGreaterThanEqualOrderByStartDateAsc(userId, today);
+    List<Reservation> reservations = reservationRepository
+        .findByUserIdAndStartDateGreaterThanOrderByStartDateAsc(userId, today);
+    return reservations.stream()
+        .map(this::mapToResponseDTO)
+        .collect(Collectors.toList());
   }
 
-  // let repository compare dates
-  public List<Reservation> getPastReservations(String userId) {
+  public List<ReservationResponseDTO> getPastReservations(String userId) {
     LocalDate today = LocalDate.now();
-    return reservationRepository
+    List<Reservation> reservations = reservationRepository
         .findByUserIdAndEndDateLessThanOrderByEndDateDesc(userId, today);
+
+    return reservations.stream()
+        .map(this::mapToResponseDTO)
+        .collect(Collectors.toList());
+  }
+
+  public List<ReservationResponseDTO> getCurrentReservations(String userId) {
+    LocalDate today = LocalDate.now();
+    List<Reservation> reservations = reservationRepository
+        .findCurrentReservationsByUserId(userId, today);
+    return reservations.stream().map(this::mapToResponseDTO).collect(Collectors.toList());
+  }
+
+  private ReservationResponseDTO mapToResponseDTO(Reservation reservation) {
+    Room room = roomRepository.findByRoomNumber(reservation.getRoomId())
+        .orElseThrow(() -> new ResourceNotFoundException("Room not found with number " + reservation.getRoomId()));
+
+    return ReservationResponseDTO.builder()
+        .id(reservation.getId())
+        .publicId(reservation.getPublicId())
+        .startDate(reservation.getStartDate())
+        .endDate(reservation.getEndDate())
+        .guests(reservation.getGuests())
+        .totalPrice(reservation.getTotalPrice())
+        .paymentStatus(reservation.getPaymentStatus())
+        .stripePaymentIntentId(reservation.getStripePaymentIntentId())
+        .roomNumber(room.getRoomNumber())
+        .roomType(room.getRoomDetails().getType())
+        .roomCapcity(room.getRoomDetails().getMaxCapacity())
+        .roomPricePerNight(room.getPricePerNight())
+        .build();
   }
 
   public RefundResponseDTO postRefund(String paymentIntentId) {
@@ -294,6 +373,23 @@ public class ReservationService {
     } catch (StripeException e) {
       throw new RuntimeException("Stripe refund failed: " + e.getMessage(), e);
     }
+  }
+
+  public Map<LocalDate, Integer> getOccupancyByDay(LocalDate startDate, LocalDate endDate) {
+    
+    List<Reservation> reservations = reservationRepository.findReservationsInDateRange(startDate, endDate);
+    Map<LocalDate, Integer> occupancyMap = new LinkedHashMap<>();
+
+    for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+      int count = 0;
+      for (Reservation reservation : reservations) {
+        if (!date.isBefore(reservation.getStartDate()) && date.isBefore(reservation.getEndDate())) {
+          count++;
+        }
+      }
+      occupancyMap.put(date, count);
+    }
+    return occupancyMap;
   }
 
 }
