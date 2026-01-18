@@ -30,6 +30,12 @@ export const reservationApi = createApi({
         return url;
       },
     }),
+    getOccupancy: builder.query<Record<string, number>, { checkInDate: string; checkOutDate: string }>({
+      query: ({ checkInDate, checkOutDate }) => ({
+        url: "/reservations/occupancy",
+        params: { checkInDate, checkOutDate },
+  }),
+}),
     createGuestBooking: builder.mutation({
       query: (booking) => ({
         url: "/reservations/bookings",
@@ -67,6 +73,7 @@ export const {
   useGetReservationsByUserIdQuery,
   useGetReservationsByTypeQuery,
   useGetReservationsByRoomQuery,
+  useGetOccupancyQuery,
   useCreateGuestBookingMutation,
   useCreateAdminBlockMutation,
   useDeleteReservationMutation,
