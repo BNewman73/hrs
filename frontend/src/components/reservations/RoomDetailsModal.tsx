@@ -43,6 +43,8 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
             roomNumber={roomNumber}
             capacity={capacity}
             pricePerNight={pricePerNight}
+            isBlock={false}
+            onSuccess={handleClose}
           />
         </Box>
       </Modal>

@@ -53,7 +53,6 @@ const UserReservations: React.FC = () => {
   } = useGetCurrentReservationsQuery();
 
   const formatDate = (dateString: string) => {
-    // Parse the date string explicitly
     const date = parse(dateString, "yyyy-MM-dd", new Date());  
     return format(date, "MMM dd, yyyy");
   };
