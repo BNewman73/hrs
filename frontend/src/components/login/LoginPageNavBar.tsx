@@ -1,5 +1,5 @@
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
-import HotelIcon from "@mui/icons-material/Hotel";
+
 import { useNavigate } from "react-router-dom";
 
 export default function LoginPageNavBar() {
@@ -16,7 +16,18 @@ export default function LoginPageNavBar() {
       >
         <Toolbar>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <HotelIcon color="primary" />
+            <Box
+              component="img"
+              src="../public/stormstay-icon-192.png"
+              alt="Storm Stay"
+              sx={{
+                width: 55,
+                height: 55,
+                mr: 1,
+
+                borderRadius: "30px",
+              }}
+            ></Box>
             <Typography
               variant="h6"
               color="black"

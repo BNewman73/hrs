@@ -3,7 +3,6 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
 
-import HotelIcon from "@mui/icons-material/Hotel";
 import type { User } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
 
@@ -22,7 +21,18 @@ export default function NavBar({ user }: { user: User }) {
         sx={{ display: "flex", alignItems: "center", gap: 1 }}
         onClick={() => navigate("/")}
       >
-        <HotelIcon color="primary" />
+        <Box
+          component="img"
+          src="../public/stormstay-icon-192.png"
+          alt="Storm Stay"
+          sx={{
+            width: 55,
+            height: 55,
+            mr: 1,
+
+            borderRadius: "30px",
+          }}
+        ></Box>
         <Typography
           variant="h6"
           sx={{ fontWeight: 900, letterSpacing: -1, color: "black" }}
