@@ -2,6 +2,7 @@ package com.skillstorm.hrs.controller;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import com.skillstorm.hrs.dto.reservation.BlockRequestDTO;
 import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
 import com.skillstorm.hrs.dto.reservation.RefundResponseDTO;
 import com.skillstorm.hrs.dto.reservation.ReservationWithGuestDTO;
+import com.skillstorm.hrs.dto.reservation.ReservationResponseDTO;
 import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.model.Reservation;
 import com.skillstorm.hrs.model.Reservation.ReservationType;
@@ -138,25 +140,51 @@ public class ReservationController {
   }
 
   @GetMapping("/mine/upcoming")
-  public ResponseEntity<List<Reservation>> getMyUpcomingReservations(
+  public ResponseEntity<List<ReservationResponseDTO>> getMyUpcomingReservations(
       @AuthenticationPrincipal OAuth2User principal) {
     String userId = userService.principalToUserId(principal);
-    List<Reservation> reservations = reservationService.getUpcomingReservations(userId);
-    return ResponseEntity.ok(reservations);
+    List<ReservationResponseDTO> reservations = reservationService.getUpcomingReservations(userId);
+    return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 
   @GetMapping("/mine/past")
-  public ResponseEntity<List<Reservation>> getMyPastReservations(
+  public ResponseEntity<List<ReservationResponseDTO>> getMyPastReservations(
       @AuthenticationPrincipal OAuth2User principal) {
     String userId = userService.principalToUserId(principal);
-    List<Reservation> reservations = reservationService.getPastReservations(userId);
-    return ResponseEntity.ok(reservations);
+    List<ReservationResponseDTO> reservations = reservationService.getPastReservations(userId);
+    return new ResponseEntity<>(reservations, HttpStatus.OK);
+  }
+
+  @GetMapping("/mine/past/test")
+  public ResponseEntity<List<Reservation>> getMyPastReservationsTest(
+      @AuthenticationPrincipal OAuth2User principal) {
+    String userId = "107082386102921512899";
+    List<Reservation> reservations = reservationService.getPastReservationsTest(userId);
+    return new ResponseEntity<>(reservations, HttpStatus.OK);
+  }
+
+  @GetMapping("/mine/upcoming/test")
+  public ResponseEntity<List<Reservation>> getMyUpcomingReservationsTest(
+      @AuthenticationPrincipal OAuth2User principal) {
+    String userId = "107082386102921512899";
+    List<Reservation> reservations = reservationService.getUpcomingReservationsTest(userId);
+    return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 
   @PostMapping("/refund/{paymentId}")
   public ResponseEntity<RefundResponseDTO> createBooking(@PathVariable String paymentId) {
     RefundResponseDTO refund = reservationService.postRefund(paymentId);
     return new ResponseEntity<>(refund, HttpStatus.CREATED);
+  }
+
+  @GetMapping("/occupancy")
+  public ResponseEntity<Map<LocalDate, Integer>> getOccupancy(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate) {
+      return  ResponseEntity.ok(reservationService.getOccupancyByDay(checkInDate, checkOutDate));
+  }
+
+  @GetMapping("/occupancy/ytd")
+  public ResponseEntity<Map<LocalDate, Integer>> getYearToDateOccupancy() {
+      return  ResponseEntity.ok(reservationService.getOccupancyByDay(LocalDate.now().withDayOfYear(1), LocalDate.now()));
   }
 
 }

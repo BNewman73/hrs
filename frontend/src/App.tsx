@@ -7,6 +7,7 @@ import BookingCancel from "./components/reservations/BookingCancel";
 import BookingSuccess from "./components/reservations/BookingSuccess.tsx";
 import HomePage from "./components/HomePage";
 import BookingPage from "./components/reservations/BookingPage";
+import ReservationsTable from "./components/reservations/ReservationsTable";
 import LogoutPage from "./components/login/LogoutPage";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./components/reservations/theme.ts";
@@ -29,6 +30,7 @@ function App() {
             <Route path="" element={<HomePage />} />
 
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/profile" element={<ReservationsTable />} />
           </Routes>
         </BrowserRouter>
       </CssBaseline>

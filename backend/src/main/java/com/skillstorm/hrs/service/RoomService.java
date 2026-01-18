@@ -11,6 +11,7 @@ import com.skillstorm.hrs.dto.roomDTOS.RoomResponseDTO;
 import com.skillstorm.hrs.exception.ResourceNotFoundException;
 import com.skillstorm.hrs.exception.RoomNotAvailableException;
 import com.skillstorm.hrs.model.Room;
+import com.skillstorm.hrs.model.RoomDetails.RoomType;
 import com.skillstorm.hrs.repository.RoomRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -75,6 +76,10 @@ public class RoomService {
 
         Room savedRoom = roomRepository.save(room);
         return convertToDto(savedRoom, RoomResponseDTO.class);
+    }
+
+    public List<Room> getRoomsByType(RoomType roomType) {
+        return roomRepository.findByRoomDetails(roomType);
     }
 
     private <S, T> T convertToDto(S entity, Class<T> targetClass) {
