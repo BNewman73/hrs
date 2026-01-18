@@ -2,6 +2,7 @@ package com.skillstorm.hrs.controller;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -168,4 +169,15 @@ public class ReservationController {
     RefundResponseDTO refund = reservationService.postRefund(paymentId);
     return new ResponseEntity<>(refund, HttpStatus.CREATED);
   }
+
+  @GetMapping("/occupancy")
+  public ResponseEntity<Map<LocalDate, Integer>> getOccupancy(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate) {
+      return  ResponseEntity.ok(reservationService.getOccupancyByDay(checkInDate, checkOutDate));
+  }
+
+  @GetMapping("/occupancy/ytd")
+  public ResponseEntity<Map<LocalDate, Integer>> getYearToDateOccupancy() {
+      return  ResponseEntity.ok(reservationService.getOccupancyByDay(LocalDate.now().withDayOfYear(1), LocalDate.now()));
+  }
+
 }
