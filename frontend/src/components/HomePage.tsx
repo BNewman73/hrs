@@ -9,8 +9,11 @@ import {
   alpha,
   Paper,
   Slide,
+  Avatar,
+  Menu,
+  MenuItem,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ShieldIcon from "@mui/icons-material/Shield";
@@ -22,6 +25,10 @@ import "./StormButton.css";
 import RoomTypesCarousel from "./reservations/RoomTypesCarousel";
 import FooterPage from "./FooterPage";
 
+import { useAppDispatch, useAppSelector } from "../shared/store/hooks";
+import { useLogoutMutation } from "../features/userApi";
+import { clearUser } from "../features/userSlice";
+
 const VIDEO_URL = import.meta.env.VITE_HOME_VIDEO_URL;
 
 export default function HomePage() {
@@ -29,10 +36,39 @@ export default function HomePage() {
   const nextSectionRef = useRef<HTMLDivElement | null>(null);
   const [storm, setStorm] = useState(false);
 
+  const user = useAppSelector((s) => s.user.user);
+  console.log(user);
+
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const [logout] = useLogoutMutation();
+  const dispatch = useAppDispatch();
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+    } finally {
+      dispatch(clearUser());
+      navigate("/");
+    }
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
   const handleStormNav = () => {
     setStorm(true);
     setTimeout(() => navigate("/types"), 320);
   };
+  const options = [
+    { title: "Dashboard", action: () => navigate("/dashboard") },
+    { title: "Reservations", action: () => navigate("/user-home") },
+    { title: "Rewards", action: () => {} },
+    { title: "Logout", action: handleLogout },
+  ];
 
   const experiences = [
     {
@@ -76,25 +112,73 @@ export default function HomePage() {
           </Box>
 
           <Box sx={{ flexGrow: 1 }} />
+          {user ? (
+            <Box>
+              <IconButton sx={{ p: 0 }} onClick={handleOpenUserMenu}>
+                <Typography
+                  variant="body2"
+                  sx={{ fontWeight: 600, color: "white", paddingRight: "10px" }}
+                >
+                  Hello, {user.firstName}
+                </Typography>
 
-          <Button
-            onClick={() => navigate("/login")}
-            sx={{
-              color: "white",
-              px: 4,
-              py: 1.5,
-              borderRadius: 999,
-              background: "linear-gradient(135deg,#FF6B35 0%,#F7931E 100%)",
-              fontWeight: 700,
-              textTransform: "none",
-            }}
-          >
-            Login
-          </Button>
-
-          <IconButton sx={{ color: "white", ml: 2 }}>
-            <MenuIcon />
-          </IconButton>
+                <Avatar
+                  alt={user.firstName}
+                  src={user.avatarUrl}
+                  sx={{ bgcolor: "primary.main" }}
+                ></Avatar>
+              </IconButton>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {options.map((option, index) =>
+                  option.title !== "Dashboard" && user.role !== "ADMIN" ? (
+                    <></>
+                  ) : (
+                    <MenuItem
+                      key={index}
+                      onClick={() => {
+                        handleCloseUserMenu();
+                        option.action();
+                      }}
+                    >
+                      <Typography sx={{ textAlign: "center" }}>
+                        {option.title}
+                      </Typography>
+                    </MenuItem>
+                  ),
+                )}
+              </Menu>
+            </Box>
+          ) : (
+            <Button
+              onClick={() => navigate("/login")}
+              sx={{
+                color: "white",
+                px: 4,
+                py: 1.5,
+                borderRadius: 999,
+                background: "linear-gradient(135deg,#FF6B35 0%,#F7931E 100%)",
+                fontWeight: 700,
+                textTransform: "none",
+              }}
+            >
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
 

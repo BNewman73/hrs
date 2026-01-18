@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   CssBaseline,
@@ -26,13 +26,11 @@ import RoomCreateForm from "./room/RoomCrudForm";
 import RoomTable from "./room/RoomTable";
 import ReservationTable from "./room/ReservationTable";
 import AccountCard from "./account/AccountCard";
-
 import { useNavigate } from "react-router-dom";
 import { useGetPrincipalQuery } from "../features/userApi";
-import { setUser, clearUser } from "../features/userSlice";
-import { useDispatch } from "react-redux";
-import UserTable from "./user/UserTable";
 
+import { useAppSelector } from "../shared/store/hooks";
+import UserTable from "./user/UserTable";
 import OccupancyCard from "./reservations/OccupancyCard";
 
 const DRAWER_WIDTH = 280;
@@ -41,15 +39,10 @@ export default function DashboardPage() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Table");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { data, error } = useGetPrincipalQuery();
 
-  useEffect(() => {
-    if (data) dispatch(setUser(data));
-    else if (error) dispatch(clearUser());
-  }, [data, error, dispatch]);
+  useGetPrincipalQuery();
 
-  const currentUser = data || {
+  const currentUser = useAppSelector((s) => s.user.user) || {
     id: "",
     firstName: "Guest",
     lastName: "User",
@@ -182,12 +175,7 @@ export default function DashboardPage() {
               >
                 {item.icon}
               </ListItemIcon>
-              <ListItemText
-                primary={item.label}
-                primaryTypographyProps={{
-                  fontWeight: activeTab === item.id ? 700 : 500,
-                }}
-              />
+              <ListItemText primary={item.label} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -280,11 +268,7 @@ export default function DashboardPage() {
           <Box sx={{ mb: 4 }}>
             <Typography
               variant="h5"
-              sx={{
-                fontWeight: 900,
-                letterSpacing: "-0.03em",
-                mb: 0.5,
-              }}
+              sx={{ fontWeight: 900, letterSpacing: "-0.03em", mb: 0.5 }}
             >
               {activeTab === "Account"
                 ? ""
@@ -294,11 +278,9 @@ export default function DashboardPage() {
                     ? "Users"
                     : activeTab === "Reservations"
                       ? "Reservations"
-                      : activeTab === "Reservations"
-                        ? "Reservations"
-                        : activeTab === "Occupancy"
-                          ? "Occupancy Report"
-                          : "Rooms"}
+                      : activeTab === "Occupancy"
+                        ? "Occupancy Report"
+                        : "Rooms"}
             </Typography>
 
             <Typography color="text.secondary">
@@ -308,13 +290,9 @@ export default function DashboardPage() {
                   ? "View and manage users."
                   : activeTab === "Table"
                     ? "View and manage hotel rooms."
-                    : activeTab === "Account"
-                      ? ""
-                      : activeTab === "Reservations"
-                        ? "View and manage reservations."
-                        : activeTab === "Occupancy"
-                          ? ""
-                          : "Manage and update your current available rooms."}
+                    : activeTab === "Reservations"
+                      ? "View and manage reservations."
+                      : ""}
             </Typography>
           </Box>
 

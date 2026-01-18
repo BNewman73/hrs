@@ -10,8 +10,9 @@ import {
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { clearUser } from "../../features/userSlice";
+import { useNavigate } from "react-router-dom";
+
 import LogoutPageNavBar from "./LogoutPageNavBar";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 export default function LogoutPage() {

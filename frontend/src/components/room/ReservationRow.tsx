@@ -18,6 +18,8 @@ import {
   DialogActions,
   Divider,
 } from "@mui/material";
+import { format } from "date-fns/format";
+import { parse } from "date-fns/parse";
 
 interface ReservationRowProps {
   reservation: ReservationWithGuestDTO;
@@ -43,13 +45,10 @@ export const ReservationRow = ({
       .replace(/^./, (c) => c.toUpperCase());
   }
 
-  function formatDate(date: string): string {
-    return new Date(date).toLocaleDateString("en-US", {
-      month: "short",
-      day: "2-digit",
-      year: "numeric",
-    });
-  }
+  const formatDate = (dateString: string) => {
+    const date = parse(dateString, "yyyy-MM-dd", new Date());
+    return format(date, "MMM dd, yyyy");
+  };
 
   const [postRefund, { isLoading }] = useRefundReservationMutation();
   const dispatch = useAppDispatch();
@@ -59,7 +58,7 @@ export const ReservationRow = ({
     try {
       await postRefund(r.stripePaymentIntentId).unwrap();
       dispatch(
-        showToast({ message: "Reservation canceled", severity: "success" })
+        showToast({ message: "Reservation canceled", severity: "success" }),
       );
     } catch {
       dispatch(showToast({ message: "Cancel failed", severity: "error" }));
@@ -102,15 +101,15 @@ export const ReservationRow = ({
             r.paymentStatus === "refunded"
               ? "error.main"
               : isGuestBooking
-              ? "success.main"
-              : "warning.main"
+                ? "success.main"
+                : "warning.main"
           }
         >
           {r.paymentStatus === "refunded"
             ? "CANCELED"
             : isGuestBooking
-            ? "PAID"
-            : formatEnum(r.blockReason)}
+              ? "PAID"
+              : formatEnum(r.blockReason)}
         </Typography>
 
         <Box sx={{ width: "10%", textAlign: "right" }}>
