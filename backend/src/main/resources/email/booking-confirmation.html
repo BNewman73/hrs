@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Storm Stay Booking Confirmation</title>
   </head>
+
   <body
     style="
       margin: 0;
@@ -31,17 +32,21 @@
               <td style="padding: 28px 32px 12px 32px">
                 <table width="100%" cellpadding="0" cellspacing="0">
                   <tr>
-                    <img
-                      src="https://project2-storm-hotel-frontend-dev.s3.us-east-1.amazonaws.com/storm-stay-clear.png"
-                      alt="Storm Stay"
-                      width="72"
-                      height="72"
-                      style="
-                        display: block;
-                        margin: 0 auto 12px auto;
-                        border-radius: 16px;
-                      "
-                    />
+                    <td text-align="center">
+                      <img
+                        src="https://project2-storm-hotel-frontend-dev.s3.us-east-1.amazonaws.com/storm-stay-clear.png"
+                        alt="Storm Stay"
+                        width="72"
+                        height="72"
+                        style="
+                          display: block;
+                          margin: 0 auto 12px auto;
+                          border-radius: 16px;
+                        "
+                      />
+                    </td>
+                  </tr>
+                  <tr>
                     <td
                       text-align="right"
                       style="font-size: 12px; color: #777; line-height: 1.5"
@@ -64,9 +69,9 @@
             <!-- TITLE -->
             <tr>
               <td
+                text-align="center"
                 style="
                   padding: 24px 32px 12px 32px;
-                  text-align: center;
                   font-size: 22px;
                   font-weight: bold;
                   color: #0e103d;
@@ -101,12 +106,6 @@
 
                 <table width="100%" cellpadding="6" cellspacing="0">
                   <tr>
-                    <td style="color: #777">Reservation Number</td>
-                    <td text-align="right">
-                      <strong>{{reservationId}}</strong>
-                    </td>
-                  </tr>
-                  <tr>
                     <td style="color: #777">Check-in Date</td>
                     <td text-align="right"><strong>{{checkInDate}}</strong></td>
                   </tr>
@@ -117,8 +116,10 @@
                     </td>
                   </tr>
                   <tr>
-                    <td style="color: #777">Room Type</td>
-                    <td text-align="right"><strong>{{roomType}}</strong></td>
+                    <td style="color: #777">Room</td>
+                    <td text-align="right">
+                      <strong>{{roomNumber}}</strong>
+                    </td>
                   </tr>
                   <tr>
                     <td style="color: #777">Number of Guests</td>
@@ -161,10 +162,8 @@
                 </h3>
 
                 <p style="margin-bottom: 0">
-                  Check-in begins at <strong>3:00 PM</strong>. If you expect to
-                  arrive earlier, please let us know and we will do our best to
-                  accommodate you. Our front desk is available 24/7 for your
-                  convenience.
+                  Check-in begins at <strong>3:00 PM</strong>. Our front desk is
+                  available 24/7 for your convenience.
                 </p>
               </td>
             </tr>

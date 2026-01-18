@@ -25,23 +25,30 @@ public class ReservationEmailService {
         private String from;
 
         public void sendBookingConfirmation(
+
                         String receiptUrl,
                         String to,
                         String roomNumber,
                         String checkInDate,
                         String checkOutDate,
                         int guests,
-                        int totalPrice, String firstName, String lastName) {
+                        int totalPrice,
+                        String firstName,
+                        String lastName) {
 
                 String htmlBody = buildHtml(
+
                                 roomNumber,
                                 checkInDate,
                                 checkOutDate,
                                 guests,
-                                totalPrice, receiptUrl, firstName, lastName);
+                                totalPrice,
+                                receiptUrl,
+                                firstName,
+                                lastName);
 
                 SendEmailRequest request = SendEmailRequest.builder()
-                                .source(from) // must be a VERIFIED SES identity
+                                .source(from)
                                 .destination(Destination.builder()
                                                 .toAddresses(to)
                                                 .build())
@@ -60,19 +67,21 @@ public class ReservationEmailService {
                                 .build();
 
                 sesClient.sendEmail(request);
-                System.out.println(request);
         }
 
         private String buildHtml(
-
                         String roomNumber,
                         String checkInDate,
                         String checkOutDate,
                         int guests,
-                        int totalPrice, String receiptUrl, String firstName, String lastName) {
+                        int totalPrice,
+                        String receiptUrl,
+                        String firstName,
+                        String lastName) {
                 String html = loadTemplate("booking-confirmation.html");
 
                 return html
+
                                 .replace("{{roomNumber}}", roomNumber)
                                 .replace("{{checkInDate}}", checkInDate)
                                 .replace("{{checkOutDate}}", checkOutDate)
@@ -80,7 +89,7 @@ public class ReservationEmailService {
                                 .replace("{{totalPrice}}", String.valueOf(totalPrice))
                                 .replace("{{receiptUrl}}", receiptUrl)
                                 .replace("{{firstName}}", firstName)
-                                .replace("{{LastName}}", lastName);
+                                .replace("{{lastName}}", lastName);
         }
 
         private String loadTemplate(String name) {
