@@ -13,8 +13,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import stormIcon from "/stormstay-icon-192.png";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ShieldIcon from "@mui/icons-material/Shield";
 import LanguageIcon from "@mui/icons-material/Language";
@@ -37,7 +36,6 @@ export default function HomePage() {
   const [storm, setStorm] = useState(false);
 
   const user = useAppSelector((s) => s.user.user);
-  console.log(user);
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [logout] = useLogoutMutation();
@@ -90,22 +88,25 @@ export default function HomePage() {
 
   return (
     <>
-      <AppBar position="fixed" elevation={0} sx={{ background: "transparent" }}>
+      <AppBar
+        position="fixed"
+        elevation={0}
+        sx={{ background: "rgba(200,200,200,.2)" }}
+      >
         <Toolbar sx={{ minHeight: { xs: 64, md: 80 } }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Box
+              component="img"
+              src={stormIcon}
+              alt="Storm Stay"
               sx={{
-                width: 40,
-                height: 40,
-                borderRadius: "50%",
-                background: "linear-gradient(135deg,#FF6B35 0%,#F7931E 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                width: 60,
+                height: 60,
+                mr: 1,
+
+                borderRadius: "30px",
               }}
-            >
-              <AutoAwesomeIcon sx={{ color: "white" }} />
-            </Box>
+            ></Box>
             <Typography fontWeight={900} letterSpacing={1} color="white">
               STORM STAY
             </Typography>

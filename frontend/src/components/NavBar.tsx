@@ -3,11 +3,14 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
 
-import HotelIcon from "@mui/icons-material/Hotel";
 import type { User } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
-
-export default function NavBar({ user }: { user: User }) {
+import stormIcon from "/stormstay-icon-192.png";
+interface NavBarProps {
+  user: User;
+  color?: string;
+}
+export default function NavBar({ user }: NavBarProps) {
   const navigate = useNavigate();
   return (
     <Box
@@ -16,13 +19,26 @@ export default function NavBar({ user }: { user: User }) {
         alignItems: "center",
         width: "100%",
         justifyContent: "space-between",
+        position: "sticky",
+        zIndex: 99999999,
       }}
     >
       <Box
         sx={{ display: "flex", alignItems: "center", gap: 1 }}
         onClick={() => navigate("/")}
       >
-        <HotelIcon color="primary" />
+        <Box
+          component="img"
+          src={stormIcon}
+          alt="Storm Stay"
+          sx={{
+            width: 55,
+            height: 55,
+            mr: 1,
+
+            borderRadius: "30px",
+          }}
+        ></Box>
         <Typography
           variant="h6"
           sx={{ fontWeight: 900, letterSpacing: -1, color: "black" }}

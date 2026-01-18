@@ -4,8 +4,9 @@ import RoomCalendar from "./RoomCalendar";
 
 interface RoomDetailsModalProps {
   roomNumber: string;
-  capacity: number;
+  capacity?: number;
   pricePerNight: number;
+  guests?: number;
 }
 
 const style = {

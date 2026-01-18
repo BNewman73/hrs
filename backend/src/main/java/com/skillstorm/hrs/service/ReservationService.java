@@ -48,7 +48,6 @@ public class ReservationService {
   private final ReservationRepository reservationRepository;
   private final RoomRepository roomRepository;
   private final ReservationEmailService emailService;
-  private final ModelMapper modelMapper;
 
   public Reservation getReservationById(String id) {
     Optional<Reservation> reservation = reservationRepository.findById(id);
@@ -228,9 +227,10 @@ public class ReservationService {
         .type(Reservation.ReservationType.GUEST_BOOKING)
         .build();
     Reservation savedReservation = reservationRepository.save(reservation);
-
+    User user = userRepository.findByProviderId(userId)
+        .orElseThrow(() -> new RuntimeException("User not found: " + userId));
     emailService.sendBookingConfirmation(receiptUrl, guestEmail, roomNumber, checkInDate, checkOutDate, guests,
-        totalPrice);
+        totalPrice, user.getFirstName(), user.getLastName());
     return savedReservation;
   }
 
@@ -376,7 +376,7 @@ public class ReservationService {
   }
 
   public Map<LocalDate, Integer> getOccupancyByDay(LocalDate startDate, LocalDate endDate) {
-    
+
     List<Reservation> reservations = reservationRepository.findReservationsInDateRange(startDate, endDate);
     Map<LocalDate, Integer> occupancyMap = new LinkedHashMap<>();
 
