@@ -227,7 +227,8 @@ public class ReservationService {
         .type(Reservation.ReservationType.GUEST_BOOKING)
         .build();
     Reservation savedReservation = reservationRepository.save(reservation);
-    User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found: " + userId));
+    User user = userRepository.findByProviderId(userId)
+        .orElseThrow(() -> new RuntimeException("User not found: " + userId));
     emailService.sendBookingConfirmation(receiptUrl, guestEmail, roomNumber, checkInDate, checkOutDate, guests,
         totalPrice, user.getFirstName(), user.getLastName());
     return savedReservation;

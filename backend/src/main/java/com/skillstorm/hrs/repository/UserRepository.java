@@ -14,6 +14,8 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     Optional<User> findByProviderAndProviderId(User.Provider provider, String providerId);
 
+    Optional<User> findByProviderId(String providerId);
+
     List<User> findByProviderIdIn(Set<String> providerIds);
 
     Optional<User> findByPublicId(String publidId);
