@@ -106,6 +106,9 @@ export const roomApi = createApi({
     getPastReservations: builder.query<ReservationResponseDTO[], void>({
       query: () => "/reservations/mine/past",
     }),
+    getCurrentReservations: builder.query<ReservationResponseDTO[], void>({
+      query: () => "/reservations/mine/current",
+    })
   }),
 });
 
@@ -122,4 +125,5 @@ export const {
   useCompleteReservationMutation,
   useGetUpcomingReservationsQuery,
   useGetPastReservationsQuery,
+  useGetCurrentReservationsQuery
 } = roomApi;

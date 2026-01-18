@@ -107,8 +107,11 @@ declare global {
     guests: number;
     totalPrice: number;
     paymentStatus: string;
+    stripePaymentIntentId: string;
     roomNumber: string;
     roomType: RoomType;
+    roomCapacity: number;
+    roomPricePerNight: number;
   }
 
   interface ReservationWithGuestDTO {

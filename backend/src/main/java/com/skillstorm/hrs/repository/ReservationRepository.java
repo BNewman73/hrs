@@ -13,45 +13,53 @@ import com.skillstorm.hrs.model.Reservation.ReservationType;
 
 @Repository
 public interface ReservationRepository extends MongoRepository<Reservation, String> {
-  Optional<Reservation> findByStripePaymentIntentId(String paymentIntentId);
-  List<Reservation> findByUserId(String userId);
+        Optional<Reservation> findByStripePaymentIntentId(String paymentIntentId);
 
-  List<Reservation> findByRoomId(String roomId);
+        List<Reservation> findByUserId(String userId);
 
-  List<Reservation> findByType(ReservationType type);
+        List<Reservation> findByRoomId(String roomId);
 
-  Optional<Reservation> findByStripeSessionId(String stripeSessionId);
+        List<Reservation> findByType(ReservationType type);
 
-  List<Reservation> findByUserIdOrderByStartDateDesc(String userId);
+        Optional<Reservation> findByStripeSessionId(String stripeSessionId);
 
-  // Upcoming reservations (check-in date is today or in the future)
-  List<Reservation> findByUserIdAndEndDateGreaterThanEqualOrderByStartDateAsc(
-      String userId,
-      LocalDate currentDate);
+        List<Reservation> findByUserIdOrderByStartDateDesc(String userId);
 
-  // Past reservations (check-out date is before today)
-  List<Reservation> findByUserIdAndEndDateLessThanOrderByEndDateDesc(
-      String userId,
-      LocalDate currentDate);
+        // Upcoming reservations (check-in date is today or in the future)
+        List<Reservation> findByUserIdAndStartDateGreaterThanOrderByStartDateAsc(
+                        String userId,
+                        LocalDate currentDate);
 
-  // find all reservations for a room within startDate and endDate
-  @Query("{ 'room_id': ?0, 'end_date': { $gte: ?1 }, 'start_date' : { $lte: ?2 }}")
-  List<Reservation> findByRoomIdAndDateRange(String roomId, LocalDate startDate, LocalDate endDate);
+        // Past reservations (check-out date is before today)
+        List<Reservation> findByUserIdAndEndDateLessThanOrderByEndDateDesc(
+                        String userId,
+                        LocalDate currentDate);
 
-  // find existing reservations anytime from startDate to endDate for specific
-  // room
-  @Query("{ 'room_id': ?0, $or: [ " +
-      "{ 'start_date' : { $lt: ?1 }, 'end_date': { $gt: ?2 } }, " +
-      "{ 'start_date' : { $gte: ?1, $lte: ?2 } }," +
-      "{ 'end_date' : { $gte: ?1, $lte: ?2 } }" +
-      " ]}")
-  List<Reservation> findOverlappingReservations(String roomNum, LocalDate startDate, LocalDate endDate);
+        // Current reservations (check-in date <= today and check-out date >= today)
+        @Query("{ 'userId': ?0, 'startDate': { $lte: ?1 }, 'endDate': { $gte: ?1 } }")
+        List<Reservation> findCurrentReservationsByUserId(String userId, LocalDate currentDate);
 
-  // find existing reservations anytime from startDate to EndDate for all rooms
-  @Query("{ $or: [ " +
-      "{ 'start_date': { $lte: ?0 }, 'end_date': { $gte: ?1 } }, " +
-      "{ 'start_date' : { $gte: ?0, $lte: ?1 } }," +
-      "{ 'end_date' : { $gte: ?0, $lte: ?1 } }" +
-      " ] }")
-  List<Reservation> findReservationsInDateRange(LocalDate startDate, LocalDate endDate);
+        // find all reservations for a room within startDate and endDate
+        @Query("{ 'room_id': ?0, 'end_date': { $gte: ?1 }, 'start_date' : { $lte: ?2 }}")
+        List<Reservation> findByRoomIdAndDateRange(String roomId, LocalDate startDate, LocalDate endDate);
+
+        // find existing reservations anytime from startDate to endDate for specific
+        // room
+        @Query("{ 'room_id': ?0, $or: [ " +
+                        "{ 'start_date' : { $lt: ?1 }, 'end_date': { $gt: ?2 } }, " +
+                        "{ 'start_date' : { $gte: ?1, $lte: ?2 } }," +
+                        "{ 'end_date' : { $gte: ?1, $lte: ?2 } }" +
+                        " ]}")
+        List<Reservation> findOverlappingReservations(String roomNum, LocalDate startDate, LocalDate endDate);
+
+        // find existing reservations anytime from startDate to EndDate for all rooms
+        @Query("{ $and: [ " +
+                        "{ 'payment_status': { $ne: 'refunded' } }, " +
+                        "{ $or: [ " +
+                        "{ 'start_date': { $lte: ?0 }, 'end_date': { $gte: ?1 } }, " +
+                        "{ 'start_date' : { $gte: ?0, $lte: ?1 } }," +
+                        "{ 'end_date' : { $gte: ?0, $lte: ?1 } }" +
+                        " ] }" +
+                        "] }")
+        List<Reservation> findReservationsInDateRange(LocalDate startDate, LocalDate endDate);
 }
