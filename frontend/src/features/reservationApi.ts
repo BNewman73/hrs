@@ -15,7 +15,8 @@ export const reservationApi = createApi({
     getAllReservationsWithGuest: builder.query<ReservationWithGuestDTO[], void>(
       {
         query: () => "/reservations/with-guests",
-      }
+        providesTags: ["Reservations"],
+      },
     ),
     getReservationById: builder.query({
       query: (id) => `/reservations/${id}`,
@@ -35,7 +36,10 @@ export const reservationApi = createApi({
         return url;
       },
     }),
-    getOccupancy: builder.query<Record<string, number>, { checkInDate: string; checkOutDate: string }>({
+    getOccupancy: builder.query<
+      Record<string, number>,
+      { checkInDate: string; checkOutDate: string }
+    >({
       query: ({ checkInDate, checkOutDate }) => ({
         url: "/reservations/occupancy",
         params: { checkInDate, checkOutDate },

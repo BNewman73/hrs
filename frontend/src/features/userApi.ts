@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { setUser } from "./userSlice";
+import { clearUser, setUser } from "./userSlice";
 import type { User } from "./userSlice";
 
 export const userApi = createApi({
@@ -47,6 +47,16 @@ export const userApi = createApi({
       }),
       invalidatesTags: ["Users"],
     }),
+    logout: builder.mutation<void, void>({
+      query: () => ({
+        url: "/logout",
+        method: "POST",
+      }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        await queryFulfilled;
+        dispatch(clearUser());
+      },
+    }),
   }),
 });
 
@@ -55,4 +65,5 @@ export const {
   useUpdateProfileMutation,
   useGetAllUsersQuery,
   useUpdateUserMutation,
+  useLogoutMutation,
 } = userApi;

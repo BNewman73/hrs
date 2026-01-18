@@ -12,30 +12,31 @@ import LogoutPage from "./components/login/LogoutPage";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./components/reservations/theme.ts";
 import UserHomePage from "./components/UserHomePage.tsx";
+import AuthBootstrap from "./AuthGlobal.tsx";
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline>
-        <BrowserRouter>
-          <GlobalSnackbar />
+      <CssBaseline />
+      <BrowserRouter>
+        <GlobalSnackbar />
+        <AuthBootstrap />
 
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/logout" element={<LogoutPage />} />
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/logout" element={<LogoutPage />} />
 
-            <Route path="/rooms/:roomType" element={<BookingPage />} />
-            <Route path="/booking-success" element={<BookingSuccess />} />
-            <Route path="/booking-cancel" element={<BookingCancel />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="" element={<HomePage />} />
+          <Route path="/rooms/:roomType" element={<BookingPage />} />
+          <Route path="/booking-success" element={<BookingSuccess />} />
+          <Route path="/booking-cancel" element={<BookingCancel />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="" element={<HomePage />} />
 
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/user-home" element={<UserHomePage /> } />
-            <Route path="/profile" element={<ReservationsTable />} />
-          </Routes>
-        </BrowserRouter>
-      </CssBaseline>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/user-home" element={<UserHomePage />} />
+          <Route path="/profile" element={<ReservationsTable />} />
+        </Routes>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }

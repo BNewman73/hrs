@@ -18,7 +18,8 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
-      .concat(userApi.middleware).concat(roomApi.middleware)
+      .concat(userApi.middleware)
+      .concat(roomApi.middleware)
       .concat(reservationApi.middleware),
 });
 
