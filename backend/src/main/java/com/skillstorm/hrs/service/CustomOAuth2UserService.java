@@ -24,6 +24,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         this.userService = userService;
     }
 
+    /**
+     * Loads the user from the OAuth2 provider, processes the user information,
+     * and returns an OAuth2User with the appropriate roles.
+     */
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 

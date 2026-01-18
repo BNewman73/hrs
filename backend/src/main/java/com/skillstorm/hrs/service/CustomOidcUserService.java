@@ -20,6 +20,10 @@ public class CustomOidcUserService extends OidcUserService {
         this.customOAuth2UserService = customOAuth2UserService;
     }
 
+    /**
+     * Loads the user from the OIDC provider, processes the user information,
+     * and returns an OidcUser with the appropriate roles.
+     */
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
 

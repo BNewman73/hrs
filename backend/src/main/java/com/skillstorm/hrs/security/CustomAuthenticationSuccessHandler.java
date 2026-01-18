@@ -16,6 +16,9 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Value("${app.frontend.url}")
     private String frontendUrl;
 
+    /**
+     * Handles successful authentication by redirecting users based on their roles.
+     */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {

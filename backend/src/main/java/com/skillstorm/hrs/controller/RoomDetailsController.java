@@ -24,17 +24,30 @@ import lombok.RequiredArgsConstructor;
 public class RoomDetailsController {
     private final RoomDetailsService roomDetailsService;
 
+    /**
+     * Creates a new RoomDetails entry in the database.
+     * @param roomDetails The RoomDetails object to create.
+     * @return ResponseEntity containing the created RoomDetails object.
+     */
     @PostMapping
     public ResponseEntity<RoomDetails> postRoomDetials(@RequestBody RoomDetails roomDetails) {
 
         return new ResponseEntity<>(roomDetailsService.createRoomDetails(roomDetails), HttpStatus.CREATED);
     }
 
+    /**
+     * Retrieves all RoomDetails entries from the database.
+     * @return ResponseEntity containing the list of all RoomDetails objects.
+     */
     @GetMapping
     public ResponseEntity<List<RoomDetails>> getRoom() {
         return new ResponseEntity<>(roomDetailsService.getRoomDetails(), HttpStatus.CREATED);
     }
 
+    /**
+     * Retrieves comprehensive details for all RoomDetails entries.
+     * @return ResponseEntity containing the list of RoomDetailsDTO objects.
+     */
     @GetMapping("/comprehensive")
     public ResponseEntity<List<RoomDetailsDTO>> getComprehensiveRoomDetails() {
         List<RoomDetailsDTO> roomDetails = roomDetailsService.getComprehensiveRoomDetails();

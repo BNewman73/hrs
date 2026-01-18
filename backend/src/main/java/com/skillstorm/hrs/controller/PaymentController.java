@@ -19,6 +19,11 @@ public class PaymentController {
   @Autowired
   private PaymentService paymentService;
 
+  /**
+   * Creates a Stripe checkout session based on the provided request details.
+   * @param request The checkout request details.
+   * @return ResponseEntity containing the session ID and URL or an error message.
+   */
   @PostMapping("/create-checkout-session")
   public ResponseEntity<?> createCheckoutSession(@RequestBody CheckoutRequest request) {
     try {
@@ -36,6 +41,10 @@ public class PaymentController {
     }
   }
 
+  /**
+   * Test endpoint to verify the PaymentController is working.
+   * @return ResponseEntity with a test message.
+   */
   @GetMapping("/test")
   public ResponseEntity<String> test() {
     return ResponseEntity.ok("Payment controller is working!");
