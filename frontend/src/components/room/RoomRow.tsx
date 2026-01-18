@@ -5,6 +5,7 @@ import {
   Chip,
   IconButton,
   Collapse,
+  Divider,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
@@ -43,23 +44,28 @@ export const RoomRow = ({
   onToggle,
   onEdit,
 }: RoomItemProps) => (
-  <Box sx={{ borderBottom: "1px solid #f5f5f5" }}>
+  <Box sx={{ borderBottom: "1px solid #f0f0f0" }}>
+    {/* MAIN ROW */}
     <ListItem
       sx={{
         display: "flex",
         p: 2,
         alignItems: "center",
-        bgcolor: isExpanded ? "rgba(25, 118, 210, 0.02)" : "inherit",
+        bgcolor: isExpanded ? "rgba(25,118,210,0.03)" : "inherit",
       }}
     >
-      <Typography sx={{ width: gridConfig.roomNo, fontWeight: 700 }}>
-        {room.roomNumber}
+      <Typography sx={{ width: gridConfig.roomNo, fontWeight: 800 }}>
+        Room {room.roomNumber}
       </Typography>
 
       <Typography
-        sx={{ width: gridConfig.price, fontWeight: 600, color: "success.main" }}
+        sx={{
+          width: gridConfig.price,
+          fontWeight: 700,
+          color: "success.main",
+        }}
       >
-        ${room.pricePerNight}
+        ${room.pricePerNight} / night
       </Typography>
 
       <Box
@@ -73,7 +79,11 @@ export const RoomRow = ({
           size="small"
           color="primary"
           variant="outlined"
-          sx={{ fontWeight: 600, fontSize: "0.7rem" }}
+          sx={{
+            fontWeight: 700,
+            fontSize: "0.7rem",
+            letterSpacing: 0.4,
+          }}
         />
       </Box>
 
@@ -88,6 +98,7 @@ export const RoomRow = ({
         <IconButton size="small" onClick={onEdit} color="primary">
           <EditIcon fontSize="small" />
         </IconButton>
+
         <IconButton
           size="small"
           onClick={onToggle}
@@ -101,90 +112,107 @@ export const RoomRow = ({
       </Box>
     </ListItem>
 
+    {/* EXPANDED DETAILS */}
     <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-      <Box sx={{ p: 3, bgcolor: "#fafafa", borderTop: "1px solid #f0f0f0" }}>
-        <Typography
-          variant="overline"
-          color="primary"
-          sx={{ fontWeight: 900, display: "block" }}
-        >
-          Description
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 2, color: "text.secondary" }}>
-          {room.roomDetails.description}
+      <Box sx={{ p: 3, bgcolor: "#fafafa", borderTop: "1px solid #eee" }}>
+        <Typography fontWeight={900} letterSpacing={1}>
+          ROOM DETAILS
         </Typography>
 
-        <Typography
-          variant="overline"
-          color="primary"
-          sx={{ fontWeight: 900, display: "block" }}
-        >
-          Tech
-        </Typography>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
-          {room.roomDetails.tech?.map((a: string) => (
-            <Chip
-              key={a}
-              label={TechDisplayNames[a as Tech]}
-              size="small"
-              variant="filled"
-              sx={{ bgcolor: "white", border: "1px solid #ddd" }}
-            />
-          ))}
+        <Divider sx={{ my: 2 }} />
+
+        {/* DESCRIPTION */}
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="overline" color="primary">
+            Description
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {room.roomDetails.description}
+          </Typography>
         </Box>
-        <Typography
-          variant="overline"
-          color="primary"
-          sx={{ fontWeight: 900, display: "block" }}
-        >
-          Comfort
-        </Typography>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
-          {room.roomDetails.comfort?.map((a: string) => (
-            <Chip
-              key={a}
-              label={ComfortDisplayNames[a as Comfort]}
-              size="small"
-              variant="filled"
-              sx={{ bgcolor: "white", border: "1px solid #ddd" }}
-            />
-          ))}
+
+        {/* TECH */}
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="overline" color="primary">
+            Tech & Connectivity
+          </Typography>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
+            {room.roomDetails.tech?.map((a: string) => (
+              <Chip
+                key={a}
+                label={TechDisplayNames[a as Tech]}
+                size="small"
+                sx={{
+                  bgcolor: "white",
+                  border: "1px solid #ddd",
+                  fontWeight: 600,
+                }}
+              />
+            ))}
+          </Box>
         </Box>
-        <Typography
-          variant="overline"
-          color="primary"
-          sx={{ fontWeight: 900, display: "block" }}
-        >
-          Provisions
-        </Typography>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
-          {room.roomDetails.provisions?.map((a: string) => (
-            <Chip
-              key={a}
-              label={ProvisionsDisplayNames[a as Provisions]}
-              size="small"
-              variant="filled"
-              sx={{ bgcolor: "white", border: "1px solid #ddd" }}
-            />
-          ))}
+
+        {/* COMFORT */}
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="overline" color="primary">
+            Comfort & Sleep
+          </Typography>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
+            {room.roomDetails.comfort?.map((a: string) => (
+              <Chip
+                key={a}
+                label={ComfortDisplayNames[a as Comfort]}
+                size="small"
+                sx={{
+                  bgcolor: "white",
+                  border: "1px solid #ddd",
+                  fontWeight: 600,
+                }}
+              />
+            ))}
+          </Box>
         </Box>
-        <Typography
-          variant="overline"
-          color="primary"
-          sx={{ fontWeight: 900, display: "block" }}
-        >
-          Miscellaneous
-        </Typography>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
-          {room.roomDetails.miscellaneous?.map((a: string) => (
-            <Chip
-              key={a}
-              label={MiscellaneousDisplayNames[a as Miscellaneous]}
-              size="small"
-              variant="filled"
-              sx={{ bgcolor: "white", border: "1px solid #ddd" }}
-            />
-          ))}
+
+        {/* PROVISIONS */}
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="overline" color="primary">
+            Food & Beverage
+          </Typography>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
+            {room.roomDetails.provisions?.map((a: string) => (
+              <Chip
+                key={a}
+                label={ProvisionsDisplayNames[a as Provisions]}
+                size="small"
+                sx={{
+                  bgcolor: "white",
+                  border: "1px solid #ddd",
+                  fontWeight: 600,
+                }}
+              />
+            ))}
+          </Box>
+        </Box>
+
+        {/* MISC */}
+        <Box>
+          <Typography variant="overline" color="primary">
+            Additional Amenities
+          </Typography>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
+            {room.roomDetails.miscellaneous?.map((a: string) => (
+              <Chip
+                key={a}
+                label={MiscellaneousDisplayNames[a as Miscellaneous]}
+                size="small"
+                sx={{
+                  bgcolor: "white",
+                  border: "1px solid #ddd",
+                  fontWeight: 600,
+                }}
+              />
+            ))}
+          </Box>
         </Box>
       </Box>
     </Collapse>

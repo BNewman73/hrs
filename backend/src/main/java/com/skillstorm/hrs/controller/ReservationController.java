@@ -2,6 +2,7 @@ package com.skillstorm.hrs.controller;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.skillstorm.hrs.dto.reservation.BlockRequestDTO;
 import com.skillstorm.hrs.dto.reservation.BookingRequestDTO;
 import com.skillstorm.hrs.dto.reservation.RefundResponseDTO;
+import com.skillstorm.hrs.dto.reservation.ReservationWithGuestDTO;
 import com.skillstorm.hrs.dto.reservation.ReservationResponseDTO;
 import com.skillstorm.hrs.exception.InvalidReservationException;
 import com.skillstorm.hrs.model.Reservation;
@@ -43,6 +45,12 @@ public class ReservationController {
   @GetMapping
   public ResponseEntity<List<Reservation>> getAllReservations() {
     List<Reservation> reservations = reservationService.getAllReservations();
+    return new ResponseEntity<>(reservations, HttpStatus.OK);
+  }
+
+  @GetMapping("/with-guests")
+  public ResponseEntity<List<ReservationWithGuestDTO>> getAllReservationsWithGuest() {
+    List<ReservationWithGuestDTO> reservations = reservationService.getAllReservationsWithGuests();
     return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 
@@ -160,4 +168,15 @@ public class ReservationController {
     RefundResponseDTO refund = reservationService.postRefund(paymentId);
     return new ResponseEntity<>(refund, HttpStatus.CREATED);
   }
+
+  @GetMapping("/occupancy")
+  public ResponseEntity<Map<LocalDate, Integer>> getOccupancy(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate) {
+      return  ResponseEntity.ok(reservationService.getOccupancyByDay(checkInDate, checkOutDate));
+  }
+
+  @GetMapping("/occupancy/ytd")
+  public ResponseEntity<Map<LocalDate, Integer>> getYearToDateOccupancy() {
+      return  ResponseEntity.ok(reservationService.getOccupancyByDay(LocalDate.now().withDayOfYear(1), LocalDate.now()));
+  }
+
 }

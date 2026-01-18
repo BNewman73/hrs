@@ -1,5 +1,6 @@
 package com.skillstorm.hrs.service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,6 +20,10 @@ public class UserService {
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     public Optional<User> getByProviderAndProviderId(User.Provider provider, String providerId) {
@@ -142,6 +147,23 @@ public class UserService {
 
     public String principalToUserId(OAuth2User principal) {
         return oauth2UserToUser(principal).getProviderId();
+    }
+
+    public User updateUser(UserDTO dto, String publicId) {
+
+        User user = userRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setFirstName(dto.firstName());
+        user.setLastName(dto.lastName());
+        user.setEmail(dto.email());
+        user.setAvatarUrl(dto.avatarUrl());
+
+        if (dto.role() != null) {
+            user.setRole(User.UserRole.valueOf(dto.role()));
+        }
+
+        return userRepository.save(user);
     }
 
 }
