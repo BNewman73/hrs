@@ -8,7 +8,7 @@ export const userApi = createApi({
     baseUrl: "/api",
     credentials: "include",
   }),
-  tagTypes: ["User"],
+  tagTypes: ["User", "Users"],
   endpoints: (builder) => ({
     getPrincipal: builder.query<User, void>({
       query: () => "/users/storedUser",
@@ -34,7 +34,25 @@ export const userApi = createApi({
         dispatch(setUser(data));
       },
     }),
+    getAllUsers: builder.query<UserDTO[], void>({
+      query: () => "/users",
+      providesTags: ["Users"],
+    }),
+
+    updateUser: builder.mutation<UserDTO, UserDTO>({
+      query: (user) => ({
+        url: `/users/${encodeURIComponent(user.publicId)}`,
+        method: "PUT",
+        body: user,
+      }),
+      invalidatesTags: ["Users"],
+    }),
   }),
 });
 
-export const { useGetPrincipalQuery, useUpdateProfileMutation } = userApi;
+export const {
+  useGetPrincipalQuery,
+  useUpdateProfileMutation,
+  useGetAllUsersQuery,
+  useUpdateUserMutation,
+} = userApi;

@@ -19,17 +19,19 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AddHomeWorkIcon from "@mui/icons-material/AddHomeWork";
 import BedIcon from "@mui/icons-material/Bed";
 import LogoutIcon from "@mui/icons-material/Logout";
-
+import EventNoteIcon from "@mui/icons-material/EventNote";
+import GroupIcon from "@mui/icons-material/Group";
 import NavBar from "./NavBar";
 import RoomCreateForm from "./room/RoomCrudForm";
 import RoomTable from "./room/RoomTable";
 import ReservationTable from "./room/ReservationTable";
-import EventNoteIcon from "@mui/icons-material/EventNote";
+import AccountCard from "./account/AccountCard";
+
 import { useNavigate } from "react-router-dom";
 import { useGetPrincipalQuery } from "../features/userApi";
 import { setUser, clearUser } from "../features/userSlice";
 import { useDispatch } from "react-redux";
-import AccountCard from "./account/AccountCard";
+import UserTable from "./user/UserTable";
 
 const DRAWER_WIDTH = 280;
 
@@ -41,11 +43,8 @@ export default function DashboardPage() {
   const { data, error } = useGetPrincipalQuery();
 
   useEffect(() => {
-    if (data) {
-      dispatch(setUser(data));
-    } else if (error) {
-      dispatch(clearUser());
-    }
+    if (data) dispatch(setUser(data));
+    else if (error) dispatch(clearUser());
   }, [data, error, dispatch]);
 
   const currentUser = data || {
@@ -61,13 +60,9 @@ export default function DashboardPage() {
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
   const menuItems = [
-    { id: "Table", label: "View Inventory", icon: <BedIcon /> },
-
-    {
-      id: "Reservations",
-      label: "View Reservations",
-      icon: <EventNoteIcon />,
-    },
+    { id: "Table", label: "View Rooms", icon: <BedIcon /> },
+    { id: "Reservations", label: "View Reservations", icon: <EventNoteIcon /> },
+    { id: "Users", label: "View Users", icon: <GroupIcon /> },
     { id: "Rooms", label: "Create Room", icon: <AddHomeWorkIcon /> },
   ];
 
@@ -79,7 +74,8 @@ export default function DashboardPage() {
         return <RoomCreateForm crud="Create" />;
       case "Reservations":
         return <ReservationTable />;
-      case "Table":
+      case "Users":
+        return <UserTable />;
       default:
         return <RoomTable />;
     }
@@ -98,11 +94,7 @@ export default function DashboardPage() {
       <Toolbar sx={{ px: 3 }}>
         <Typography
           variant="h6"
-          sx={{
-            fontWeight: 900,
-            color: "primary.main",
-            letterSpacing: -0.5,
-          }}
+          sx={{ fontWeight: 900, color: "primary.main", letterSpacing: -0.5 }}
         >
           STORM HOTELS
         </Typography>
@@ -121,29 +113,17 @@ export default function DashboardPage() {
             boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
             mb: 2,
             p: 2,
-            transition: "transform .2s ease, box-shadow .2s ease",
-            "&:hover": {
-              transform: "translateY(-2px)",
-              boxShadow: "0 10px 22px rgba(0,0,0,0.12)",
-            },
           }}
         >
           <Avatar
-            alt={currentUser.firstName}
             src={currentUser.avatarUrl}
-            imgProps={{ referrerPolicy: "no-referrer" }}
             sx={{ width: 44, height: 44, mr: 1.5, bgcolor: "primary.main" }}
           />
           <Box sx={{ overflow: "hidden" }}>
-            <Typography variant="subtitle2" noWrap sx={{ fontWeight: 700 }}>
+            <Typography variant="subtitle2" noWrap fontWeight={700}>
               {currentUser.firstName} {currentUser.lastName}
             </Typography>
-            <Typography
-              variant="caption"
-              noWrap
-              color="text.secondary"
-              sx={{ display: "block" }}
-            >
+            <Typography variant="caption" color="text.secondary" noWrap>
               Admin Account
             </Typography>
           </Box>
@@ -170,7 +150,6 @@ export default function DashboardPage() {
                   bgcolor: "primary.main",
                   color: "white",
                   boxShadow: "0 4px 10px rgba(25,118,210,0.3)",
-                  "&:hover": { bgcolor: "primary.dark" },
                   "& .MuiListItemIcon-root": { color: "white" },
                   "&::before": {
                     content: '""',
@@ -214,9 +193,7 @@ export default function DashboardPage() {
           sx={{
             borderRadius: "12px",
             color: "error.main",
-            "&:hover": {
-              bgcolor: "rgba(211,47,47,0.08)",
-            },
+            "&:hover": { bgcolor: "rgba(211,47,47,0.08)" },
           }}
         >
           <ListItemIcon sx={{ minWidth: 40, color: "error.main" }}>
@@ -236,20 +213,18 @@ export default function DashboardPage() {
         position="fixed"
         elevation={0}
         sx={{
-          zIndex: (theme) => theme.zIndex.drawer + 1,
+          zIndex: (t) => t.zIndex.drawer + 1,
           bgcolor: "rgba(255,255,255,0.75)",
           backdropFilter: "blur(12px)",
-          color: "text.primary",
           borderBottom: "1px solid",
           borderColor: "divider",
         }}
       >
         <Toolbar>
           <IconButton
-            color="inherit"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
+            sx={{ mr: 2, display: { md: "none" } }}
           >
             <MenuIcon />
           </IconButton>
@@ -257,22 +232,12 @@ export default function DashboardPage() {
         </Toolbar>
       </AppBar>
 
-      <Box
-        component="nav"
-        sx={{ width: { sm: DRAWER_WIDTH }, flexShrink: { sm: 0 } }}
-      >
+      <Box component="nav" sx={{ width: { md: DRAWER_WIDTH } }}>
         <Drawer
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
-          sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: DRAWER_WIDTH,
-              borderRight: "none",
-            },
-          }}
+          sx={{ display: { xs: "block", md: "none" } }}
         >
           {sidebarContent}
         </Drawer>
@@ -280,15 +245,7 @@ export default function DashboardPage() {
         <Drawer
           variant="permanent"
           open
-          sx={{
-            display: { xs: "none", sm: "block" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: DRAWER_WIDTH,
-              borderRight: "1px solid",
-              borderColor: "divider",
-            },
-          }}
+          sx={{ display: { xs: "none", md: "block" } }}
         >
           {sidebarContent}
         </Drawer>
@@ -298,10 +255,8 @@ export default function DashboardPage() {
         component="main"
         sx={{
           flexGrow: 1,
-          p: { xs: 1.5, sm: 3, md: 5 }, // Smaller padding on tiny screens
-          width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
-          // Add: ensure the main area doesn't force a horizontal scroll
-          overflowX: "hidden",
+          p: { xs: 1.5, sm: 3, md: 5 },
+          width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
         }}
       >
         <Toolbar />
@@ -311,44 +266,38 @@ export default function DashboardPage() {
             maxWidth: 1200,
             mx: "auto",
             bgcolor: "white",
-            borderRadius: { xs: "12px", sm: "20px" }, // Slightly smaller radius on mobile
+            borderRadius: { xs: "12px", sm: "20px" },
             p: { xs: 2, sm: 4 },
             boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-            // Change: Ensure internal content respects boundaries
-            width: "100%",
-            boxSizing: "border-box",
           }}
         >
           <Box sx={{ mb: 4 }}>
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: 900,
-                letterSpacing: "-0.03em",
-                mb: 0.5,
-              }}
-            >
+            <Typography variant="h4" fontWeight={900} mb={0.5}>
               {activeTab === "Account"
                 ? "Account Settings"
                 : activeTab === "Rooms"
                 ? "Room Management"
-                : "Hotel Inventory"}
+                : activeTab === "Users"
+                ? "Users"
+                : activeTab === "Reservations"
+                ? "Reservations"
+                : "Rooms"}
             </Typography>
-            <Typography
-              variant="body1"
-              sx={{ color: "text.secondary", fontSize: "1rem" }}
-            >
+
+            <Typography color="text.secondary">
               {activeTab === "Rooms"
                 ? "Add new rooms to your hotel."
-                : activeTab === "Account"
-                ? ""
-                : "Manage and update your current available rooms."}
+                : activeTab === "Reservations"
+                ? "View and manage users."
+                : activeTab === "Table"
+                ? "View and manage hotel rooms."
+                : activeTab === "Users"
+                ? "View and manage guest and blocked reservations."
+                : ""}
             </Typography>
           </Box>
 
-          <Box sx={{ animation: "fadeIn 0.5s ease-in-out" }}>
-            {renderContent()}
-          </Box>
+          {renderContent()}
         </Box>
       </Box>
     </Box>

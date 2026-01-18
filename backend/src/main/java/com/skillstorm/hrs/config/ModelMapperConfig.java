@@ -11,9 +11,11 @@ import org.springframework.context.annotation.Configuration;
 import com.skillstorm.hrs.dto.roomDTOS.RoomDTO;
 import com.skillstorm.hrs.dto.roomDTOS.RoomPatchDTO;
 import com.skillstorm.hrs.dto.roomDTOS.RoomPutDTO;
+import com.skillstorm.hrs.dto.userDTOs.UserDTO;
 import com.skillstorm.hrs.model.Room;
 import com.skillstorm.hrs.model.RoomDetails;
 import com.skillstorm.hrs.model.RoomDetails.RoomType;
+import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.repository.RoomDetailsRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -59,6 +61,8 @@ public class ModelMapperConfig {
                         mapper.skip(Room::setRoomDetails);
                         mapper.using(converter).map(RoomDTO::getRoomType, Room::setRoomDetails);
                 });
+
+                modelMapper.typeMap(User.class, UserDTO.class);
 
                 // Mapping for RoomPutDTO
                 modelMapper.typeMap(RoomPutDTO.class, Room.class).addMappings(mapper -> {

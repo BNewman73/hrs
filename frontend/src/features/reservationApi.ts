@@ -12,6 +12,11 @@ export const reservationApi = createApi({
       query: () => "/reservations",
       providesTags: ["Reservations"],
     }),
+    getAllReservationsWithGuest: builder.query<ReservationWithGuestDTO[], void>(
+      {
+        query: () => "/reservations/with-guests",
+      }
+    ),
     getReservationById: builder.query({
       query: (id) => `/reservations/${id}`,
     }),
@@ -63,6 +68,7 @@ export const reservationApi = createApi({
 
 export const {
   useGetAllReservationsQuery,
+  useGetAllReservationsWithGuestQuery,
   useGetReservationByIdQuery,
   useGetReservationsByUserIdQuery,
   useGetReservationsByTypeQuery,

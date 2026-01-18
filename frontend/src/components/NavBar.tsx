@@ -7,7 +7,6 @@ import HotelIcon from "@mui/icons-material/Hotel";
 import type { User } from "../features/userSlice";
 
 export default function NavBar({ user }: { user: User }) {
-
   return (
     <Box
       sx={{
@@ -19,14 +18,17 @@ export default function NavBar({ user }: { user: User }) {
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
         <HotelIcon color="primary" />
-        <Typography variant="h6" sx={{ fontWeight: 900, letterSpacing: -1 }}>
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: 900, letterSpacing: -1, color: "black" }}
+        >
           STORM STAY
         </Typography>
       </Box>
 
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
         <Box sx={{ display: { xs: "none", md: "block" }, textAlign: "right" }}>
-          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+          <Typography variant="body2" sx={{ fontWeight: 600, color: "black" }}>
             {user.firstName} {user.lastName}
           </Typography>
           <Typography variant="caption" color="text.secondary">
