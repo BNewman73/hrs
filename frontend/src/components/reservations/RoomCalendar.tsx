@@ -7,6 +7,9 @@ import {
   Chip,
   Button,
   IconButton,
+  FormControl,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -24,7 +27,10 @@ import {
   isSameDay,
 } from "date-fns";
 import { useBooking } from "../../hooks/useBooking";
+import { useCreateAdminBlockMutation } from "../../features/roomApi";
 import { Add, Remove } from "@mui/icons-material";
+import { useAppDispatch } from "../../shared/store/hooks";
+import { showToast } from "../../features/toastSlice";
 
 const COLORS: Record<string, string> = {
   available: "transparent",
@@ -34,25 +40,31 @@ const COLORS: Record<string, string> = {
   booked: "#d32f2f",
   blocked: "#d32f2f",
   white: "white",
+  black: "black",
   inherit: "inherit",
 };
 
 interface RoomCalendarProps {
   roomNumber: string;
-  pricePerNight: number;
-  capacity: number;
+  pricePerNight?: number;
+  capacity?: number;
+  isBlock: boolean;
+  onSuccess?: () => void
 }
 
 const SimpleCalendar: React.FC<RoomCalendarProps> = ({
   roomNumber,
   pricePerNight,
   capacity,
+  isBlock,
+  onSuccess
 }) => {
   const { bookRoom } = useBooking();
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [checkInDate, setCheckInDate] = useState<Date | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
   const [guests, setGuests] = useState<number>(1);
+  const [blockReason, setBlockReason] = useState<string>("")
 
   const startDate = useMemo(() => {
     return format(startOfMonth(currentMonth), "yyyy-MM-dd");
@@ -72,7 +84,11 @@ const SimpleCalendar: React.FC<RoomCalendarProps> = ({
     endDate,
   });
 
-  const getDateStatus = (date: Date): "available" | "booked" | "blocked" => {
+  const [createAdminBlock] = useCreateAdminBlockMutation();
+
+  const getDateStatus = (date: Date): "past" | "available" | "booked" | "blocked" => {
+    const isPast = date < new Date(new Date().setHours(0, 0, 0, 0));
+    if (isPast) return "past";
     if (!reservations) return "available";
 
     for (const reservation of reservations) {
@@ -121,7 +137,6 @@ const SimpleCalendar: React.FC<RoomCalendarProps> = ({
     let backgroundColor = COLORS.available;
     let color = COLORS.inherit;
     const border = "none";
-
     if (status === "booked" || status === "blocked") {
       backgroundColor = COLORS.booked;
       color = COLORS.white;
@@ -158,12 +173,41 @@ const SimpleCalendar: React.FC<RoomCalendarProps> = ({
     if (checkInDate && checkOutDate)
       await bookRoom({
         roomNumber,
-        roomPricePerNight: pricePerNight,
+        roomPricePerNight: pricePerNight!,
         checkInDate: format(checkInDate, "yyyy-MM-dd"),
         checkOutDate: format(checkOutDate, "yyyy-MM-dd"),
         guests,
       });
   };
+
+  const dispatch = useAppDispatch();
+  const handleBlock = async () => {
+    if (checkInDate && checkOutDate) {
+      try {
+        await createAdminBlock({
+          roomId: roomNumber,
+          startDate: format(checkInDate, "yyyy-MM-dd"),
+          endDate: format(checkOutDate, "yyyy-MM-dd"),
+          blockReason: blockReason
+        }).unwrap();
+        dispatch(
+          showToast({
+            message: `Block created successfully!`,
+            severity: "success",
+          })
+        );
+        handleReset();
+        if (onSuccess) onSuccess();
+      } catch {
+        dispatch(
+        showToast({
+          message: `Error occurred creating the block!`,
+          severity: "error",
+        })
+      );
+      }
+    }
+  }
 
   const handleReset = () => {
     setCheckInDate(null);
@@ -222,12 +266,13 @@ const SimpleCalendar: React.FC<RoomCalendarProps> = ({
             display: "flex", 
             alignItems: "center", 
             gap: 1,
-            justifyContent: "space-between"
+            // justifyContent: "space-between"
           }}
         >
           <Typography variant="body2">
-            <strong>Guests:</strong>
+            <strong>{isBlock ? "Reason:" : "Guests:" }</strong>
           </Typography>
+          {!isBlock ? (
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, maxHeight: 10 }}>
             <IconButton
               size="small"
@@ -241,22 +286,41 @@ const SimpleCalendar: React.FC<RoomCalendarProps> = ({
             </Typography>
             <IconButton
               size="small"
-              onClick={() => setGuests(Math.min(capacity, guests + 1))}
+              onClick={() => setGuests(Math.min(capacity!, guests + 1))}
               disabled={guests == capacity}
             >
               <Add fontSize="small" />
             </IconButton>
-          </Box>
+          </Box>) : (
+            <FormControl variant="standard" size="small" sx={{ width: 110 }}>
+            <Select
+              value={blockReason}
+              onChange={(e) => setBlockReason(e.target.value)}
+              disableUnderline
+              sx={{ 
+                pt: "5px",
+                fontSize: "0.9rem",
+                height: 20,
+              }}
+            >
+              <MenuItem sx={{fontSize: "0.8rem"}} value="CLEANING">Cleaning</MenuItem>
+              <MenuItem sx={{fontSize: "0.8rem"}} value="MAINTENANCE">Maintenance</MenuItem>
+              <MenuItem sx={{fontSize: "0.8rem"}} value="REPAIR">Repair</MenuItem>
+              <MenuItem sx={{fontSize: "0.8rem"}} value="RENOVATION">Renovation</MenuItem>
+              <MenuItem sx={{fontSize: "0.8rem"}} value="OTHER">Other</MenuItem>
+            </Select>
+          </FormControl>
+          )}
         </Box>
         <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
           <Button
             variant="contained"
             size="small"
-            onClick={handleBooking}
-            disabled={!checkInDate || !checkOutDate}
+            onClick={isBlock ? handleBlock : handleBooking}
+            disabled={!checkInDate || !checkOutDate || (isBlock ? !blockReason : false)}
             fullWidth
           >
-            Book Now
+            {isBlock ? "Create Block" : "Book Now"}
           </Button>
           <Button variant="outlined" size="small" onClick={handleReset}>
             Reset
