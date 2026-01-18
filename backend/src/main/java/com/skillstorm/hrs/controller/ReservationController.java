@@ -147,19 +147,11 @@ public class ReservationController {
     return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 
-  @GetMapping("/mine/past/test")
-  public ResponseEntity<List<Reservation>> getMyPastReservationsTest(
+  @GetMapping("/mine/current")
+  public ResponseEntity<List<ReservationResponseDTO>> getMyCurrentReservations(
       @AuthenticationPrincipal OAuth2User principal) {
-    String userId = "107082386102921512899";
-    List<Reservation> reservations = reservationService.getPastReservationsTest(userId);
-    return new ResponseEntity<>(reservations, HttpStatus.OK);
-  }
-
-  @GetMapping("/mine/upcoming/test")
-  public ResponseEntity<List<Reservation>> getMyUpcomingReservationsTest(
-      @AuthenticationPrincipal OAuth2User principal) {
-    String userId = "107082386102921512899";
-    List<Reservation> reservations = reservationService.getUpcomingReservationsTest(userId);
+    String userId = userService.principalToUserId(principal);
+    List<ReservationResponseDTO> reservations = reservationService.getCurrentReservations(userId);
     return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 

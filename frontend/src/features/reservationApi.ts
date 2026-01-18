@@ -53,7 +53,7 @@ export const reservationApi = createApi({
     }),
     refundReservation: builder.mutation<RefundResponse, string>({
       query: (id) => ({
-        url: `/reservations/refund/${id}`,
+        url: `/reservations/refund/${id}`, // stripePaymentIntent
         method: "POST",
       }),
       invalidatesTags: ["Reservations"],

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -13,18 +13,31 @@ import {
   Chip,
   CircularProgress,
   Alert,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import {
   useGetUpcomingReservationsQuery,
   useGetPastReservationsQuery,
+  useGetCurrentReservationsQuery,
 } from "../../features/roomApi";
 import { getErrorMessage } from "../../features/errorUtils";
+import { useRefundReservationMutation } from "../../features/reservationApi";
+import { useAppDispatch } from "../../shared/store/hooks";
+import { showToast } from "../../features/toastSlice";
+import { format, parse } from "date-fns";
 
 const UserReservations: React.FC = () => {
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [reservation, setReservation] = useState<ReservationResponseDTO | null>(null)
   const {
     data: upcomingReservations,
     isLoading: upcomingLoading,
     error: upcomingError,
+    refetch: refetchUpcoming
   } = useGetUpcomingReservationsQuery();
 
   const {
@@ -33,14 +46,16 @@ const UserReservations: React.FC = () => {
     error: pastError,
   } = useGetPastReservationsQuery();
 
-  // Helper function to format dates
+  const {
+    data: currentReservations,
+    isLoading: currentLoading,
+    error: currentError
+  } = useGetCurrentReservationsQuery();
+
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
+    // Parse the date string explicitly
+    const date = parse(dateString, "yyyy-MM-dd", new Date());  
+    return format(date, "MMM dd, yyyy");
   };
 
   // Helper function to calculate nights
@@ -79,8 +94,8 @@ const UserReservations: React.FC = () => {
 
     if (!reservations || reservations.length === 0) {
       return (
-        <Typography variant="body2" color="text.secondary" sx={{ p: 2 }}>
-          No {title.toLowerCase()} found.
+        <Typography variant="h6" color="text.secondary" sx={{ p: 2 }}>
+          You have no {title.toLowerCase()}.
         </Typography>
       );
     }
@@ -116,7 +131,7 @@ const UserReservations: React.FC = () => {
               </TableCell>
               {showActions && (
                 <TableCell>
-                  <strong>Actions</strong>
+                  <strong>Cancel</strong>
                 </TableCell>
               )}
             </TableRow>
@@ -146,23 +161,20 @@ const UserReservations: React.FC = () => {
                 </TableCell>
                 {showActions && (
                   <TableCell>
-                    <Box display="flex" gap={1}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={() => handleEdit(reservation.id)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
+                    {reservation.paymentStatus != "refunded" && (
+                        <Button
                         variant="outlined"
                         size="small"
                         color="error"
-                        onClick={() => handleCancel(reservation.id)}
-                      >
-                        Cancel
-                      </Button>
-                    </Box>
+                          onClick={() => {
+                            setConfirmOpen(true)
+                            setReservation(reservation);
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                    
+                    )}
                   </TableCell>
                 )}
               </TableRow>
@@ -173,15 +185,32 @@ const UserReservations: React.FC = () => {
     );
   };
 
-  // Placeholder handlers for actions
-  const handleEdit = (reservationId: string) => {
-    console.log("Edit reservation:", reservationId);
-    // TODO: Implement edit functionality
-  };
+  const [postRefund, { isLoading: isRefunding }] =
+    useRefundReservationMutation();
+  const dispatch = useAppDispatch();
+  const handleCancel = async (paymentIntentId: string) => {
+    try {
+      await postRefund(paymentIntentId).unwrap();
+      setConfirmOpen(false);
+      setReservation(null);
+      refetchUpcoming();
 
-  const handleCancel = (reservationId: string) => {
-    console.log("Cancel reservation:", reservationId);
-    // TODO: Implement cancel functionality
+      dispatch(
+        showToast({
+          message: `Reservation has been canceled successfully!`,
+          severity: "success",
+        })
+      );
+    } catch {
+      setConfirmOpen(false);
+      setReservation(null);
+      dispatch(
+        showToast({
+          message: `Error occurred canceling the reservation!`,
+          severity: "error",
+        })
+      );
+    }
   };
 
   return (
@@ -189,6 +218,20 @@ const UserReservations: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         My Reservations
       </Typography>
+
+      {/* Current Reservations */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h5" gutterBottom>
+          Current Reservations ({currentReservations?.length || 0})
+        </Typography>
+        {renderReservationTable(
+          currentReservations,
+          currentLoading,
+          currentError,
+          "Current Reservations",
+          false // Show actions for upcoming reservations
+        )}
+      </Box>
 
       {/* Upcoming Reservations */}
       <Box sx={{ mb: 4 }}>
@@ -217,6 +260,29 @@ const UserReservations: React.FC = () => {
           false // No actions for past reservations
         )}
       </Box>
+      <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+        <DialogTitle sx={{ fontWeight: "bold" }}>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to cancel this reservation. This action cannot
+            be undone!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => setConfirmOpen(false)} color="inherit">
+            Exit
+          </Button>
+          <Button
+            onClick={() => handleCancel(reservation!.stripePaymentIntentId)}
+            color="error"
+            variant="contained"
+            autoFocus
+            loading={isRefunding}
+          >
+            Cancel Reservation
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

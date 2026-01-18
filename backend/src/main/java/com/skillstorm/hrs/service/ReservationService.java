@@ -122,6 +122,7 @@ public class ReservationService {
 
     List<Reservation> overlappingReservations = reservationRepository.findReservationsInDateRange(checkInDate,
         checkOutDate);
+    System.out.println("overlapping reservations: " + overlappingReservations);
 
     Set<String> bookedRoomIds = overlappingReservations.stream()
         .map(Reservation::getRoomId)
@@ -141,6 +142,7 @@ public class ReservationService {
         .findReservationsInDateRange(startDate, endDate)
         .stream()
         .filter(r -> r.getRoomId().equals(roomNumber))
+        .filter(r -> !"refunded".equals(r.getPaymentStatus()))
         .collect(Collectors.toList());
 
     return reservations.stream()
@@ -249,7 +251,7 @@ public class ReservationService {
   public List<ReservationResponseDTO> getUpcomingReservations(String userId) {
     LocalDate today = LocalDate.now();
     List<Reservation> reservations = reservationRepository
-        .findByUserIdAndEndDateGreaterThanEqualOrderByStartDateAsc(userId, today);
+        .findByUserIdAndStartDateGreaterThanOrderByStartDateAsc(userId, today);
     return reservations.stream()
         .map(this::mapToResponseDTO)
         .collect(Collectors.toList());
@@ -265,19 +267,11 @@ public class ReservationService {
         .collect(Collectors.toList());
   }
 
-  public List<Reservation> getUpcomingReservationsTest(String userId) {
+  public List<ReservationResponseDTO> getCurrentReservations(String userId) {
     LocalDate today = LocalDate.now();
     List<Reservation> reservations = reservationRepository
-        .findByUserIdAndEndDateGreaterThanEqualOrderByStartDateAsc(userId, today);
-    return reservations;
-
-  }
-
-  public List<Reservation> getPastReservationsTest(String userId) {
-    LocalDate today = LocalDate.now();
-    List<Reservation> reservations = reservationRepository
-        .findByUserIdAndEndDateLessThanOrderByEndDateDesc(userId, today);
-    return reservations;
+        .findCurrentReservationsByUserId(userId, today);
+    return reservations.stream().map(this::mapToResponseDTO).collect(Collectors.toList());
   }
 
   private ReservationResponseDTO mapToResponseDTO(Reservation reservation) {
@@ -292,8 +286,11 @@ public class ReservationService {
         .guests(reservation.getGuests())
         .totalPrice(reservation.getTotalPrice())
         .paymentStatus(reservation.getPaymentStatus())
+        .stripePaymentIntentId(reservation.getStripePaymentIntentId())
         .roomNumber(room.getRoomNumber())
         .roomType(room.getRoomDetails().getType())
+        .roomCapcity(room.getRoomDetails().getMaxCapacity())
+        .roomPricePerNight(room.getPricePerNight())
         .build();
   }
 
