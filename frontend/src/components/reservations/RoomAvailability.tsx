@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Container, Paper, Grid, TextField, Button } from "@mui/material";
 import { SearchOutlined } from "@mui/icons-material";
-import { useGetAvailableRoomsQuery } from "../../features/roomApi";
+import {
+  useGetAllRoomsByTypeQuery,
+  useGetAvailableRoomsQuery,
+} from "../../features/roomApi";
 import RoomList from "./RoomList";
 import type { RoomType } from "../../types/enum";
 
@@ -13,6 +16,7 @@ const RoomAvailability: React.FC<RoomAvailabilityProps> = ({ roomType }) => {
   const [checkInDate, setCheckInDate] = useState<string>("");
   const [checkOutDate, setCheckOutDate] = useState<string>("");
   const [guests, setGuests] = useState<number>(1);
+  const [showFiltered, setShowFiltered] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useState<{
     checkInDate: string;
     checkOutDate: string;
@@ -21,9 +25,15 @@ const RoomAvailability: React.FC<RoomAvailabilityProps> = ({ roomType }) => {
   } | null>(null);
 
   const {
-    data: rooms,
-    isLoading,
-    error,
+    data: allRooms,
+    isLoading: allRoomsLoading,
+    error: allRoomsError,
+  } = useGetAllRoomsByTypeQuery(roomType);
+
+  const {
+    data: filteredRooms,
+    isLoading: filteredLoading,
+    error: filteredError,
   } = useGetAvailableRoomsQuery(searchParams!, {
     skip: !searchParams,
   });
@@ -36,8 +46,21 @@ const RoomAvailability: React.FC<RoomAvailabilityProps> = ({ roomType }) => {
         guests,
         roomType,
       });
+      setShowFiltered(true);
     }
   };
+
+  const handleShowAll = () => {
+    setShowFiltered(false);
+    setCheckInDate("");
+    setCheckOutDate("");
+    setGuests(1);
+    setSearchParams(null);
+  };
+
+  const rooms = showFiltered ? filteredRooms : allRooms;
+  const isLoading = showFiltered ? filteredLoading : allRoomsLoading;
+  const error = showFiltered ? filteredError : allRoomsError;
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -101,16 +124,27 @@ const RoomAvailability: React.FC<RoomAvailabilityProps> = ({ roomType }) => {
           </Grid>
 
           <Grid size={{ xs: 12, md: 3 }}>
-            <Button
-              variant="contained"
-              fullWidth
-              size="large"
-              startIcon={<SearchOutlined />}
-              onClick={handleSearch}
-              disabled={!checkInDate || !checkOutDate}
-            >
-              Search
-            </Button>
+            {!showFiltered ? (
+              <Button
+                variant="contained"
+                fullWidth
+                size="large"
+                startIcon={<SearchOutlined />}
+                onClick={handleSearch}
+                disabled={!checkInDate || !checkOutDate}
+              >
+                Search
+              </Button>
+            ) : (
+              <Button
+                variant="outlined"
+                fullWidth
+                size="large"
+                onClick={handleShowAll}
+              >
+                Show All Rooms
+              </Button>
+            )}
           </Grid>
         </Grid>
       </Paper>
@@ -122,6 +156,7 @@ const RoomAvailability: React.FC<RoomAvailabilityProps> = ({ roomType }) => {
         checkInDate={checkInDate}
         checkOutDate={checkOutDate}
         guests={guests}
+        filtered={showFiltered}
       />
     </Container>
   );

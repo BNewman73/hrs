@@ -3,11 +3,15 @@ import RoomAvailability from "./RoomAvailability";
 import type { RoomType } from "../../types/enum";
 import { Box, Container, Fade, Typography } from "@mui/material";
 import FooterPage from "../FooterPage";
+import { useEffect } from "react";
 
 const IMAGE =
   "https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg";
 const BookingPage: React.FC = () => {
   const { roomType } = useParams<{ roomType: string }>();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <>
       <Fade in unmountOnExit timeout={1000}>
