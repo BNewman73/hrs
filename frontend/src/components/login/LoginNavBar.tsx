@@ -1,7 +1,6 @@
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 
 import { useNavigate } from "react-router-dom";
-import stormIcon from "/stormstay-icon-192.png";
 
 interface LoginPageNavBarProps {
   login: boolean;
@@ -22,7 +21,7 @@ export default function LoginPageNavBar({ login }: LoginPageNavBarProps) {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Box
               component="img"
-              src={stormIcon}
+              src="/stormstay-icon-192.png"
               alt="Storm Stay"
               sx={{
                 width: 55,
