@@ -55,7 +55,6 @@ export default function UserHomePage() {
             centered
           >
             <Tab label="Reservations" />
-            <Tab label="Payments" />
             <Tab label="Profile" />
           </Tabs>
         </Box>
@@ -90,17 +89,6 @@ export default function UserHomePage() {
                         )}
 
               {activeTab === 1 && (
-                <Box>
-                  <Typography variant="h5" fontWeight={800} mb={1}>
-                    Payment History
-                  </Typography>
-                  <Typography color="text.secondary">
-                    Review your completed and pending payments.
-                  </Typography>
-                </Box>
-              )}
-
-              {activeTab === 2 && (
                 <Box>
                   <Typography variant="h5" fontWeight={800} mb={1}>
                     Profile

@@ -32,22 +32,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             Authentication authentication) throws IOException, ServletException {
         // Just redirect. Logic moved to CustomOAuth2UserService
        
-        OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-        Map<String, Object> attributes = oauth2User.getAttributes();
-
-        String id = userService.parseAttributes(attributes, "sub", "id");
-        String issuer = userService.parseAttributes(attributes, "iss", "url");
-        User.Provider provider = userService.determineProvider(issuer);
-
-        String email = userService.parseAttributes(attributes, "email");
-        String name = userService.parseAttributes(attributes, "given_name", "name");
-        String lastName = userService.parseAttributes(attributes, "family_name");
-        String avatar = userService.parseAttributes(attributes, "picture", "avatar_url");
-
-        User user = userService.findOrCreateUser(provider, id, email, name, lastName, avatar);
-       
-        //boolean isAdmin = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-        boolean isAdmin = user.getRole() == User.UserRole.ADMIN;
+        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
         if (isAdmin) {
             response.sendRedirect(frontendUrl + "/dashboard");
