@@ -3,6 +3,7 @@ package com.skillstorm.hrs.dto;
 import java.time.Instant;
 
 import com.skillstorm.hrs.model.Reservation;
+import com.skillstorm.hrs.model.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,4 +24,5 @@ public class TransactionDTO {
   private String customerEmail;
   // additional fields
   private Reservation reservation;
+  private User user;
 }

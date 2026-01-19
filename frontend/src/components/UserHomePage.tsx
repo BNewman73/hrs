@@ -15,6 +15,7 @@ import { setUser, clearUser } from "../features/userSlice";
 import { useDispatch } from "react-redux";
 import GuestAccountCard from "./account/GuestAccountCard";
 import { usePageTitle } from "../hooks/usePageTitle";
+import ReservationsTable from "./reservations/ReservationsTable"
 
 export default function UserHomePage() {
   usePageTitle("Dashboard");
@@ -30,9 +31,9 @@ export default function UserHomePage() {
     }
   }, [data, error, dispatch]);
 
-  return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "#f4f6f8" }}>
-      <CssBaseline />
+    return (
+        <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+            <CssBaseline />
 
       <Toolbar>
         {" "}
@@ -59,33 +60,34 @@ export default function UserHomePage() {
           </Tabs>
         </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            px: 2,
-            py: 6,
-          }}
-        >
-          <Card
-            sx={{
-              width: "100%",
-              maxWidth: 900,
-              borderRadius: 3,
-              boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-            }}
-          >
-            <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
-              {activeTab === 0 && (
-                <Box>
-                  <Typography variant="h5" fontWeight={800} mb={1}>
-                    Your Reservations
-                  </Typography>
-                  <Typography color="text.secondary">
-                    View and manage your upcoming and past reservations.
-                  </Typography>
-                </Box>
-              )}
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        px: 2,
+                        py: 6,
+                    }}
+                >
+                    <Card
+                        sx={{
+                            width: "100%",
+                            maxWidth: 1000,
+                            borderRadius: 3,
+                            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+                        }}
+                    >
+                        <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
+                        {activeTab === 0 && (
+                            <Box>
+                                <Typography variant="h5" fontWeight={800} mb={1}>
+                                    Your Reservations
+                                </Typography>
+                                <Typography color="text.secondary">
+                                    View and manage your current, upcoming, and past reservations
+                                </Typography>
+                                <ReservationsTable />
+                            </Box>
+                        )}
 
               {activeTab === 1 && (
                 <Box>

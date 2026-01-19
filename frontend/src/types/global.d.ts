@@ -46,6 +46,23 @@ declare global {
     status: "pending" | "succeeded" | "failed" | "canceled";
   }
 
+  interface TransactionDTO {
+    paymentIntentId: string;
+    amount: number; // Amount in cents
+    currency: string;
+    status: string;
+    created: string; // ISO 8601 timestamp
+    customerEmail: string | null;
+    // reservation: TransactionReservationDTO;
+    // user: TransactionUserDTO;
+  }
+
+  // whatever fields you want to display
+  // interface TransactionReservationDTO {}
+
+  // whatever fields you want to display
+  // interface TransactionUserDTO {}
+
   interface RoomDetails {
     type: RoomType;
     description: string;
