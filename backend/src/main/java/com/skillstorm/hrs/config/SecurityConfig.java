@@ -12,8 +12,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.skillstorm.hrs.security.CustomAuthenticationSuccessHandler;
-import com.skillstorm.hrs.service.CustomOAuth2UserService;
-import com.skillstorm.hrs.service.CustomOidcUserService;
+// import com.skillstorm.hrs.service.CustomOAuth2UserService;
+// import com.skillstorm.hrs.service.CustomOidcUserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,8 +27,8 @@ public class SecurityConfig {
         private String frontendUrl;
 
         private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-        private final CustomOAuth2UserService customOAuth2UserService;
-        private final CustomOidcUserService customOidcUserService;
+        // private final CustomOAuth2UserService customOAuth2UserService;
+        // private final CustomOidcUserService customOidcUserService;
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -42,9 +42,7 @@ public class SecurityConfig {
 
                                                 .anyRequest().authenticated())
                                 .oauth2Login(oauth -> oauth
-                                                .userInfoEndpoint(userInfo -> userInfo
-                                                                .userService(customOAuth2UserService)
-                                                                .oidcUserService(customOidcUserService))
+
                                                 .successHandler(customAuthenticationSuccessHandler))
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")
