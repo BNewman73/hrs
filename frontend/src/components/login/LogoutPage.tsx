@@ -12,7 +12,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useDispatch } from "react-redux";
 import { clearUser } from "../../features/userSlice";
 import { useNavigate } from "react-router-dom";
-import LoginPageNavBar from "./LoginNavBar";
+
+import NavBar from "../NavBar";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 export default function LogoutPage() {
@@ -52,7 +53,7 @@ export default function LogoutPage() {
         }}
       >
         <Toolbar>
-          <LoginPageNavBar login={false} />
+          <NavBar variant="light" showHomeButton={false} />
         </Toolbar>
       </AppBar>
 

@@ -205,80 +205,95 @@ export default function DashboardPage() {
   );
 
   return (
-    <Box sx={{ display: "flex", bgcolor: "#f4f6f8", minHeight: "100vh" }}>
-      <CssBaseline />
+    <>
+      <Box sx={{ display: "flex", bgcolor: "#f4f6f8", minHeight: "100vh" }}>
+        <CssBaseline />
 
-      <AppBar
-        position="fixed"
-        elevation={0}
-        sx={{
-          zIndex: (t) => t.zIndex.drawer + 1,
-          bgcolor: "rgba(255,255,255,0.75)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid",
-          borderColor: "divider",
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { md: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <NavBar user={currentUser} />
-        </Toolbar>
-      </AppBar>
-
-      <Box component="nav" sx={{ width: { md: DRAWER_WIDTH } }}>
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          sx={{ display: { xs: "block", md: "none" } }}
-        >
-          {sidebarContent}
-        </Drawer>
-
-        <Drawer
-          variant="permanent"
-          open
-          sx={{ display: { xs: "none", md: "block" } }}
-        >
-          {sidebarContent}
-        </Drawer>
-      </Box>
-
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: { xs: 1.5, sm: 3, md: 5 },
-          width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
-        }}
-      >
-        <Toolbar />
-
-        <Box
+        <AppBar
+          position="fixed"
+          elevation={0}
           sx={{
-            maxWidth: 1200,
-            mx: "auto",
-            bgcolor: "white",
-            borderRadius: { xs: "12px", sm: "20px" },
-            p: { xs: 2, sm: 4 },
-            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+            zIndex: (t) => t.zIndex.drawer + 1,
+            bgcolor: "rgba(255,255,255,0.75)",
+            backdropFilter: "blur(12px)",
+            borderBottom: "1px solid",
+            borderColor: "divider",
           }}
         >
-          <Box sx={{ mb: 4 }}>
-            <Typography
-              variant="h5"
-              sx={{ fontWeight: 900, letterSpacing: "-0.03em", mb: 0.5 }}
+          <Toolbar>
+            <IconButton
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { md: "none" } }}
             >
-              {activeTab === "Account"
-                ? ""
-                : activeTab === "Rooms"
-                  ? "Room Management"
+              <MenuIcon />
+            </IconButton>
+            <NavBar />
+          </Toolbar>
+        </AppBar>
+
+        <Box component="nav" sx={{ width: { md: DRAWER_WIDTH } }}>
+          <Drawer
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            sx={{ display: { xs: "block", md: "none" } }}
+          >
+            {sidebarContent}
+          </Drawer>
+
+          <Drawer
+            variant="permanent"
+            open
+            sx={{ display: { xs: "none", md: "block" } }}
+          >
+            {sidebarContent}
+          </Drawer>
+        </Box>
+
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: { xs: 1.5, sm: 3, md: 5 },
+            width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
+          }}
+        >
+          <Toolbar />
+
+          <Box
+            sx={{
+              maxWidth: 1200,
+              mx: "auto",
+              bgcolor: "white",
+              borderRadius: { xs: "12px", sm: "20px" },
+              p: { xs: 2, sm: 4 },
+              boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+            }}
+          >
+            <Box sx={{ mb: 4 }}>
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: 900, letterSpacing: "-0.03em", mb: 0.5 }}
+              >
+                {activeTab === "Account"
+                  ? ""
+                  : activeTab === "Rooms"
+                    ? "Room Management"
+                    : activeTab === "Users"
+                      ? "Users"
+                      : activeTab === "Reservations"
+                        ? "Reservations"
+                        : activeTab === "Occupancy"
+                          ? "Occupancy Report"
+                          : activeTab === "Transactions"
+                            ? "Transactions"
+                            : "Rooms"}
+              </Typography>
+
+              <Typography color="text.secondary">
+                {activeTab === "Rooms"
+                  ? "Add new rooms to your hotel."
                   : activeTab === "Users"
                     ? "Users"
                     : activeTab === "Reservations"
@@ -286,28 +301,15 @@ export default function DashboardPage() {
                       : activeTab === "Occupancy"
                         ? "Occupancy and Revenue"
                         : activeTab === "Transactions"
-                          ? "Transactions"
-                          : "Rooms"}
-            </Typography>
+                          ? "View Transactions."
+                          : ""}
+              </Typography>
+            </Box>
 
-            <Typography color="text.secondary">
-              {activeTab === "Rooms"
-                ? "Add new rooms to your hotel."
-                : activeTab === "Users"
-                  ? "View and manage users."
-                  : activeTab === "Table"
-                    ? "View and manage hotel rooms."
-                    : activeTab === "Reservations"
-                      ? "View and manage reservations."
-                      : activeTab === "Transactions"
-                        ? "View Transactions."
-                        : ""}
-            </Typography>
+            {renderContent()}
           </Box>
-
-          {renderContent()}
         </Box>
       </Box>
-    </Box>
+    </>
   );
 }
