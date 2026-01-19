@@ -13,6 +13,7 @@ import NavBar from "./NavBar";
 import { useGetPrincipalQuery } from "../features/userApi";
 import { setUser, clearUser } from "../features/userSlice";
 import { useDispatch } from "react-redux";
+import GuestAccountCard from "./account/GuestAccountCard";
 
 export default function UserHomePage() {
   const [activeTab, setActiveTab] = useState(0);
@@ -52,6 +53,7 @@ export default function UserHomePage() {
           >
             <Tab label="Reservations" />
             <Tab label="Payments" />
+            <Tab label="Profile" />
           </Tabs>
         </Box>
 
@@ -91,6 +93,15 @@ export default function UserHomePage() {
                   <Typography color="text.secondary">
                     Review your completed and pending payments.
                   </Typography>
+                </Box>
+              )}
+
+              {activeTab === 2 && (
+                <Box>
+                  <Typography variant="h5" fontWeight={800} mb={1}>
+                    Profile
+                  </Typography>
+                  <GuestAccountCard />
                 </Box>
               )}
             </CardContent>
