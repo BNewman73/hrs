@@ -14,11 +14,7 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
-import {
-  ExpandMore,
-  PeopleOutline,
-  AttachMoneyOutlined,
-} from "@mui/icons-material";
+import { ExpandMore, PeopleOutline } from "@mui/icons-material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
@@ -52,11 +48,19 @@ const RoomTypeCard: React.FC<{ roomType: RoomDetailsDTO }> = ({ roomType }) => {
   return (
     <Card
       sx={{
-        height: "100%",
         display: "flex",
         flexDirection: "column",
-        maxWidth: 800,
+        maxWidth: 520,
         mx: "auto",
+        borderRadius: 4,
+        overflow: "hidden",
+        bgcolor: "rgba(255,255,255,0.97)",
+        boxShadow: "0 18px 50px rgba(0,0,0,0.12)",
+        transition: "transform .35s ease, box-shadow .35s ease",
+        "&:hover": {
+          transform: "translateY(-6px)",
+          boxShadow: "0 28px 70px rgba(0,0,0,0.18)",
+        },
       }}
     >
       {/* <CardMedia
@@ -66,18 +70,39 @@ const RoomTypeCard: React.FC<{ roomType: RoomDetailsDTO }> = ({ roomType }) => {
         alt={roomType.type}
         sx={{ objectFit: "cover" }}
       /> */}
-      <Box sx={{ width: "100%", maxWidth: "100%" }}>
+      <Box
+        sx={{
+          position: "relative",
+          "&::after": {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.55))",
+            zIndex: 1,
+            pointerEvents: "none",
+          },
+        }}
+      >
         <RoomTypePics pics={roomType.images} />
       </Box>
 
       <CardContent
         sx={{
-          flexGrow: 1,
           display: "flex",
           flexDirection: "column",
+          px: 3.5,
+          py: 3.5,
         }}
       >
-        <Typography variant="h4" component="h2" gutterBottom>
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 900,
+            letterSpacing: -0.5,
+            mb: 2,
+          }}
+        >
           {roomType.type
             .split("_")
             .map((word) => word.charAt(0) + word.slice(1).toLowerCase())
@@ -89,41 +114,60 @@ const RoomTypeCard: React.FC<{ roomType: RoomDetailsDTO }> = ({ roomType }) => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            mb: 2,
+            mb: 3,
             flexWrap: "wrap",
             gap: 2,
           }}
         >
-          <Box display="flex" alignItems="center" gap={0.5}>
-            <PeopleOutline fontSize="small" color="action" />
-            <Typography variant="body1" color="text.secondary">
-              Up to {roomType.maxCapacity}{" "}
-              {roomType.maxCapacity === 1 ? "guest" : "guests"}
+          <Box display="flex" alignItems="center" gap={0.75}>
+            <PeopleOutline fontSize="small" />
+            <Typography fontWeight={600} color="text.secondary">
+              Up to {roomType.maxCapacity} guests
             </Typography>
           </Box>
 
-          <Box display="flex" alignItems="center" gap={0.5}>
-            <AttachMoneyOutlined color="primary" />
-            <Typography variant="h6" color="primary">
-              {formattedMinPrice} - {formattedMaxPrice}
+          <Box display="flex" alignItems="baseline" gap={0.5}>
+            <Typography variant="h6" fontWeight={800} color="primary">
+              {formattedMinPrice} – {formattedMaxPrice}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              /night
+            <Typography variant="caption" color="text.secondary">
+              / night
             </Typography>
           </Box>
         </Box>
 
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+        <Typography
+          sx={{
+            color: "text.secondary",
+            lineHeight: 1.7,
+            mb: 3,
+          }}
+        >
           {roomType.description}
         </Typography>
 
         <Box sx={{ mb: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Amenities
+          <Typography
+            sx={{
+              color: "text.secondary",
+              lineHeight: 1.7,
+              mb: 3,
+            }}
+          >
+            <strong>Amenities</strong>
           </Typography>
           {Object.entries(roomType.amenitiesByCategory).map(
             ([category, items]) => (
-              <Accordion key={category} defaultExpanded={false}>
+              <Accordion
+                key={category}
+                disableGutters
+                elevation={0}
+                sx={{
+                  bgcolor: "transparent",
+                  borderBottom: "1px solid rgba(0,0,0,0.08)",
+                  "&::before": { display: "none" },
+                }}
+              >
                 <AccordionSummary
                   expandIcon={<ExpandMore />}
                   aria-controls={`${category}-content`}
@@ -145,23 +189,38 @@ const RoomTypeCard: React.FC<{ roomType: RoomDetailsDTO }> = ({ roomType }) => {
                         key={index}
                         label={amenity}
                         size="small"
-                        variant="outlined"
+                        sx={{
+                          bgcolor: "rgba(14,16,61,0.04)",
+                          fontWeight: 600,
+                        }}
                       />
                     ))}
                   </Stack>
                 </AccordionDetails>
               </Accordion>
-            )
+            ),
           )}
         </Box>
 
         <Box sx={{ mt: "auto" }}>
           <Button
-            onClick={() => navigate(`/rooms/${roomType.type}`)}
-            variant="contained"
-            color="primary"
             fullWidth
             size="large"
+            onClick={() => navigate(`/rooms/${roomType.type}`)}
+            sx={{
+              mt: 3,
+              py: 1.6,
+              borderRadius: 999,
+              fontWeight: 800,
+              textTransform: "none",
+              color: "black",
+              background: "linear-gradient(135deg,#FF6B35 0%,#F7931E 100%)",
+              boxShadow: "0 12px 30px rgba(255,107,53,.45)",
+              "&:hover": {
+                transform: "translateY(-2px)",
+                boxShadow: "0 18px 40px rgba(255,107,53,.6)",
+              },
+            }}
           >
             Explore All{" "}
             {roomType.type
@@ -221,13 +280,10 @@ const RoomTypesCarousel: React.FC = () => {
       modules={[Navigation, Pagination]}
       slidesPerView={1}
       navigation
-      pagination={{ clickable: false }}
-      loop={true}
-      className="types"
+      loop
       style={{
-        paddingBottom: "40px",
-        paddingLeft: "40px",
-        paddingRight: "40px",
+        paddingBottom: "60px",
+        paddingInline: "24px",
       }}
     >
       {roomTypes.map((roomType) => (
