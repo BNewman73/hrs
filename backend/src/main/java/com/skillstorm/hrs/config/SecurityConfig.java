@@ -42,10 +42,12 @@ public class SecurityConfig {
 
                                                 .anyRequest().authenticated())
                                 .oauth2Login(oauth -> oauth
+
+                                                .successHandler(customAuthenticationSuccessHandler)
                                                 .userInfoEndpoint(userInfo -> userInfo
                                                                 .userService(customOAuth2UserService)
-                                                                .oidcUserService(customOidcUserService))
-                                                .successHandler(customAuthenticationSuccessHandler))
+                                                                .oidcUserService(customOidcUserService)))
+                                
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")
                                                 .logoutSuccessUrl(frontendUrl + "/login"))

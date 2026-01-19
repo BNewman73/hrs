@@ -17,6 +17,7 @@ spring:
           github:
             client-id: Ov23liZ1tPryYifyyYhY
             client-secret: ${GITHUB_CLIENT_SECRET}
+            redirect-uri: https://d24rfvgips8loh.cloudfront.net/api/login/oauth2/code/github
             scope: read:user, user:email
           google:
             client-id: 249191790614-1dofquvhuita6ahs897a5qdocj7kpnd5.apps.googleusercontent.com
