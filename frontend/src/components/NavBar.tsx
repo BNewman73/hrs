@@ -5,7 +5,7 @@ import Avatar from "@mui/material/Avatar";
 
 import type { User } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
-import stormIcon from "/stormstay-icon-192.png";
+
 interface NavBarProps {
   user: User;
   color?: string;
@@ -29,7 +29,7 @@ export default function NavBar({ user }: NavBarProps) {
       >
         <Box
           component="img"
-          src={stormIcon}
+          src="/stormstay-icon-192.png"
           alt="Storm Stay"
           sx={{
             width: 55,
