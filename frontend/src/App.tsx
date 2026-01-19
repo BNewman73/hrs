@@ -13,6 +13,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./components/reservations/theme.ts";
 import UserHomePage from "./components/UserHomePage.tsx";
 import AuthBootstrap from "./AuthGlobal.tsx";
+import NotFoundPage from "./components/NotFoundPage.tsx";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/user-home" element={<UserHomePage />} />
           <Route path="/profile" element={<ReservationsTable />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
