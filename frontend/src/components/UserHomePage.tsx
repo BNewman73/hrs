@@ -14,6 +14,7 @@ import NavBar from "./NavBar";
 import { useGetPrincipalQuery } from "../features/userApi";
 import { setUser, clearUser } from "../features/userSlice";
 import { useDispatch } from "react-redux";
+import ReservationsTable from "./reservations/ReservationsTable"
 
 export default function UserHomePage() {
     
@@ -89,7 +90,7 @@ export default function UserHomePage() {
                     <Card
                         sx={{
                             width: "100%",
-                            maxWidth: 900,
+                            maxWidth: 1000,
                             borderRadius: 3,
                             boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
                         }}
@@ -101,18 +102,19 @@ export default function UserHomePage() {
                                     Your Reservations
                                 </Typography>
                                 <Typography color="text.secondary">
-                                    View and manage your upcoming and past reservations.
+                                    View and manage your current, upcoming, and past reservations
                                 </Typography>
+                                <ReservationsTable />
                             </Box>
                         )}
 
                         {activeTab === 1 && (
                             <Box>
                                 <Typography variant="h5" fontWeight={800} mb={1}>
-                                    Payment History
+                                    Your Reward Points
                                 </Typography>
                                 <Typography color="text.secondary">
-                                    Review your completed and pending payments.
+                                    View and manage your accumulated StormStay reward points
                                 </Typography>
                             </Box>
                         )}

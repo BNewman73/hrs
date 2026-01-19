@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.skillstorm.hrs.dto.CheckoutRequest;
 import com.skillstorm.hrs.dto.TransactionDTO;
 import com.skillstorm.hrs.model.Reservation;
+import com.skillstorm.hrs.model.User;
 import com.skillstorm.hrs.repository.ReservationRepository;
+import com.skillstorm.hrs.repository.UserRepository;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.PaymentIntentCollection;
@@ -24,7 +26,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
+
         private final ReservationRepository reservationRepository;
+        private final UserRepository userRepository;
 
         @Value("${APP_FRONTEND_URL:http://localhost:3000}")
         private String baseUrl;
@@ -96,13 +100,24 @@ public class PaymentService {
                 // Map to DTOs
                 return paymentIntents.getData().stream()
                                 .map(this::mapToTransactionDTO)
+                                .filter(dto -> dto.getReservation() != null)
                                 .collect(Collectors.toList());
         }
 
         private TransactionDTO mapToTransactionDTO(PaymentIntent paymentIntent) {
-                // Find the associated reservation
-                Optional<Reservation> reservation = reservationRepository
+                Optional<Reservation> reservationOpt = reservationRepository
                                 .findByStripePaymentIntentId(paymentIntent.getId());
+                Reservation reservation = null;
+                User user = null;
+                if (reservationOpt.isPresent()) {
+                        reservation = reservationOpt.get();
+                        if (reservation.getUserId() != null) {
+                                Optional<User> userOpt = userRepository.findByProviderId(reservation.getUserId());
+                                if (userOpt.isPresent()) {
+                                        user = userOpt.get();
+                                }
+                        }
+                }
 
                 return TransactionDTO.builder()
                                 .paymentIntentId(paymentIntent.getId())
@@ -111,7 +126,8 @@ public class PaymentService {
                                 .status(paymentIntent.getStatus())
                                 .created(Instant.ofEpochSecond(paymentIntent.getCreated()))
                                 .customerEmail(paymentIntent.getReceiptEmail())
-                                .reservation(reservation.orElse(null))
+                                .reservation(reservation)
+                                .user(user)
                                 .build();
         }
 }

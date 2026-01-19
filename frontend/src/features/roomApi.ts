@@ -127,6 +127,14 @@ export const roomApi = createApi({
         { type: "RoomReservations", id: arg.roomId },
       ],
     }),
+    getTransactionHistory: builder.query<TransactionDTO[], number | void>({
+      query: (limit) => ({
+        url: '/payment/transactions',
+        params: {
+          limit: limit || 10, 
+        },
+      }),
+    }),
   }),
 });
 

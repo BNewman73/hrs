@@ -36,6 +36,7 @@ public class SecurityConfig {
                                 .csrf(csrf -> csrf.disable())
                                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                                 .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers("/payment/transactions").permitAll()
                                                 .requestMatchers("/oauth2/**", "/login/**").permitAll()
                                                 .requestMatchers("/room-details/comprehensive").permitAll()
 
