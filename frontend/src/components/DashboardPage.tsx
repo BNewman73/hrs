@@ -35,10 +35,12 @@ import UserTable from "./user/UserTable";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import TransactionsTable from "../transaction/TransactionsTable";
 import ReportCard from "./reservations/ReportCard";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const DRAWER_WIDTH = 280;
 
 export default function DashboardPage() {
+  usePageTitle("Dashboard");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Table");
   const navigate = useNavigate();

@@ -1,7 +1,9 @@
 import { Box, Button, Container, Typography, alpha } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function NotFoundPage() {
+  usePageTitle("Not Found");
   const navigate = useNavigate();
 
   return (
