@@ -12,11 +12,13 @@ import {
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import LoginPageNavBar from "./LoginNavBar";
+import NavBar from "../NavBar";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function LoginPage() {
+  usePageTitle("Sign In");
   const handleLogin = (provider: "google" | "github") => {
     window.location.href = `${API_BASE}/oauth2/authorization/${provider}`;
   };
@@ -45,7 +47,7 @@ export default function LoginPage() {
           }}
         >
           <Toolbar>
-            <LoginPageNavBar login={true} />
+            <NavBar variant="light" showHomeButton={true} />
           </Toolbar>
         </AppBar>
 
@@ -68,12 +70,12 @@ export default function LoginPage() {
               textAlign: "center",
             }}
           >
-            <Typography variant="h5" fontWeight={700} mb={1}>
+            <Typography variant="h4" fontWeight={800} mb={1}>
               Welcome Back
             </Typography>
 
             <Typography variant="body2" color="text.secondary" mb={4}>
-              Sign in to manage your hotel inventory and rooms.
+              Sign in to continue to the Storm Stay Dashboard.
             </Typography>
 
             <Stack spacing={2}>
@@ -114,7 +116,7 @@ export default function LoginPage() {
         {/* Footer */}
         <Box sx={{ py: 2, textAlign: "center" }}>
           <Typography variant="caption" color="text.secondary">
-            © {new Date().getFullYear()} Hotel Reservation System
+            © {new Date().getFullYear()} Storm Stay. All rights reserved.
           </Typography>
         </Box>
       </Box>

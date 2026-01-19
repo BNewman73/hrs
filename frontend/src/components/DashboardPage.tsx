@@ -21,6 +21,7 @@ import BedIcon from "@mui/icons-material/Bed";
 import LogoutIcon from "@mui/icons-material/Logout";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import GroupIcon from "@mui/icons-material/Group";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import NavBar from "./NavBar";
 import RoomCreateForm from "./room/RoomCrudForm";
 import RoomTable from "./room/RoomTable";
@@ -31,13 +32,15 @@ import { useGetPrincipalQuery } from "../features/userApi";
 
 import { useAppSelector } from "../shared/store/hooks";
 import UserTable from "./user/UserTable";
-import OccupancyCard from "./reservations/OccupancyCard";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import TransactionsTable from "../transaction/TransactionsTable";
+import ReportCard from "./reservations/ReportCard";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const DRAWER_WIDTH = 280;
 
 export default function DashboardPage() {
+  usePageTitle("Dashboard");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Table");
   const navigate = useNavigate();
@@ -61,7 +64,7 @@ export default function DashboardPage() {
     { id: "Reservations", label: "View Reservations", icon: <EventNoteIcon /> },
     { id: "Users", label: "View Users", icon: <GroupIcon /> },
     { id: "Rooms", label: "Create Room", icon: <AddHomeWorkIcon /> },
-    { id: "Occupancy", label: "Occupancy Report", icon: <EventNoteIcon /> },
+    { id: "Occupancy", label: "Occupancy & Revenue", icon: <QueryStatsIcon /> },
     { id: "Transactions", label: "Transactions", icon: <ReceiptIcon /> },
   ];
 
@@ -76,7 +79,7 @@ export default function DashboardPage() {
       case "Users":
         return <UserTable />;
       case "Occupancy":
-        return <OccupancyCard />;
+        return <ReportCard />;
       case "Transactions":
         return <TransactionsTable />;
       case "Table":
@@ -205,109 +208,113 @@ export default function DashboardPage() {
   );
 
   return (
-    <Box sx={{ display: "flex", bgcolor: "#f4f6f8", minHeight: "100vh" }}>
-      <CssBaseline />
+    <>
+      <Box sx={{ display: "flex", bgcolor: "#f4f6f8", minHeight: "100vh" }}>
+        <CssBaseline />
 
-      <AppBar
-        position="fixed"
-        elevation={0}
-        sx={{
-          zIndex: (t) => t.zIndex.drawer + 1,
-          bgcolor: "rgba(255,255,255,0.75)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid",
-          borderColor: "divider",
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { md: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <NavBar user={currentUser} />
-        </Toolbar>
-      </AppBar>
-
-      <Box component="nav" sx={{ width: { md: DRAWER_WIDTH } }}>
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          sx={{ display: { xs: "block", md: "none" } }}
-        >
-          {sidebarContent}
-        </Drawer>
-
-        <Drawer
-          variant="permanent"
-          open
-          sx={{ display: { xs: "none", md: "block" } }}
-        >
-          {sidebarContent}
-        </Drawer>
-      </Box>
-
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: { xs: 1.5, sm: 3, md: 5 },
-          width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
-        }}
-      >
-        <Toolbar />
-
-        <Box
+        <AppBar
+          position="fixed"
+          elevation={0}
           sx={{
-            maxWidth: 1200,
-            mx: "auto",
-            bgcolor: "white",
-            borderRadius: { xs: "12px", sm: "20px" },
-            p: { xs: 2, sm: 4 },
-            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+            zIndex: (t) => t.zIndex.drawer + 1,
+            bgcolor: "rgba(255,255,255,0.75)",
+            backdropFilter: "blur(12px)",
+            borderBottom: "1px solid",
+            borderColor: "divider",
           }}
         >
-          <Box sx={{ mb: 4 }}>
-            <Typography
-              variant="h5"
-              sx={{ fontWeight: 900, letterSpacing: "-0.03em", mb: 0.5 }}
+          <Toolbar>
+            <IconButton
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { md: "none" } }}
             >
-              {activeTab === "Account"
-                ? ""
-                : activeTab === "Rooms"
-                  ? "Room Management"
-                  : activeTab === "Users"
-                    ? "Users"
-                    : activeTab === "Reservations"
-                      ? "Reservations"
-                      : activeTab === "Occupancy"
-                        ? "Occupancy Report"
-                        : activeTab === "Transactions"
-                          ? "Transactions"
-                          : "Rooms"}
-            </Typography>
+              <MenuIcon />
+            </IconButton>
+            <NavBar />
+          </Toolbar>
+        </AppBar>
 
-            <Typography color="text.secondary">
-              {activeTab === "Rooms"
-                ? "Add new rooms to your hotel."
-                : activeTab === "Users"
-                  ? "View and manage users."
-                  : activeTab === "Table"
-                    ? "View and manage hotel rooms."
+        <Box component="nav" sx={{ width: { md: DRAWER_WIDTH } }}>
+          <Drawer
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            sx={{ display: { xs: "block", md: "none" } }}
+          >
+            {sidebarContent}
+          </Drawer>
+
+          <Drawer
+            variant="permanent"
+            open
+            sx={{ display: { xs: "none", md: "block" } }}
+          >
+            {sidebarContent}
+          </Drawer>
+        </Box>
+
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: { xs: 1.5, sm: 3, md: 5 },
+            width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
+          }}
+        >
+          <Toolbar />
+
+          <Box
+            sx={{
+              maxWidth: 1200,
+              mx: "auto",
+              bgcolor: "white",
+              borderRadius: { xs: "12px", sm: "20px" },
+              p: { xs: 2, sm: 4 },
+              boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+            }}
+          >
+            <Box sx={{ mb: 4 }}>
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: 900, letterSpacing: "-0.03em", mb: 0.5 }}
+              >
+                {activeTab === "Account"
+                  ? ""
+                  : activeTab === "Rooms"
+                    ? "Room Management"
+                    : activeTab === "Users"
+                      ? "Users"
+                      : activeTab === "Reservations"
+                        ? "Reservations"
+                        : activeTab === "Occupancy"
+                          ? "Occupancy & Revenue"
+                          : activeTab === "Transactions"
+                            ? "Transactions"
+                            : "Rooms"}
+              </Typography>
+
+              <Typography color="text.secondary">
+                {activeTab === "Rooms"
+                  ? "Add new rooms to your hotel."
+                  : activeTab === "Users"
+                    ? "View and manage users."
                     : activeTab === "Reservations"
                       ? "View and manage reservations."
-                      : activeTab === "Transactions"
-                        ? "View Transactions."
-                        : ""}
-            </Typography>
-          </Box>
+                      : activeTab === "Occupancy"
+                        ? ""
+                        :activeTab === "Account"
+                          ? ""
+                          : activeTab === "Transactions"
+                            ? "View Transactions."
+                            : "View and manage all rooms available in the hotel."}
+              </Typography>
+            </Box>
 
-          {renderContent()}
+            {renderContent()}
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 }
