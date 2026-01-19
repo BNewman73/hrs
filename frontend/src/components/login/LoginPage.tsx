@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import LoginPageNavBar from "./LoginNavBar";
+import NavBar from "../NavBar";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -45,7 +45,7 @@ export default function LoginPage() {
           }}
         >
           <Toolbar>
-            <LoginPageNavBar login={true} />
+            <NavBar variant="light" showHomeButton={true} />
           </Toolbar>
         </AppBar>
 
