@@ -13,7 +13,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import stormIcon from "/stormstay-icon-192.png";
+
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ShieldIcon from "@mui/icons-material/Shield";
 import LanguageIcon from "@mui/icons-material/Language";
@@ -97,7 +97,7 @@ export default function HomePage() {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Box
               component="img"
-              src={stormIcon}
+              src="/stormstay-icon-192.png"
               alt="Storm Stay"
               sx={{
                 width: 60,
