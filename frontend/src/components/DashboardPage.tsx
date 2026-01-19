@@ -10,12 +10,9 @@ import {
   Typography,
   Toolbar,
   Avatar,
-  IconButton,
-  AppBar,
   ListItemIcon,
   Divider,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 import AddHomeWorkIcon from "@mui/icons-material/AddHomeWork";
 import BedIcon from "@mui/icons-material/Bed";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -212,29 +209,7 @@ export default function DashboardPage() {
       <Box sx={{ display: "flex", bgcolor: "#f4f6f8", minHeight: "100vh" }}>
         <CssBaseline />
 
-        <AppBar
-          position="fixed"
-          elevation={0}
-          sx={{
-            zIndex: (t) => t.zIndex.drawer + 1,
-            bgcolor: "rgba(255,255,255,0.75)",
-            backdropFilter: "blur(12px)",
-            borderBottom: "1px solid",
-            borderColor: "divider",
-          }}
-        >
-          <Toolbar>
-            <IconButton
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { md: "none" } }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <NavBar />
-          </Toolbar>
-        </AppBar>
-
+        <NavBar onMenuClick={handleDrawerToggle} />
         <Box component="nav" sx={{ width: { md: DRAWER_WIDTH } }}>
           <Drawer
             variant="temporary"
@@ -253,7 +228,6 @@ export default function DashboardPage() {
             {sidebarContent}
           </Drawer>
         </Box>
-
         <Box
           component="main"
           sx={{
@@ -303,7 +277,7 @@ export default function DashboardPage() {
                       ? "View and manage reservations."
                       : activeTab === "Occupancy"
                         ? ""
-                        :activeTab === "Account"
+                        : activeTab === "Account"
                           ? ""
                           : activeTab === "Transactions"
                             ? "View Transactions."

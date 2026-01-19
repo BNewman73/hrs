@@ -10,8 +10,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import com.skillstorm.hrs.dto.CalendarEventDTO;
@@ -404,7 +402,7 @@ public class ReservationService {
     double totalRevenue = 0;
 
     for (LocalDate d = startDate; !d.isAfter(endDate); d = d.plusDays(1)) {
-      
+
       for (Reservation reservation : reservations) {
         if (!d.isBefore(reservation.getStartDate()) && d.isBefore(reservation.getEndDate())) {
           long nights = reservation.getEndDate().toEpochDay() - reservation.getStartDate().toEpochDay();

@@ -15,7 +15,7 @@ import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../shared/store/hooks";
 import { useLogoutMutation } from "../features/userApi";
 import { clearUser } from "../features/userSlice";
-
+import MenuIcon from "@mui/icons-material/Menu";
 const style = {
   color: "white",
 
@@ -51,6 +51,7 @@ const style = {
 export default function NavBar({
   variant = "light",
   showHomeButton = false,
+  onMenuClick,
 }: NavBarProps) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -103,6 +104,19 @@ export default function NavBar({
       <Toolbar
         sx={{ minHeight: { xs: 64, md: 80 }, justifyContent: "space-between" }}
       >
+        {onMenuClick && (
+          <IconButton
+            edge="start"
+            onClick={onMenuClick}
+            sx={{
+              mr: 1,
+              display: { xs: "inline-flex", md: "none" },
+              color: isDark ? "white" : "black",
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
         <Box
           sx={{
             display: "flex",
