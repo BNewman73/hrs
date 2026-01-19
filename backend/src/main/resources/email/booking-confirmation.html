@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Storm Stay Booking Confirmation</title>
+  </head>
+
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background-color: #f2f4f8;
+      font-family: Arial, Helvetica, sans-serif;
+    "
+  >
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td text-align="center" style="padding: 40px 16px">
+          <table
+            width="100%"
+            cellpadding="0"
+            cellspacing="0"
+            style="
+              max-width: 560px;
+              background: #ffffff;
+              border-radius: 12px;
+              box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            "
+          >
+            <!-- HEADER -->
+            <tr>
+              <td style="padding: 28px 32px 12px 32px">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td text-align="center">
+                      <img
+                        src="https://project2-storm-hotel-frontend-dev.s3.us-east-1.amazonaws.com/storm-stay-clear.png"
+                        alt="Storm Stay"
+                        width="72"
+                        height="72"
+                        style="
+                          display: block;
+                          margin: 0 auto 12px auto;
+                          border-radius: 16px;
+                        "
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      text-align="right"
+                      style="font-size: 12px; color: #777; line-height: 1.5"
+                    >
+                      stormstay@proton.me<br />
+                      United States
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- DIVIDER -->
+            <tr>
+              <td style="padding: 0 32px">
+                <hr style="border: none; border-top: 1px solid #e6e6e6" />
+              </td>
+            </tr>
+
+            <!-- TITLE -->
+            <tr>
+              <td
+                text-align="center"
+                style="
+                  padding: 24px 32px 12px 32px;
+                  font-size: 22px;
+                  font-weight: bold;
+                  color: #0e103d;
+                "
+              >
+                Hotel Booking Confirmation
+              </td>
+            </tr>
+
+            <!-- BODY -->
+            <tr>
+              <td style="padding: 12px 32px; font-size: 15px; color: #333">
+                <p>Dear {{firstName}} {{lastName}},</p>
+
+                <p>
+                  Thank you for choosing to stay with
+                  <strong>Storm Stay</strong>. We are delighted to confirm your
+                  reservation. Below are the details of your booking.
+                </p>
+
+                <!-- RESERVATION DETAILS -->
+                <h3
+                  style="
+                    margin-top: 28px;
+                    margin-bottom: 12px;
+                    font-size: 17px;
+                    color: #0e103d;
+                  "
+                >
+                  Reservation Details
+                </h3>
+
+                <table width="100%" cellpadding="6" cellspacing="0">
+                  <tr>
+                    <td style="color: #777">Check-in Date</td>
+                    <td text-align="right"><strong>{{checkInDate}}</strong></td>
+                  </tr>
+                  <tr>
+                    <td style="color: #777">Check-out Date</td>
+                    <td text-align="right">
+                      <strong>{{checkOutDate}}</strong>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="color: #777">Room</td>
+                    <td text-align="right">
+                      <strong>{{roomNumber}}</strong>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="color: #777">Number of Guests</td>
+                    <td text-align="right"><strong>{{guests}}</strong></td>
+                  </tr>
+                  <tr>
+                    <td style="color: #777">Total Rate</td>
+                    <td text-align="right">
+                      <strong>${{totalPrice}}</strong>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="color: #777">Payment Receipt</td>
+                    <td text-align="right">
+                      <a
+                        href="{{receiptUrl}}"
+                        target="_blank"
+                        style="
+                          color: #0e103d;
+                          font-weight: bold;
+                          text-decoration: underline;
+                        "
+                      >
+                        View Receipt
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- CHECK-IN INFO -->
+                <h3
+                  style="
+                    margin-top: 28px;
+                    margin-bottom: 12px;
+                    font-size: 17px;
+                    color: #0e103d;
+                  "
+                >
+                  Check-in Information
+                </h3>
+
+                <p style="margin-bottom: 0">
+                  Check-in begins at <strong>3:00 PM</strong>. Our front desk is
+                  available 24/7 for your convenience.
+                </p>
+              </td>
+            </tr>
+
+            <!-- FOOTER -->
+            <tr>
+              <td
+                style="
+                  padding: 20px 32px;
+                  background: #fafafa;
+                  font-size: 12px;
+                  color: #888;
+                  text-align: center;
+                  border-radius: 0 0 12px 12px;
+                "
+              >
+                Storm Stay Hotel<br />
+                This email confirms your reservation and serves as your official
+                booking record.
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

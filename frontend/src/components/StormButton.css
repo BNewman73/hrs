@@ -1,0 +1,103 @@
+.storm-btn {
+  padding: 16px 42px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: linear-gradient(135deg, #1d363f, #196b86, #11a2e042);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+.storm-away {
+  pointer-events: none;
+  animation: stormSweep 0.9s linear forwards;
+}
+.storm-btn:hover::before {
+  opacity: 1;
+  animation: silverSweep 1s ease-in-out infinite alternate;
+}
+@keyframes silverSweep {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(150%);
+  }
+}
+.storm-btn:hover {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.053),
+    0 12px 40px rgba(255, 255, 255, 0.15);
+}
+
+@keyframes stormSweep {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  60% {
+    transform: translate3d(20px, 0, 0);
+  }
+  100% {
+    transform: translate3d(140vw, 0, 0);
+    opacity: 0;
+  }
+}
+
+.storm-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.22),
+    transparent
+  );
+  transform: translate3d(-120%, 0, 0);
+}
+
+.storm-away::after {
+  animation: windSweep 0.3s linear forwards;
+}
+
+@keyframes windSweep {
+  to {
+    transform: translate3d(120%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .storm-away {
+    animation: none;
+    opacity: 0;
+  }
+}
+.storm-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 150%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.65),
+    rgba(255, 255, 255, 0.85),
+    rgba(255, 255, 255, 0.65),
+    transparent 50%
+  );
+  transform: translateX(0);
+  pointer-events: none;
+  opacity: 0;
+}

@@ -1,7 +1,12 @@
 # Development config
-
-# MongoDB - Local Development
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/hrs
+      uri: mongodb+srv://jumpstart:jumpstart@cluster0.xfvbu51.mongodb.net/hrs # mongodb://localhost:27017/hrs
+      auto-index-creation: true
+      uuid-representation: standard
+server:
+  port: 8080
+  address: 0.0.0.0
+  servlet:
+    context-path: /api
