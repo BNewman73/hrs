@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import com.skillstorm.hrs.dto.CalendarEventDTO;
@@ -389,6 +391,32 @@ public class ReservationService {
       occupancyMap.put(date, count);
     }
     return occupancyMap;
+  }
+
+  public Map<LocalDate, Integer> getRevenueYtd(LocalDate date) {
+
+    LocalDate startDate = LocalDate.of(date.getYear(), 1, 1);
+    LocalDate endDate = LocalDate.of(date.getYear(), 12, 31);
+
+    List<Reservation> reservations = reservationRepository.findReservationsInDateRange(startDate, endDate);
+    Map<LocalDate, Integer> revenueMap = new LinkedHashMap<>();
+
+    double totalRevenue = 0;
+
+    for (LocalDate d = startDate; !d.isAfter(endDate); d = d.plusDays(1)) {
+      
+      for (Reservation reservation : reservations) {
+        if (!d.isBefore(reservation.getStartDate()) && d.isBefore(reservation.getEndDate())) {
+          long nights = reservation.getEndDate().toEpochDay() - reservation.getStartDate().toEpochDay();
+          if (nights > 0) {
+            Integer revenue = reservation.getTotalPrice();
+            totalRevenue += revenue != null ? revenue / nights : 0;
+          }
+        }
+      }
+      revenueMap.put(d, (int) totalRevenue);
+    }
+    return revenueMap;
   }
 
 }

@@ -54,7 +54,7 @@ export const RoomRow = ({
         bgcolor: isExpanded ? "rgba(25,118,210,0.03)" : "inherit",
       }}
     >
-      <Typography sx={{ width: gridConfig.roomNo, fontWeight: 800 }}>
+      <Typography sx={{ width: gridConfig.roomNo, fontWeight: 700 }}>
         Room {room.roomNumber}
       </Typography>
 

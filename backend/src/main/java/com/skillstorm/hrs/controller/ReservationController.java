@@ -176,9 +176,10 @@ public class ReservationController {
     return ResponseEntity.ok(reservationService.getOccupancyByDay(checkInDate, checkOutDate));
   }
 
-  @GetMapping("/occupancy/ytd")
-  public ResponseEntity<Map<LocalDate, Integer>> getYearToDateOccupancy() {
-    return ResponseEntity.ok(reservationService.getOccupancyByDay(LocalDate.now().withDayOfYear(1), LocalDate.now()));
+  @GetMapping("/revenue")
+  public ResponseEntity<Map<LocalDate, Integer>> getRevenue(
+      @RequestParam String date) {
+    return ResponseEntity.ok(reservationService.getRevenueYtd(LocalDate.ofYearDay(Integer.parseInt(date), 1)));
   }
 
 }
