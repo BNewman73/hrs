@@ -184,8 +184,9 @@ declare global {
   export type TransactionSortOrder = "none" | "date_asc" | "date_desc";
 
   interface NavBarProps {
-    variant?: "dark" | "light";
+    variant?: "light" | "dark";
     showHomeButton?: boolean;
+    onMenuClick?: () => void;
   }
   interface ToolbarProps {
     searchQuery: string;
