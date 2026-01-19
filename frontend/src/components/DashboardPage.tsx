@@ -21,6 +21,7 @@ import BedIcon from "@mui/icons-material/Bed";
 import LogoutIcon from "@mui/icons-material/Logout";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import GroupIcon from "@mui/icons-material/Group";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import NavBar from "./NavBar";
 import RoomCreateForm from "./room/RoomCrudForm";
 import RoomTable from "./room/RoomTable";
@@ -61,7 +62,7 @@ export default function DashboardPage() {
     { id: "Reservations", label: "View Reservations", icon: <EventNoteIcon /> },
     { id: "Users", label: "View Users", icon: <GroupIcon /> },
     { id: "Rooms", label: "Create Room", icon: <AddHomeWorkIcon /> },
-    { id: "Occupancy", label: "Occupancy and Revenue", icon: <EventNoteIcon /> },
+    { id: "Occupancy", label: "Occupancy & Revenue", icon: <QueryStatsIcon /> },
     { id: "Transactions", label: "Transactions", icon: <ReceiptIcon /> },
   ];
 
@@ -285,7 +286,7 @@ export default function DashboardPage() {
                       : activeTab === "Reservations"
                         ? "Reservations"
                         : activeTab === "Occupancy"
-                          ? "Occupancy Report"
+                          ? "Occupancy & Revenue"
                           : activeTab === "Transactions"
                             ? "Transactions"
                             : "Rooms"}
@@ -295,14 +296,16 @@ export default function DashboardPage() {
                 {activeTab === "Rooms"
                   ? "Add new rooms to your hotel."
                   : activeTab === "Users"
-                    ? "Users"
+                    ? "View and manage users."
                     : activeTab === "Reservations"
-                      ? "Reservations"
+                      ? "View and manage reservations."
                       : activeTab === "Occupancy"
-                        ? "Occupancy and Revenue"
-                        : activeTab === "Transactions"
-                          ? "View Transactions."
-                          : ""}
+                        ? ""
+                        :activeTab === "Account"
+                          ? ""
+                          : activeTab === "Transactions"
+                            ? "View Transactions."
+                            : "View and manage all rooms available in the hotel."}
               </Typography>
             </Box>
 
