@@ -13,10 +13,12 @@ import {
 import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import NavBar from "../NavBar";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function LoginPage() {
+  usePageTitle("Sign In");
   const handleLogin = (provider: "google" | "github") => {
     window.location.href = `${API_BASE}/oauth2/authorization/${provider}`;
   };

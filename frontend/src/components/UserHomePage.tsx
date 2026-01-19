@@ -14,8 +14,10 @@ import { useGetPrincipalQuery } from "../features/userApi";
 import { setUser, clearUser } from "../features/userSlice";
 import { useDispatch } from "react-redux";
 import GuestAccountCard from "./account/GuestAccountCard";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function UserHomePage() {
+  usePageTitle("Dashboard");
   const [activeTab, setActiveTab] = useState(0);
   const dispatch = useDispatch();
   const { data, error } = useGetPrincipalQuery();

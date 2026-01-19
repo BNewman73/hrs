@@ -17,6 +17,7 @@ import RoomTypesCarousel from "./reservations/RoomTypesCarousel";
 import FooterPage from "./FooterPage";
 
 import NavBar from "./NavBar";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const VIDEO_URL = import.meta.env.VITE_HOME_VIDEO_URL;
 
@@ -39,6 +40,7 @@ const experiences = [
 ];
 
 export default function HomePage() {
+  usePageTitle("Storm Stay");
   const nextSectionRef = useRef<HTMLDivElement | null>(null);
 
   return (
@@ -278,7 +280,7 @@ export default function HomePage() {
             variant="h2"
             sx={{ color: "white", fontWeight: 900, mb: 8, textAlign: "center" }}
           >
-            Room Options
+            Our Rooms
           </Typography>
           <RoomTypesCarousel />
         </Container>
