@@ -41,7 +41,7 @@ export default function UserHomePage() {
       };
 
     return (
-        <Box sx={{ minHeight: "100vh", bgcolor: "#f4f6f8" }}>
+        <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
             <CssBaseline />
 
             <AppBar

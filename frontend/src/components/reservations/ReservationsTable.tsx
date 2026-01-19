@@ -102,7 +102,7 @@ const UserReservations: React.FC = () => {
     return (
       <TableContainer component={Paper}>
         <Table>
-          <TableHead>
+          <TableHead sx={{bgcolor:"background.default"}}>
             <TableRow>
               <TableCell>
                 <strong>Room</strong>

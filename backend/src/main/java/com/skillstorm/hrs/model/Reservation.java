@@ -33,7 +33,7 @@ public class Reservation extends BaseEntity {
   private LocalDate endDate;
 
   @Field("user_id")
-  private String userId;
+  private String userId; // null for admin blocks
 
   private Integer guests; // null for admin blocks
 
@@ -43,15 +43,15 @@ public class Reservation extends BaseEntity {
   @Field("block_reason")
   private BlockReason blockReason; // null for guest bookings
 
-  private String notes;
+  private String notes; // always null
 
   // Stripe payment info
   @Field("stripe_session_id")
-  private String stripeSessionId;
+  private String stripeSessionId; // null for admin blocks
   @Field("stripe_payment_intent_id")
-  private String stripePaymentIntentId;
+  private String stripePaymentIntentId; // null for admin blocks
   @Field("payment_status")
-  private String paymentStatus;
+  private String paymentStatus; // null for admin blocks
 
   public enum ReservationType {
     GUEST_BOOKING,

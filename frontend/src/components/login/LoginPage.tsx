@@ -26,7 +26,7 @@ export default function LoginPage() {
       <Box
         sx={{
           minHeight: "100vh",
-          bgcolor: "#f4f6f8",
+          bgcolor: "background.default",
           display: "flex",
           flexDirection: "column",
         }}
