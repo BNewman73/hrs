@@ -23,8 +23,7 @@ const RoomTypePics: React.FC<{ pics: string[] }> = ({ pics }) => {
           <CardMedia
             component="img"
             image={pic}
-            height="200"
-            alt={"pic"}
+            height="180"
             sx={{ objectFit: "cover" }}
           />
         </SwiperSlide>

@@ -1,201 +1,61 @@
 import {
-  AppBar,
   Box,
-  Button,
-  IconButton,
   Toolbar,
   Typography,
   Container,
   alpha,
   Paper,
   Slide,
-  Avatar,
-  Menu,
-  MenuItem,
 } from "@mui/material";
-import stormIcon from "/stormstay-icon-192.png";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+
 import ShieldIcon from "@mui/icons-material/Shield";
 import LanguageIcon from "@mui/icons-material/Language";
 import StarIcon from "@mui/icons-material/Star";
-import { useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import "./StormButton.css";
 import RoomTypesCarousel from "./reservations/RoomTypesCarousel";
 import FooterPage from "./FooterPage";
 
-import { useAppDispatch, useAppSelector } from "../shared/store/hooks";
-import { useLogoutMutation } from "../features/userApi";
-import { clearUser } from "../features/userSlice";
+import NavBar from "./NavBar";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const VIDEO_URL = import.meta.env.VITE_HOME_VIDEO_URL;
 
+const experiences = [
+  {
+    icon: <ShieldIcon sx={{ fontSize: 40 }} />,
+    title: "Contactless Check-in",
+    desc: "Arrive on your terms, depart with ease.",
+  },
+  {
+    icon: <LanguageIcon sx={{ fontSize: 40 }} />,
+    title: "Exclusive Destination",
+    desc: "One iconic location, crafted for unforgettable stays.",
+  },
+  {
+    icon: <StarIcon sx={{ fontSize: 40 }} />,
+    title: "24/7 Concierge",
+    desc: "Always attentive. Always available.",
+  },
+];
+
 export default function HomePage() {
-  const navigate = useNavigate();
+  usePageTitle("Storm Stay");
   const nextSectionRef = useRef<HTMLDivElement | null>(null);
-  const [storm, setStorm] = useState(false);
-
-  const user = useAppSelector((s) => s.user.user);
-
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  const [logout] = useLogoutMutation();
-  const dispatch = useAppDispatch();
-  const handleLogout = async () => {
-    try {
-      await logout().unwrap();
-    } finally {
-      dispatch(clearUser());
-      navigate("/");
-    }
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleStormNav = () => {
-    setStorm(true);
-    setTimeout(() => navigate("/types"), 320);
-  };
-  const options = [
-    { title: "Dashboard", action: () => navigate("/dashboard") },
-    { title: "Reservations", action: () => navigate("/user-home") },
-    { title: "Rewards", action: () => {} },
-    { title: "Logout", action: handleLogout },
-  ];
-
-  const experiences = [
-    {
-      icon: <ShieldIcon sx={{ fontSize: 40 }} />,
-      title: "Contactless Check-in",
-      desc: "Arrive on your terms, depart with ease.",
-    },
-    {
-      icon: <LanguageIcon sx={{ fontSize: 40 }} />,
-      title: "Worldwide Locations",
-      desc: "Curated destinations across the globe.",
-    },
-    {
-      icon: <StarIcon sx={{ fontSize: 40 }} />,
-      title: "24/7 Concierge",
-      desc: "Always attentive. Always available.",
-    },
-  ];
 
   return (
     <>
-      <AppBar
-        position="fixed"
-        elevation={0}
-        sx={{ background: "rgba(200,200,200,.2)" }}
-      >
-        <Toolbar sx={{ minHeight: { xs: 64, md: 80 } }}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Box
-              component="img"
-              src={stormIcon}
-              alt="Storm Stay"
-              sx={{
-                width: 60,
-                height: 60,
-                mr: 1,
+      <NavBar variant="dark" />
 
-                borderRadius: "30px",
-              }}
-            ></Box>
-            <Typography fontWeight={900} letterSpacing={1} color="white">
-              STORM STAY
-            </Typography>
-          </Box>
-
-          <Box sx={{ flexGrow: 1 }} />
-          {user ? (
-            <Box>
-              <IconButton sx={{ p: 0 }} onClick={handleOpenUserMenu}>
-                <Typography
-                  variant="body2"
-                  sx={{ fontWeight: 600, color: "white", paddingRight: "10px" }}
-                >
-                  Hello, {user.firstName}
-                </Typography>
-
-                <Avatar
-                  alt={user.firstName}
-                  src={user.avatarUrl}
-                  sx={{ bgcolor: "primary.main" }}
-                ></Avatar>
-              </IconButton>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {options.map((option, index) =>
-                  option.title !== "Dashboard" && user.role !== "ADMIN" ? (
-                    <></>
-                  ) : (
-                    <MenuItem
-                      key={index}
-                      onClick={() => {
-                        handleCloseUserMenu();
-                        option.action();
-                      }}
-                    >
-                      <Typography sx={{ textAlign: "center" }}>
-                        {option.title}
-                      </Typography>
-                    </MenuItem>
-                  ),
-                )}
-              </Menu>
-            </Box>
-          ) : (
-            <Button
-              onClick={() => navigate("/login")}
-              sx={{
-                color: "white",
-                px: 4,
-                py: 1.5,
-                borderRadius: 999,
-                background: "linear-gradient(135deg,#FF6B35 0%,#F7931E 100%)",
-                fontWeight: 700,
-                textTransform: "none",
-              }}
-            >
-              Login
-            </Button>
-          )}
-        </Toolbar>
-      </AppBar>
-
-      <Box
-        sx={{
-          minHeight: "100vh",
-          position: "relative",
-        }}
-      >
-        <Toolbar></Toolbar>
+      <Box sx={{ minHeight: "100vh", position: "relative" }}>
+        <Toolbar />
         <Box
           component="video"
           autoPlay
           muted
           loop
           playsInline
+          preload="metadata"
           sx={{
             position: "absolute",
             inset: 0,
@@ -228,20 +88,14 @@ export default function HomePage() {
             textAlign: "center",
           }}
         >
-          <Slide
-            in={!storm}
-            direction={`${storm ? "left" : "down"}`}
-            mountOnEnter
-            unmountOnExit
-            timeout={Number(`${storm ? 1500 : 1000}`)}
-          >
+          <Slide in direction="down" mountOnEnter unmountOnExit timeout={1000}>
             <Box>
               <Typography
                 component="h1"
                 sx={{
                   fontSize: { xs: "4rem", md: "5rem", lg: "6.5rem" },
                   fontWeight: 900,
-                  lineHeight: 1,
+                  lineHeight: { xs: 1.1, md: 1 },
                   mb: 3,
                   background: `
                     linear-gradient(
@@ -255,11 +109,6 @@ export default function HomePage() {
                   `,
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  textShadow: `
-                    0 2px 10px rgba(255,255,255,0.15),
-                    0 20px 60px rgba(255,107,53,0.25)
-                  `,
                 }}
               >
                 Welcome To The Future Of
@@ -282,92 +131,20 @@ export default function HomePage() {
 
               <button
                 className="storm-btn"
-                disabled={storm}
-                onClick={handleStormNav}
+                onClick={() =>
+                  nextSectionRef.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  })
+                }
               >
                 Secure Your Suite
               </button>
             </Box>
           </Slide>
-
-          <Box sx={{ mt: 10, display: "flex", justifyContent: "center" }}>
-            <IconButton
-              onClick={() =>
-                nextSectionRef.current?.scrollIntoView({
-                  behavior: "smooth",
-                  block: "start",
-                })
-              }
-              sx={{
-                color: alpha("#fff", 0.4),
-                animation: "bounce 2s ease-in-out infinite",
-                "&:hover": {
-                  color: "#FF6B35",
-                  transform: "translateY(4px)",
-                },
-                transition: "all 0.3s ease",
-                "@keyframes bounce": {
-                  "0%, 100%": { transform: "translateY(0)" },
-                  "50%": { transform: "translateY(-10px)" },
-                },
-              }}
-            >
-              <KeyboardArrowDownIcon sx={{ fontSize: 48 }} />
-            </IconButton>
-          </Box>
         </Container>
       </Box>
 
-      {/* SUITES */}
-      <Box ref={nextSectionRef} sx={{ bgcolor: "#0F1229", py: 16 }}>
-        <Container maxWidth="lg">
-          <Typography
-            variant="h2"
-            sx={{
-              color: "white",
-              fontWeight: 900,
-              mb: 8,
-              textAlign: "center",
-            }}
-          >
-            Room Options
-          </Typography>
-          <RoomTypesCarousel />
-        </Container>
-      </Box>
-
-      {/* EXPERIENCE */}
-      <Box sx={{ py: 16, bgcolor: "#0A0E27" }}>
-        <Container maxWidth="lg">
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: { xs: "1fr", md: "repeat(3,1fr)" },
-              gap: 6,
-            }}
-          >
-            {experiences.map((exp) => (
-              <Paper
-                key={exp.title}
-                sx={{
-                  p: 6,
-                  textAlign: "center",
-                  bgcolor: alpha("#fff", 0.04),
-                  borderRadius: 4,
-                }}
-              >
-                <Box sx={{ color: "#FF6B35", mb: 3 }}>{exp.icon}</Box>
-                <Typography variant="h5" color="white" fontWeight={800} mb={2}>
-                  {exp.title}
-                </Typography>
-                <Typography sx={{ color: alpha("#fff", 0.6) }}>
-                  {exp.desc}
-                </Typography>
-              </Paper>
-            ))}
-          </Box>
-        </Container>
-      </Box>
       {/* ABOUT US SECTION */}
       <Box
         sx={{
@@ -497,6 +274,55 @@ export default function HomePage() {
           </Box>
         </Container>
       </Box>
+      <Box ref={nextSectionRef} sx={{ bgcolor: "#0F1229", py: 16 }}>
+        <Container maxWidth="lg">
+          <Typography
+            variant="h2"
+            sx={{ color: "white", fontWeight: 900, mb: 8, textAlign: "center" }}
+          >
+            Our Rooms
+          </Typography>
+          <RoomTypesCarousel />
+        </Container>
+      </Box>
+
+      <Box sx={{ py: 16, bgcolor: "#0A0E27" }}>
+        <Container maxWidth="lg">
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "repeat(3,1fr)" },
+              gap: 6,
+            }}
+          >
+            {experiences.map((exp) => (
+              <Paper
+                key={exp.title}
+                sx={{
+                  p: 6,
+                  textAlign: "center",
+                  bgcolor: alpha("#fff", 0.04),
+                  borderRadius: 4,
+                  transition: "0.3s ease",
+                  "&:hover": {
+                    transform: "translateY(-4px)",
+                    background: alpha("#fff", 0.06),
+                  },
+                }}
+              >
+                <Box sx={{ color: "#FF6B35", mb: 3 }}>{exp.icon}</Box>
+                <Typography variant="h5" color="white" fontWeight={800} mb={2}>
+                  {exp.title}
+                </Typography>
+                <Typography sx={{ color: alpha("#fff", 0.6) }}>
+                  {exp.desc}
+                </Typography>
+              </Paper>
+            ))}
+          </Box>
+        </Container>
+      </Box>
+
       <FooterPage />
     </>
   );

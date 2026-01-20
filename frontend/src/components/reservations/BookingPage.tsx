@@ -5,7 +5,7 @@ import { Box, Container, Fade, Typography } from "@mui/material";
 import FooterPage from "../FooterPage";
 import { useEffect } from "react";
 import { useGetPrincipalQuery } from "../../features/userApi";
-import { useAppSelector } from "../../shared/store/hooks";
+
 import NavBar from "../NavBar";
 
 const IMAGE =
@@ -18,21 +18,12 @@ const BookingPage: React.FC = () => {
 
   useGetPrincipalQuery();
 
-  const currentUser = useAppSelector((s) => s.user.user) || {
-    id: "",
-    firstName: "Guest",
-    lastName: "User",
-    email: "guest@stormstay.com",
-    avatarUrl: "/static/images/avatar/placeholder.jpg",
-    provider: "",
-    role: "guest",
-  };
   return (
     <>
       <Fade in unmountOnExit timeout={1000}>
         <Box component="div" display="flex" sx={{ flexDirection: "column" }}>
           <Box sx={{ padding: "5px" }}>
-            <NavBar user={currentUser} />
+            <NavBar variant="dark" />
           </Box>
 
           <Box

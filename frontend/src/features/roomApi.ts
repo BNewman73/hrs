@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { RoomType } from "../types/enum";
+import { reservationApi } from "./reservationApi";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 export const roomApi = createApi({
   reducerPath: "roomApi",
@@ -62,6 +63,12 @@ export const roomApi = createApi({
         body,
       }),
     }),
+    getTransactions: builder.query<Transaction[], void>({
+      query: () => ({
+        url: "/payment/transactions",
+        method: "GET",
+      }),
+    }),
     getAllRooms: builder.query<Room[], void>({
       query: () => ({
         url: "/rooms",
@@ -112,6 +119,7 @@ export const roomApi = createApi({
     getCurrentReservations: builder.query<ReservationResponseDTO[], void>({
       query: () => "/reservations/mine/current",
     }),
+
     createAdminBlock: builder.mutation({
       query: (block: {
         roomId: string;
@@ -123,9 +131,28 @@ export const roomApi = createApi({
         method: "POST",
         body: block,
       }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+
+          dispatch(
+            reservationApi.util.invalidateTags([{ type: "Reservations" }]),
+          );
+        } catch (e) {
+          console.log(e);
+        }
+      },
       invalidatesTags: (_result, _error, arg) => [
         { type: "RoomReservations", id: arg.roomId },
       ],
+    }),
+    getTransactionHistory: builder.query<TransactionDTO[], number | void>({
+      query: (limit) => ({
+        url: '/payment/transactions',
+        params: {
+          limit: limit || 10, 
+        },
+      }),
     }),
   }),
 });
@@ -135,6 +162,7 @@ export const {
   useGetAvailableRoomsQuery,
   useGetRoomReservationsQuery,
   useGetAllRoomsQuery,
+  useGetTransactionsQuery,
   useUpdateRoomMutation,
   useCreateRoomMutation,
   useDeleteRoomMutation,

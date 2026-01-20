@@ -91,7 +91,7 @@ export default function FooterPage() {
               Smart Suites
             </Typography>
             <Typography sx={{ color: alpha("#fff", 0.6), mb: 1 }}>
-              Global Locations
+              Exclusive Destination
             </Typography>
             <Typography sx={{ color: alpha("#fff", 0.6) }}>
               Concierge Services

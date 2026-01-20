@@ -36,15 +36,18 @@ public class SecurityConfig {
                                 .csrf(csrf -> csrf.disable())
                                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                                 .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers("/payment/transactions").permitAll()
                                                 .requestMatchers("/oauth2/**", "/login/**").permitAll()
                                                 .requestMatchers("/room-details/comprehensive").permitAll()
 
                                                 .anyRequest().authenticated())
                                 .oauth2Login(oauth -> oauth
+
+                                                .successHandler(customAuthenticationSuccessHandler)
                                                 .userInfoEndpoint(userInfo -> userInfo
                                                                 .userService(customOAuth2UserService)
-                                                                .oidcUserService(customOidcUserService))
-                                                .successHandler(customAuthenticationSuccessHandler))
+                                                                .oidcUserService(customOidcUserService)))
+                                
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")
                                                 .logoutSuccessUrl(frontendUrl + "/login"))

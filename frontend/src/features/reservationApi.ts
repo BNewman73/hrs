@@ -6,8 +6,8 @@ export const reservationApi = createApi({
     baseUrl: API_BASE,
     credentials: "include",
   }),
-  tagTypes: ["Reservations", "RoomReservations"],
-  endpoints: (builder) => ({ 
+  tagTypes: ["Reservations"],
+  endpoints: (builder) => ({
     getAllReservations: builder.query<ReservationDTO[], void>({
       query: () => "/reservations",
       providesTags: ["Reservations"],
@@ -43,15 +43,24 @@ export const reservationApi = createApi({
       query: ({ checkInDate, checkOutDate }) => ({
         url: "/reservations/occupancy",
         params: { checkInDate, checkOutDate },
+      }),
     }),
-  }),
+    getRevenue: builder.query<
+      Record<string, number>,
+      { date: string}
+    >({
+      query: ({ date }) => ({
+        url: "/reservations/revenue",
+        params: { date },
+      }),
+    }),
     createGuestBooking: builder.mutation({
       query: (booking) => ({
         url: "/reservations/bookings",
         method: "POST",
         body: booking,
       }),
-    }), 
+    }),
     deleteReservation: builder.mutation({
       query: (id) => ({
         url: `/reservations/${id}`,
@@ -77,6 +86,7 @@ export const {
   useGetReservationsByTypeQuery,
   useGetReservationsByRoomQuery,
   useGetOccupancyQuery,
+  useGetRevenueQuery,
   useCreateGuestBookingMutation,
   useDeleteReservationMutation,
   useRefundReservationMutation,

@@ -102,7 +102,7 @@ const UserReservations: React.FC = () => {
     return (
       <TableContainer component={Paper}>
         <Table>
-          <TableHead>
+          <TableHead sx={{bgcolor:"background.default"}}>
             <TableRow>
               <TableCell>
                 <strong>Room</strong>
@@ -214,10 +214,6 @@ const UserReservations: React.FC = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        My Reservations
-      </Typography>
-
       {/* Current Reservations */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h5" gutterBottom>

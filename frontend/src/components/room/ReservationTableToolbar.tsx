@@ -1,4 +1,6 @@
-import { Box, TextField, Button, MenuItem, Stack } from "@mui/material";
+import { Box, TextField, Button, MenuItem, Stack, Modal } from "@mui/material";
+import RoomCalendar from "../reservations/RoomCalendar";
+import { useState } from "react";
 
 interface Props {
   searchQuery: string;
@@ -29,6 +31,22 @@ export function ReservationTableToolbar({
   isFiltered,
   onReset,
 }: Props) {
+  const [open, setOpen] = useState<boolean>(false);
+  const [roomNumber, setRoomNumber] = useState<string>("");
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    bgcolor: "background.paper",
+    height: 600,
+    boxShadow: 24,
+    overflow: "auto",
+    borderRadius: "5px",
+  };
   return (
     <Box sx={{ mb: 3 }}>
       <Stack spacing={2}>
@@ -115,6 +133,28 @@ export function ReservationTableToolbar({
           ) : (
             <Box />
           )}
+          <Button sx={{ border: "2px solid" }} onClick={() => setOpen(true)}>
+            {" "}
+            Create Block
+          </Button>
+
+          <Modal open={open} onClose={handleClose}>
+            <Box sx={style}>
+              <TextField
+                fullWidth
+                label="Enter a Room Number to Create a Admin Block:"
+                value={roomNumber}
+                onChange={(e) => setRoomNumber(e.target.value)}
+                required
+                sx={{ mt: 2, padding: "0px 10px" }}
+              />
+              <RoomCalendar
+                roomNumber={roomNumber}
+                isBlock={true}
+                onSuccess={handleClose}
+              />
+            </Box>
+          </Modal>
         </Stack>
       </Stack>
     </Box>
