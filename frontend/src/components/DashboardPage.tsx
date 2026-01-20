@@ -1,3 +1,10 @@
+/**
+ * DashboardPage
+ *
+ * Admin dashboard layout containing navigation, side drawer and content
+ * panels for rooms, reservations, users, occupancy and transactions.
+ * This is a route-level component and composes many admin subcomponents.
+ */
 import { useState } from "react";
 import {
   Box,
@@ -22,7 +29,7 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import NavBar from "./NavBar";
 import RoomCreateForm from "./room/RoomCrudForm";
 import RoomTable from "./room/RoomTable";
-import ReservationTable from "./room/ReservationTable";
+import ReservationTable from "./reservations/ReservationTable";
 import AccountCard from "./account/AccountCard";
 import { useNavigate } from "react-router-dom";
 import { useGetPrincipalQuery } from "../features/userApi";
@@ -30,7 +37,7 @@ import { useGetPrincipalQuery } from "../features/userApi";
 import { useAppSelector } from "../shared/store/hooks";
 import UserTable from "./user/UserTable";
 import ReceiptIcon from "@mui/icons-material/Receipt";
-import TransactionsTable from "../transaction/TransactionsTable";
+import TransactionsTable from "../components/transaction/TransactionsTable";
 import ReportCard from "./reservations/ReportCard";
 import { usePageTitle } from "../hooks/usePageTitle";
 

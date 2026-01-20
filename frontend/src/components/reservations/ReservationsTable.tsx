@@ -1,3 +1,10 @@
+/**
+ * ReservationsTable (UserReservations)
+ *
+ * Renders tables of current, upcoming and past reservations for the
+ * authenticated user. Supports cancellation/refund actions and displays
+ * loading/error states.
+ */
 import React, { useState } from "react";
 import {
   Box,
@@ -30,14 +37,23 @@ import { useAppDispatch } from "../../shared/store/hooks";
 import { showToast } from "../../features/toastSlice";
 import { format, parse } from "date-fns";
 
+/**
+ * UserReservations component
+ *
+ * Top-level component used on the account pages to show the user's
+ * reservations. Handles UI state for confirmations and calls reservation
+ * APIs for refunds.
+ */
 const UserReservations: React.FC = () => {
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
-  const [reservation, setReservation] = useState<ReservationResponseDTO | null>(null)
+  const [reservation, setReservation] = useState<ReservationResponseDTO | null>(
+    null,
+  );
   const {
     data: upcomingReservations,
     isLoading: upcomingLoading,
     error: upcomingError,
-    refetch: refetchUpcoming
+    refetch: refetchUpcoming,
   } = useGetUpcomingReservationsQuery();
 
   const {
@@ -49,11 +65,11 @@ const UserReservations: React.FC = () => {
   const {
     data: currentReservations,
     isLoading: currentLoading,
-    error: currentError
+    error: currentError,
   } = useGetCurrentReservationsQuery();
 
   const formatDate = (dateString: string) => {
-    const date = parse(dateString, "yyyy-MM-dd", new Date());  
+    const date = parse(dateString, "yyyy-MM-dd", new Date());
     return format(date, "MMM dd, yyyy");
   };
 
@@ -72,7 +88,7 @@ const UserReservations: React.FC = () => {
     isLoading: boolean,
     error: any,
     title: string,
-    showActions: boolean = false
+    showActions: boolean = false,
   ) => {
     if (isLoading) {
       return (
@@ -102,7 +118,7 @@ const UserReservations: React.FC = () => {
     return (
       <TableContainer component={Paper}>
         <Table>
-          <TableHead sx={{bgcolor:"background.default"}}>
+          <TableHead sx={{ bgcolor: "background.default" }}>
             <TableRow>
               <TableCell>
                 <strong>Room</strong>
@@ -161,18 +177,17 @@ const UserReservations: React.FC = () => {
                 {showActions && (
                   <TableCell>
                     {reservation.paymentStatus != "refunded" && (
-                        <Button
+                      <Button
                         variant="outlined"
                         size="small"
                         color="error"
-                          onClick={() => {
-                            setConfirmOpen(true)
-                            setReservation(reservation);
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                    
+                        onClick={() => {
+                          setConfirmOpen(true);
+                          setReservation(reservation);
+                        }}
+                      >
+                        Cancel
+                      </Button>
                     )}
                   </TableCell>
                 )}
@@ -198,7 +213,7 @@ const UserReservations: React.FC = () => {
         showToast({
           message: `Reservation has been canceled successfully!`,
           severity: "success",
-        })
+        }),
       );
     } catch {
       setConfirmOpen(false);
@@ -207,7 +222,7 @@ const UserReservations: React.FC = () => {
         showToast({
           message: `Error occurred canceling the reservation!`,
           severity: "error",
-        })
+        }),
       );
     }
   };
@@ -224,7 +239,7 @@ const UserReservations: React.FC = () => {
           currentLoading,
           currentError,
           "Current Reservations",
-          false // Show actions for upcoming reservations
+          false, // Show actions for upcoming reservations
         )}
       </Box>
 
@@ -238,7 +253,7 @@ const UserReservations: React.FC = () => {
           upcomingLoading,
           upcomingError,
           "Upcoming Reservations",
-          true // Show actions for upcoming reservations
+          true, // Show actions for upcoming reservations
         )}
       </Box>
 
@@ -252,7 +267,7 @@ const UserReservations: React.FC = () => {
           pastLoading,
           pastError,
           "Past Reservations",
-          false // No actions for past reservations
+          false, // No actions for past reservations
         )}
       </Box>
       <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>

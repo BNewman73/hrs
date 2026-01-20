@@ -1,3 +1,9 @@
+/**
+ * RoomPicsCarousel
+ *
+ * Simple carousel component that displays an array of image URLs using
+ * `swiper`. Used on the room type cards.
+ */
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";

@@ -1,3 +1,12 @@
+/**
+ * Authentication bootstrap component.
+ *
+ * When mounted, this component attempts to load the current principal
+ * via `useGetPrincipalQuery` and updates the Redux `user` slice. It
+ * intentionally renders `null` because it only performs background side-effects.
+ *
+ * @module src/AuthGlobal
+ */
 import { useEffect } from "react";
 import { useGetPrincipalQuery } from "./features/userApi";
 import { setUser, clearUser } from "./features/userSlice";

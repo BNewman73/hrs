@@ -1,6 +1,12 @@
+/**
+ * RoomDetailsModal
+ *
+ * Simple modal wrapper that shows `RoomCalendar` for a given room number.
+ * Used by result cards to provide an availability/booking flow.
+ */
 import { Box, Button, Modal } from "@mui/material";
 import { useState } from "react";
-import RoomCalendar from "./RoomCalendar";
+import RoomCalendar from "../room/RoomCalendar";
 
 interface RoomDetailsModalProps {
   roomNumber: string;
@@ -20,6 +26,12 @@ const style = {
   overflow: "autho",
 };
 
+/**
+ * RoomDetailsModal component
+ *
+ * Props: `roomNumber`, optional `capacity`, `pricePerNight`, and optional
+ * `guests`. Controls its own open state and renders `RoomCalendar`.
+ */
 const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
   roomNumber,
   capacity,

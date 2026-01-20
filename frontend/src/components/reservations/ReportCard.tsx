@@ -1,3 +1,10 @@
+/**
+ * ReportCard
+ *
+ * Combined occupancy and revenue reports. Provides date range and year
+ * selection inputs and renders two charts: occupancy over time and year-to-
+ * date revenue.
+ */
 import { useMemo, useState } from "react";
 import {
   Card,
@@ -17,22 +24,31 @@ import {
   CartesianGrid,
   Label,
 } from "recharts";
-import { useGetOccupancyQuery, useGetRevenueQuery } from "../../features/reservationApi";
+import {
+  useGetOccupancyQuery,
+  useGetRevenueQuery,
+} from "../../features/reservationApi";
 import YearPicker from "./YearPicker";
 
+/**
+ * ReportCard component
+ *
+ * Stateful report container that coordinates occupancy and revenue queries
+ * and renders charts. No props.
+ */
 export default function ReportCard() {
-
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [selectedYear, setSelectedYear] = useState<string | number>('');
+  const [selectedYear, setSelectedYear] = useState<string | number>("");
 
-  const { data: occupancyResponse, isFetching: isFetchingOccupancy } = useGetOccupancyQuery(
-    {
-      checkInDate: startDate,
-      checkOutDate: endDate,
-    },
-    { skip: !startDate || !endDate }
-  );
+  const { data: occupancyResponse, isFetching: isFetchingOccupancy } =
+    useGetOccupancyQuery(
+      {
+        checkInDate: startDate,
+        checkOutDate: endDate,
+      },
+      { skip: !startDate || !endDate },
+    );
 
   const occupancyData = useMemo(() => {
     if (!occupancyResponse) return [];
@@ -43,19 +59,20 @@ export default function ReportCard() {
     }));
   }, [occupancyResponse]);
 
-  const { data: revenueResponse, isFetching: isFetchingRevenue } = useGetRevenueQuery(
-    {
-      date: selectedYear.toString(),
-    },
-    { skip: !selectedYear }
-  );
+  const { data: revenueResponse, isFetching: isFetchingRevenue } =
+    useGetRevenueQuery(
+      {
+        date: selectedYear.toString(),
+      },
+      { skip: !selectedYear },
+    );
 
   const revenueData = useMemo(() => {
     if (!revenueResponse) return [];
 
     return Object.entries(revenueResponse).map(([date, revenue]) => ({
       date,
-      revenue
+      revenue,
     }));
   }, [revenueResponse]);
   const handleYearChange = (year: string | number) => {
@@ -71,7 +88,6 @@ export default function ReportCard() {
       }}
     >
       <CardContent>
-
         {/* Occupancy Report */}
         <Box sx={{ mb: 2 }}>
           <Typography variant="h6" sx={{ fontWeight: 800 }}>
@@ -95,7 +111,7 @@ export default function ReportCard() {
         >
           <TextField
             type="date"
-            label= "From"
+            label="From"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             InputLabelProps={{ shrink: true }}
@@ -114,7 +130,7 @@ export default function ReportCard() {
 
         {/* Chart 1 */}
         <Box sx={{ height: 260 }}>
-          {isFetchingOccupancy? (
+          {isFetchingOccupancy ? (
             <Box
               sx={{
                 height: "100%",
@@ -132,7 +148,11 @@ export default function ReportCard() {
               <LineChart data={occupancyData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" tick={{ fontSize: 12 }} tickMargin={8} />
-                <YAxis tick={{ fontSize: 14 }} tickMargin={8} allowDecimals={false}>
+                <YAxis
+                  tick={{ fontSize: 14 }}
+                  tickMargin={8}
+                  allowDecimals={false}
+                >
                   <Label
                     value="Occupancy"
                     angle={-90}
@@ -155,7 +175,6 @@ export default function ReportCard() {
           )}
         </Box>
 
-    
         {/* Revenue Report */}
         <Box sx={{ mb: 2 }}>
           <Typography variant="h6" sx={{ fontWeight: 800 }}>
@@ -177,8 +196,7 @@ export default function ReportCard() {
             mb: 3,
           }}
         >
-            <YearPicker selectedYear={selectedYear} onChange={handleYearChange} />
-
+          <YearPicker selectedYear={selectedYear} onChange={handleYearChange} />
         </Box>
 
         {/* Chart 2 */}
@@ -200,8 +218,17 @@ export default function ReportCard() {
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={revenueData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" interval="preserveStartEnd" tick={{ fontSize: 12 }} tickMargin={8} />
-                <YAxis tick={{ fontSize: 14 }} tickMargin={8} allowDecimals={false}>
+                <XAxis
+                  dataKey="date"
+                  interval="preserveStartEnd"
+                  tick={{ fontSize: 12 }}
+                  tickMargin={8}
+                />
+                <YAxis
+                  tick={{ fontSize: 14 }}
+                  tickMargin={8}
+                  allowDecimals={false}
+                >
                   <Label
                     value="Total Revenue (USD)"
                     angle={-90}
@@ -223,8 +250,6 @@ export default function ReportCard() {
             </ResponsiveContainer>
           )}
         </Box>
-        
-        
       </CardContent>
     </Card>
   );

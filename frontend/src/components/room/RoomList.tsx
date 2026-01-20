@@ -1,3 +1,9 @@
+/**
+ * RoomList
+ *
+ * Renders a list of `RoomCard` components or appropriate placeholder states
+ * (loading, empty, error). Accepts fetched room data and UI state props.
+ */
 import React from "react";
 import { Box, Typography, CircularProgress, Alert, Stack } from "@mui/material";
 import { type SerializedError } from "@reduxjs/toolkit";
@@ -14,6 +20,12 @@ interface RoomListProps {
   filtered: boolean;
 }
 
+/**
+ * RoomList component
+ *
+ * Props: `rooms`, `isLoading`, `error`, `checkInDate`, `checkOutDate`,
+ * `guests`, `filtered`.
+ */
 const RoomList: React.FC<RoomListProps> = ({
   rooms,
   isLoading,

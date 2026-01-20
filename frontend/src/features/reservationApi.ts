@@ -1,3 +1,11 @@
+/**
+ * reservationApi
+ *
+ * RTK Query service for reservation-related endpoints including fetching
+ * reservations, occupancy and revenue reports, guest booking creation and
+ * refund operations. Exposes typed hooks used throughout the reservation
+ * UI.
+ */
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 export const reservationApi = createApi({
@@ -45,10 +53,7 @@ export const reservationApi = createApi({
         params: { checkInDate, checkOutDate },
       }),
     }),
-    getRevenue: builder.query<
-      Record<string, number>,
-      { date: string}
-    >({
+    getRevenue: builder.query<Record<string, number>, { date: string }>({
       query: ({ date }) => ({
         url: "/reservations/revenue",
         params: { date },

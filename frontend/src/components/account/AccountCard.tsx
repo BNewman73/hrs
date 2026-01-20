@@ -1,6 +1,23 @@
+/**
+ * AccountCard
+ *
+ * Account editor for the currently authenticated principal. Loads the
+ * principal into the Redux store, allows editing of common profile fields
+ * and persists changes via `useUpdateProfileMutation`.
+ */
 import type { ChangeEvent } from "react";
-import { Box, Avatar, Typography, TextField, Button, Chip } from "@mui/material";
-import { useGetPrincipalQuery, useUpdateProfileMutation } from "../../features/userApi";
+import {
+  Box,
+  Avatar,
+  Typography,
+  TextField,
+  Button,
+  Chip,
+} from "@mui/material";
+import {
+  useGetPrincipalQuery,
+  useUpdateProfileMutation,
+} from "../../features/userApi";
 import { updateUserField } from "../../features/userSlice";
 import { useAppDispatch, useAppSelector } from "../../shared/store/hooks";
 
@@ -17,9 +34,13 @@ export default function AccountCard() {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     dispatch(
       updateUserField({
-        field: e.target.name as "firstName" | "lastName" | "email" | "avatarUrl",
+        field: e.target.name as
+          | "firstName"
+          | "lastName"
+          | "email"
+          | "avatarUrl",
         value: e.target.value,
-      })
+      }),
     );
   };
 

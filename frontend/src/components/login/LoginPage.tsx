@@ -1,3 +1,9 @@
+/**
+ * LoginPage
+ *
+ * Public sign-in page offering OAuth providers. Redirects the browser to the
+ * backend authorization endpoints for the selected provider.
+ */
 import {
   Box,
   Button,
@@ -17,6 +23,12 @@ import { usePageTitle } from "../../hooks/usePageTitle";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
+/**
+ * LoginPage component
+ *
+ * No props. Provides buttons to begin OAuth flows and displays a simple
+ * centered card UI.
+ */
 export default function LoginPage() {
   usePageTitle("Sign In");
   const handleLogin = (provider: "google" | "github") => {

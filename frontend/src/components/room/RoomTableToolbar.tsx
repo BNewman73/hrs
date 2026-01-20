@@ -1,3 +1,10 @@
+/**
+ * RoomTableToolbar
+ *
+ * Toolbar for the admin room table. Exposes search, type filter and price
+ * sort controls and a reset action. Controlled via the `ToolbarProps`
+ * interface.
+ */
 import {
   Box,
   TextField,
@@ -27,6 +34,12 @@ interface ToolbarProps {
   onReset: () => void;
 }
 
+/**
+ * RoomTableToolbar component
+ *
+ * Controlled presentational component. All callbacks are provided via
+ * props.
+ */
 export const RoomTableToolbar = ({ isFiltered, ...p }: ToolbarProps) => (
   <Box
     sx={{

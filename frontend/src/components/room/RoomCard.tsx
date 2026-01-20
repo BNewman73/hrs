@@ -1,3 +1,9 @@
+/**
+ * RoomCard
+ *
+ * Visual card representing a single room result. Shows primary image,
+ * description, price and actions for booking or viewing availability.
+ */
 import {
   Card,
   Box,
@@ -28,6 +34,11 @@ interface RoomResultCardProps {
   filtered: boolean;
 }
 
+/**
+ * RoomResultCard component
+ *
+ * Props: `room`, `checkInDate`, `checkOutDate`, `guests`, `filtered`.
+ */
 const RoomResultCard = ({
   room,
   checkInDate,

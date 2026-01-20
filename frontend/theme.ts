@@ -1,3 +1,11 @@
+/**
+ * Material UI theme configuration for the frontend app.
+ *
+ * Centralizes color palette and typography overrides so components
+ * can consume a consistent design system via `ThemeProvider`.
+ *
+ * @module frontend/theme
+ */
 import { indigo, orange } from "@mui/material/colors";
 import { createTheme } from "@mui/material/styles";
 

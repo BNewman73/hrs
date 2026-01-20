@@ -1,3 +1,11 @@
+/**
+ * Hook that prepares room data for table/list views.
+ *
+ * It handles searching, filtering by room type, sorting, pagination and
+ * exposes simple setters for UI controls.
+ *
+ * @returns An object containing the current page of rooms and control handlers.
+ */
 import { useState, useMemo } from "react";
 import { useGetAllRoomsQuery } from "../features/roomApi";
 import { RoomType } from "../types/enum";
@@ -20,7 +28,7 @@ export function useRoomTable() {
 
   const filteredAndSorted = useMemo(() => {
     let result = [...rawRooms].sort((a, b) =>
-      collator.compare(a.roomNumber, b.roomNumber)
+      collator.compare(a.roomNumber, b.roomNumber),
     );
 
     if (searchQuery) {
@@ -28,7 +36,7 @@ export function useRoomTable() {
       result = result.filter(
         (r) =>
           r.roomNumber.toLowerCase().includes(q) ||
-          r.roomDetails.type.toLowerCase().includes(q)
+          r.roomDetails.type.toLowerCase().includes(q),
       );
     }
 
@@ -40,7 +48,7 @@ export function useRoomTable() {
       result.sort((a, b) =>
         sortOrder === "asc"
           ? a.pricePerNight - b.pricePerNight
-          : b.pricePerNight - a.pricePerNight
+          : b.pricePerNight - a.pricePerNight,
       );
     }
 

@@ -1,3 +1,10 @@
+/**
+ * ReservationRow
+ *
+ * Renders a single reservation row with summary information and an
+ * expandable detail panel. Includes actions for canceling/refunding a
+ * reservation when applicable.
+ */
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useRefundReservationMutation } from "../../features/reservationApi";
 import { useState } from "react";
@@ -27,6 +34,12 @@ interface ReservationRowProps {
   onToggle: () => void;
 }
 
+/**
+ * ReservationRow component
+ *
+ * Presentation + small behavior (refund dialog) for a single reservation
+ * entry. Receives `reservation`, `isExpanded` and `onToggle` props.
+ */
 export const ReservationRow = ({
   reservation,
   isExpanded,

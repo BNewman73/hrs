@@ -1,3 +1,9 @@
+/**
+ * Application entrypoint: mounts React app and provides the Redux store.
+ *
+ * This file bootstraps the app into the DOM and should remain minimal.
+ * @module src/main
+ */
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
@@ -10,5 +16,5 @@ createRoot(document.getElementById("root")!).render(
     <StrictMode>
       <App />
     </StrictMode>
-  </Provider>
+  </Provider>,
 );

@@ -1,3 +1,9 @@
+/**
+ * RoomCrudForm
+ *
+ * Admin form used to create, update or delete rooms. Accepts an optional
+ * `props` RoomDTO for editing and a `crud` action string.
+ */
 import { useState } from "react";
 import {
   Box,
@@ -36,6 +42,12 @@ const ROOM_TYPES: RoomType[] = [
   RoomType.ACCESSIBLE,
 ];
 
+/**
+ * RoomCreateForm component
+ *
+ * Renders the CRUD form. Props: optional `props` (RoomDTO), `crud` action
+ * string, and optional `onClose` callback.
+ */
 export default function RoomCreateForm({
   props,
   crud = "",
@@ -63,7 +75,7 @@ export default function RoomCreateForm({
 
   const handleChange = <K extends keyof RoomDTO>(
     field: K,
-    value: RoomDTO[K]
+    value: RoomDTO[K],
   ) => {
     setRoom((prev) => ({ ...prev, [field]: value }));
   };
@@ -81,7 +93,7 @@ export default function RoomCreateForm({
         showToast({
           message: `Room ${crud.toLowerCase()}d successfully!`,
           severity: "success",
-        })
+        }),
       );
 
       setRoom({
@@ -108,13 +120,13 @@ export default function RoomCreateForm({
     try {
       await deleteRoom(room.publicID).unwrap();
       dispatch(
-        showToast({ message: "Room deleted successfully", severity: "info" })
+        showToast({ message: "Room deleted successfully", severity: "info" }),
       );
       setConfirmOpen(false);
       if (onClose) onClose();
     } catch {
       dispatch(
-        showToast({ message: "Failed to delete room", severity: "error" })
+        showToast({ message: "Failed to delete room", severity: "error" }),
       );
     }
   };
@@ -204,7 +216,7 @@ export default function RoomCreateForm({
                   e.target.value
                     .split(",")
                     .map((s) => s.trim())
-                    .filter(Boolean)
+                    .filter(Boolean),
                 )
               }
             />

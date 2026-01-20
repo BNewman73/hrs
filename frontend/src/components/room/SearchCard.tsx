@@ -1,3 +1,9 @@
+/**
+ * SearchCard
+ *
+ * Compact result card used in search results; supports creating a
+ * Checkout session for booking and viewing room availability.
+ */
 import {
   Card,
   CardContent,
@@ -28,6 +34,11 @@ interface RoomResultCardProps {
   guests: number;
 }
 
+/**
+ * RoomResultCard component (search)
+ *
+ * Props: `room`, `checkInDate`, `checkOutDate`, `guests`.
+ */
 const RoomResultCard = ({
   room,
   checkInDate,
