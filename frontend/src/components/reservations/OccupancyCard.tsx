@@ -1,3 +1,10 @@
+/**
+ * OccupancyCard
+ *
+ * Displays a line chart of occupancy over a selected date range. Uses
+ * `useGetOccupancyQuery` to fetch data and renders a responsive chart via
+ * `recharts`.
+ */
 import { useMemo, useState } from "react";
 import {
   Card,
@@ -19,8 +26,12 @@ import {
 } from "recharts";
 import { useGetOccupancyQuery } from "../../features/reservationApi";
 
+/**
+ * OccupancyCard component
+ *
+ * Stateful component providing date inputs and a chart; no external props.
+ */
 export default function OccupancyCard() {
-
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -29,7 +40,7 @@ export default function OccupancyCard() {
       checkInDate: startDate,
       checkOutDate: endDate,
     },
-    { skip: !startDate || !endDate }
+    { skip: !startDate || !endDate },
   );
 
   const chartData = useMemo(() => {
@@ -40,7 +51,6 @@ export default function OccupancyCard() {
       rooms,
     }));
   }, [data]);
-
 
   return (
     <Card
@@ -70,7 +80,7 @@ export default function OccupancyCard() {
         >
           <TextField
             type="date"
-            label= "From"
+            label="From"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             InputLabelProps={{ shrink: true }}
@@ -107,7 +117,11 @@ export default function OccupancyCard() {
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" tick={{ fontSize: 12 }} tickMargin={8} />
-                <YAxis tick={{ fontSize: 14 }} tickMargin={8} allowDecimals={false}>
+                <YAxis
+                  tick={{ fontSize: 14 }}
+                  tickMargin={8}
+                  allowDecimals={false}
+                >
                   <Label
                     value="Occupancy"
                     angle={-90}

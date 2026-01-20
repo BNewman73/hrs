@@ -1,3 +1,15 @@
+/**
+ * UserCrudForm
+ *
+ * Form used to edit a user's profile and role. This admin-facing form
+ * accepts a `UserDTO`, allows editing fields and calls the provided
+ * `onSubmit` callback with the updated user object.
+ *
+ * Props:
+ * - `user`: UserDTO - the user to edit
+ * - `onSubmit(user)`: callback invoked when form is submitted
+ * - `onClose()`: callback to close the form/modal
+ */
 import { useState } from "react";
 import {
   Box,
@@ -13,6 +25,12 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
+/**
+ * UserCrudForm component
+ *
+ * Controlled form component that manages local form state and forwards
+ * the updated `UserDTO` via `onSubmit`.
+ */
 export default function UserCrudForm({
   user,
   onSubmit,

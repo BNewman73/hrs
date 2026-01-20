@@ -1,6 +1,13 @@
+/**
+ * ReservationTable
+ *
+ * Admin-facing reservations table with search, filtering and expandable
+ * reservation rows. Fetches reservation+guest data and delegates row
+ * rendering to `ReservationRow`.
+ */
 import { useState, useMemo } from "react";
 import { Box } from "@mui/material";
-import { EntityTable } from "./EntityTable";
+import { EntityTable } from "../EntityTable";
 import { ReservationRow } from "./ReservationRow";
 import { ReservationTableToolbar } from "./ReservationTableToolbar";
 import { useGetAllReservationsWithGuestQuery } from "../../features/reservationApi";
@@ -13,6 +20,11 @@ const GRID_CONFIG = {
   expand: "10%",
 };
 
+/**
+ * ReservationTable component
+ *
+ * Renders the admin reservation listing. No props.
+ */
 export default function ReservationTable() {
   const { data: reservations = [], isLoading } =
     useGetAllReservationsWithGuestQuery();
@@ -32,7 +44,7 @@ export default function ReservationTable() {
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       result = result.filter((r) =>
-        r.reservation.roomId.toLowerCase().includes(q)
+        r.reservation.roomId.toLowerCase().includes(q),
       );
     }
 
@@ -42,7 +54,7 @@ export default function ReservationTable() {
 
     if (statusFilter !== "ALL") {
       result = result.filter(
-        (r) => r.reservation.paymentStatus === statusFilter
+        (r) => r.reservation.paymentStatus === statusFilter,
       );
     }
 
@@ -52,7 +64,7 @@ export default function ReservationTable() {
           ? new Date(a.reservation.startDate).getTime() -
             new Date(b.reservation.startDate).getTime()
           : new Date(b.reservation.startDate).getTime() -
-            new Date(a.reservation.startDate).getTime()
+            new Date(a.reservation.startDate).getTime(),
       );
     }
 
@@ -61,7 +73,7 @@ export default function ReservationTable() {
 
   const paginated = filteredAndSorted.slice(
     page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
+    page * rowsPerPage + rowsPerPage,
   );
 
   return (
@@ -128,7 +140,7 @@ export default function ReservationTable() {
             isExpanded={expanded === row.reservation.id}
             onToggle={() =>
               setExpanded(
-                expanded === row.reservation.id ? null : row.reservation.id
+                expanded === row.reservation.id ? null : row.reservation.id,
               )
             }
           />

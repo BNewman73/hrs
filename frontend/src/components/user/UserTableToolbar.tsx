@@ -1,3 +1,9 @@
+/**
+ * UserTableToolbar
+ *
+ * Toolbar for the admin user table. Provides search, role filter, sort
+ * controls and a reset action. Controlled via props described in `Props`.
+ */
 import {
   Box,
   TextField,
@@ -24,6 +30,12 @@ interface Props {
   onReset: () => void;
 }
 
+/**
+ * UserTableToolbar component
+ *
+ * Controlled presentational component. All callbacks are provided via
+ * props.
+ */
 export function UserTableToolbar({
   searchQuery,
   onSearchChange,

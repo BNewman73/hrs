@@ -1,11 +1,22 @@
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
+/**
+ * YearPicker
+ *
+ * Small utility component that renders a select input with years (1900 -
+ * current). Used by reporting components to choose a calendar year.
+ */
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 
 interface YearPickerProps {
   selectedYear: string | number;
   onChange: (year: string | number) => void;
 }
 
+/**
+ * YearPicker component
+ *
+ * Props: `selectedYear` and `onChange(year)`.
+ */
 const YearPicker: React.FC<YearPickerProps> = ({ selectedYear, onChange }) => {
   const years: number[] = [];
   const currentYear = new Date().getFullYear();

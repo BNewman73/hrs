@@ -1,8 +1,26 @@
+/**
+ * BookingCancel
+ *
+ * Simple confirmation page shown when a booking flow was cancelled before
+ * completion. Provides contextual copy and quick actions to retry or browse
+ * available rooms.
+ *
+ * Usage:
+ * ```tsx
+ * <BookingCancel />
+ * ```
+ */
 import React from "react";
 import { Container, Paper, Typography, Box, Button } from "@mui/material";
 import { CancelOutlined } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * BookingCancel component
+ *
+ * Presentational component that displays a cancellation confirmation UI and
+ * navigation actions. No props.
+ */
 const BookingCancel: React.FC = () => {
   const navigate = useNavigate();
 

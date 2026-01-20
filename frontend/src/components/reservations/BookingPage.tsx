@@ -1,5 +1,12 @@
+/**
+ * BookingPage
+ *
+ * Page used to initiate a booking flow for a specific `roomType`. Shows a
+ * hero area and the `RoomAvailability` selector. Uses `useGetPrincipalQuery`
+ * to ensure the authenticated principal is loaded.
+ */
 import { useParams } from "react-router-dom";
-import RoomAvailability from "./RoomAvailability";
+import RoomAvailability from "../room/RoomAvailability";
 import type { RoomType } from "../../types/enum";
 import { Box, Container, Fade, Typography } from "@mui/material";
 import FooterPage from "../FooterPage";
@@ -10,6 +17,12 @@ import NavBar from "../NavBar";
 
 const IMAGE =
   "https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg";
+/**
+ * BookingPage component
+ *
+ * Route-level component that orchestrates the booking UI. No props; it reads
+ * the `roomType` parameter from the route.
+ */
 const BookingPage: React.FC = () => {
   const { roomType } = useParams<{ roomType: string }>();
   useEffect(() => {

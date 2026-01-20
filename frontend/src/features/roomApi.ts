@@ -1,3 +1,11 @@
+/**
+ * roomApi
+ *
+ * RTK Query service for room-related endpoints: listing rooms by type,
+ * availability checks, reservations for a specific room, and administrative
+ * room management (create/update/delete). Exposes typed hooks for use in
+ * components.
+ */
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { RoomType } from "../types/enum";
 import { reservationApi } from "./reservationApi";
@@ -148,9 +156,9 @@ export const roomApi = createApi({
     }),
     getTransactionHistory: builder.query<TransactionDTO[], number | void>({
       query: (limit) => ({
-        url: '/payment/transactions',
+        url: "/payment/transactions",
         params: {
-          limit: limit || 10, 
+          limit: limit || 10,
         },
       }),
     }),

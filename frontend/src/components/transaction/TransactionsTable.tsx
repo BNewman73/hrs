@@ -1,10 +1,29 @@
+/**
+ * TransactionsTable
+ *
+ * Displays a paginated, searchable table of payment transactions using
+ * `EntityTable`. Includes toolbar controls for searching, filtering by
+ * status, and sorting. Rows are rendered with `TransactionRow` and the
+ * toolbar is provided by `TransactionTableToolbar`.
+ *
+ * Usage:
+ * ```tsx
+ * <TransactionsTable />
+ * ```
+ */
 import { Box } from "@mui/material";
 import { useState, useMemo } from "react";
-import { EntityTable } from "../components/room/EntityTable";
+import { EntityTable } from "../EntityTable";
 import { TransactionRow } from "./TransactionRow";
-import { useGetTransactionsQuery } from "../features/roomApi";
+import { useGetTransactionsQuery } from "../../features/roomApi";
 import { TransactionTableToolbar } from "./TransactionTableToolbar";
 
+/**
+ * TransactionsTable component
+ *
+ * Fetches transactions via `useGetTransactionsQuery`, applies client-side
+ * filtering, sorting and pagination, and renders the table UI.
+ */
 export default function TransactionsTable() {
   const { data: transactions = [], isLoading } = useGetTransactionsQuery();
 

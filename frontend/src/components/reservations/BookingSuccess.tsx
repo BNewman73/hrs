@@ -1,3 +1,10 @@
+/**
+ * BookingSuccess
+ *
+ * Handles completing a reservation after a successful payment session.
+ * This page reads the `session_id` query parameter and calls the backend to
+ * finalize the reservation. It displays loading, success and error states.
+ */
 import React, { useEffect, useState } from "react";
 import {
   Container,
@@ -12,6 +19,12 @@ import { CheckCircleOutline, ErrorOutline } from "@mui/icons-material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCompleteReservationMutation } from "../../features/roomApi";
 
+/**
+ * BookingSuccess component
+ *
+ * Route-level component that finalizes reservations and shows confirmation
+ * details. No props.
+ */
 const BookingSuccess: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();

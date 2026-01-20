@@ -1,6 +1,11 @@
+/**
+ * utils
+ *
+ * Small utility helpers used across the frontend feature modules.
+ */
 export const calculateNights = (
   checkInDate: string | Date,
-  checkOutDate: string | Date
+  checkOutDate: string | Date,
 ): number => {
   const checkIn = new Date(checkInDate);
   const checkOut = new Date(checkOutDate);

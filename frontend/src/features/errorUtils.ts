@@ -1,3 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/**
+ * errorUtils
+ *
+ * Helper utilities for extracting and normalizing error information
+ * returned from RTK Query / backend responses. Provides small helpers to
+ * convert errors into user-friendly strings and to check for common error
+ * conditions (status codes, network errors).
+ */
 /**
  * Extracts a user-friendly error message from RTK Query errors
  * @param error - The error object from RTK Query
@@ -34,10 +43,22 @@ export const getErrorMessage = (error: any): string => {
  * @param statusCode - The HTTP status code to check
  * @returns boolean
  */
+/**
+ * Checks if an error is a specific HTTP status code
+ * @param error - The error object from RTK Query
+ * @param statusCode - The HTTP status code to check
+ * @returns boolean
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isErrorStatus = (error: any, statusCode: number): boolean => {
   return error?.status === statusCode;
 };
 
+/**
+ * Checks if the error is a network error (no response from server)
+ * @param error - The error object from RTK Query
+ * @returns boolean
+ */
 /**
  * Checks if the error is a network error (no response from server)
  * @param error - The error object from RTK Query

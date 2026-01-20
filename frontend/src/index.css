@@ -1,3 +1,11 @@
+/*
+  Global styles for the frontend app.
+
+  This file contains reset-like rules and a small set of utility styles
+  used across pages (animations, hero/wave sections and swiper overrides).
+  Keep this file focused on global concerns; component-level styles belong
+  with their components.
+*/
 *,
 *::before,
 *::after {
@@ -13,8 +21,9 @@ body,
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
   background-color: #fafafa;
 }
 

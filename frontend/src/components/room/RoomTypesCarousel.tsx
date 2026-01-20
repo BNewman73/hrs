@@ -1,3 +1,9 @@
+/**
+ * RoomTypesCarousel
+ *
+ * Carousel of room type cards for marketing and exploration. Fetches
+ * comprehensive room type data and renders `RoomTypeCard` slides.
+ */
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -235,6 +241,11 @@ const RoomTypeCard: React.FC<{ roomType: RoomDetailsDTO }> = ({ roomType }) => {
   );
 };
 
+/**
+ * RoomTypesCarousel component
+ *
+ * Fetches room type data and displays a swiper carousel of `RoomTypeCard`.
+ */
 const RoomTypesCarousel: React.FC = () => {
   const {
     data: roomTypes,

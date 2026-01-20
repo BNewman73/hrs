@@ -1,3 +1,10 @@
+/**
+ * RoomCalendar
+ *
+ * Interactive date picker/calendar used for booking or creating admin
+ * blocks on a specific room. Displays availability and lets the user
+ * select check-in and check-out dates.
+ */
 import React, { useState, useMemo } from "react";
 import {
   Box,
@@ -49,22 +56,29 @@ interface RoomCalendarProps {
   pricePerNight?: number;
   capacity?: number;
   isBlock: boolean;
-  onSuccess?: () => void
+  onSuccess?: () => void;
 }
 
+/**
+ * RoomCalendar component
+ *
+ * Props: `roomNumber`, `pricePerNight`, `capacity`, `isBlock` and an
+ * optional `onSuccess` callback. Internally handles date selection and
+ * booking/block actions.
+ */
 const SimpleCalendar: React.FC<RoomCalendarProps> = ({
   roomNumber,
   pricePerNight,
   capacity,
   isBlock,
-  onSuccess
+  onSuccess,
 }) => {
   const { bookRoom } = useBooking();
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [checkInDate, setCheckInDate] = useState<Date | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
   const [guests, setGuests] = useState<number>(1);
-  const [blockReason, setBlockReason] = useState<string>("")
+  const [blockReason, setBlockReason] = useState<string>("");
 
   const startDate = useMemo(() => {
     return format(startOfMonth(currentMonth), "yyyy-MM-dd");
@@ -86,7 +100,9 @@ const SimpleCalendar: React.FC<RoomCalendarProps> = ({
 
   const [createAdminBlock] = useCreateAdminBlockMutation();
 
-  const getDateStatus = (date: Date): "past" | "available" | "booked" | "blocked" => {
+  const getDateStatus = (
+    date: Date,
+  ): "past" | "available" | "booked" | "blocked" => {
     const isPast = date < new Date(new Date().setHours(0, 0, 0, 0));
     if (isPast) return "past";
     if (!reservations) return "available";
@@ -188,26 +204,26 @@ const SimpleCalendar: React.FC<RoomCalendarProps> = ({
           roomId: roomNumber,
           startDate: format(checkInDate, "yyyy-MM-dd"),
           endDate: format(checkOutDate, "yyyy-MM-dd"),
-          blockReason: blockReason
+          blockReason: blockReason,
         }).unwrap();
         dispatch(
           showToast({
             message: `Block created successfully!`,
             severity: "success",
-          })
+          }),
         );
         handleReset();
         if (onSuccess) onSuccess();
       } catch {
         dispatch(
-        showToast({
-          message: `Error occurred creating the block!`,
-          severity: "error",
-        })
-      );
+          showToast({
+            message: `Error occurred creating the block!`,
+            severity: "error",
+          }),
+        );
       }
     }
-  }
+  };
 
   const handleReset = () => {
     setCheckInDate(null);
@@ -261,55 +277,76 @@ const SimpleCalendar: React.FC<RoomCalendarProps> = ({
           <strong>Check-out:</strong>{" "}
           {checkOutDate ? format(checkOutDate, "MMM dd, yyyy") : "Not selected"}
         </Typography>
-        <Box 
-          sx={{ 
-            display: "flex", 
-            alignItems: "center", 
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
             gap: 1,
             // justifyContent: "space-between"
           }}
         >
           <Typography variant="body2">
-            <strong>{isBlock ? "Reason:" : "Guests:" }</strong>
+            <strong>{isBlock ? "Reason:" : "Guests:"}</strong>
           </Typography>
           {!isBlock ? (
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, maxHeight: 10 }}>
-            <IconButton
-              size="small"
-              onClick={() => setGuests(Math.max(1, guests - 1))}
-              disabled={guests == 1}
-            >
-              <Remove fontSize="small" />
-            </IconButton>
-            <Typography variant="body2" sx={{ minWidth: 30, textAlign: "center" }}>
-              {guests}
-            </Typography>
-            <IconButton
-              size="small"
-              onClick={() => setGuests(Math.min(capacity!, guests + 1))}
-              disabled={guests == capacity}
-            >
-              <Add fontSize="small" />
-            </IconButton>
-          </Box>) : (
-            <FormControl variant="standard" size="small" sx={{ width: 110 }}>
-            <Select
-              value={blockReason}
-              onChange={(e) => setBlockReason(e.target.value)}
-              disableUnderline
-              sx={{ 
-                pt: "5px",
-                fontSize: "0.9rem",
-                height: 20,
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 0.5,
+                maxHeight: 10,
               }}
             >
-              <MenuItem sx={{fontSize: "0.8rem"}} value="CLEANING">Cleaning</MenuItem>
-              <MenuItem sx={{fontSize: "0.8rem"}} value="MAINTENANCE">Maintenance</MenuItem>
-              <MenuItem sx={{fontSize: "0.8rem"}} value="REPAIR">Repair</MenuItem>
-              <MenuItem sx={{fontSize: "0.8rem"}} value="RENOVATION">Renovation</MenuItem>
-              <MenuItem sx={{fontSize: "0.8rem"}} value="OTHER">Other</MenuItem>
-            </Select>
-          </FormControl>
+              <IconButton
+                size="small"
+                onClick={() => setGuests(Math.max(1, guests - 1))}
+                disabled={guests == 1}
+              >
+                <Remove fontSize="small" />
+              </IconButton>
+              <Typography
+                variant="body2"
+                sx={{ minWidth: 30, textAlign: "center" }}
+              >
+                {guests}
+              </Typography>
+              <IconButton
+                size="small"
+                onClick={() => setGuests(Math.min(capacity!, guests + 1))}
+                disabled={guests == capacity}
+              >
+                <Add fontSize="small" />
+              </IconButton>
+            </Box>
+          ) : (
+            <FormControl variant="standard" size="small" sx={{ width: 110 }}>
+              <Select
+                value={blockReason}
+                onChange={(e) => setBlockReason(e.target.value)}
+                disableUnderline
+                sx={{
+                  pt: "5px",
+                  fontSize: "0.9rem",
+                  height: 20,
+                }}
+              >
+                <MenuItem sx={{ fontSize: "0.8rem" }} value="CLEANING">
+                  Cleaning
+                </MenuItem>
+                <MenuItem sx={{ fontSize: "0.8rem" }} value="MAINTENANCE">
+                  Maintenance
+                </MenuItem>
+                <MenuItem sx={{ fontSize: "0.8rem" }} value="REPAIR">
+                  Repair
+                </MenuItem>
+                <MenuItem sx={{ fontSize: "0.8rem" }} value="RENOVATION">
+                  Renovation
+                </MenuItem>
+                <MenuItem sx={{ fontSize: "0.8rem" }} value="OTHER">
+                  Other
+                </MenuItem>
+              </Select>
+            </FormControl>
           )}
         </Box>
         <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
@@ -317,7 +354,9 @@ const SimpleCalendar: React.FC<RoomCalendarProps> = ({
             variant="contained"
             size="small"
             onClick={isBlock ? handleBlock : handleBooking}
-            disabled={!checkInDate || !checkOutDate || (isBlock ? !blockReason : false)}
+            disabled={
+              !checkInDate || !checkOutDate || (isBlock ? !blockReason : false)
+            }
             fullWidth
           >
             {isBlock ? "Create Block" : "Book Now"}

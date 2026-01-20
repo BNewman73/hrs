@@ -1,3 +1,10 @@
+/**
+ * userSlice
+ *
+ * Redux slice holding authenticated principal data and helper reducers to
+ * set/clear the user and update individual fields. Exported types are used
+ * across the UI and API layers.
+ */
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export interface User {
@@ -30,7 +37,7 @@ const userSlice = createSlice({
     },
     updateUserField(
       state,
-      action: PayloadAction<{ field: keyof User; value: string }>
+      action: PayloadAction<{ field: keyof User; value: string }>,
     ) {
       if (state.user) {
         (state.user[action.payload.field] as string) = action.payload.value;

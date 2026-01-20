@@ -1,3 +1,11 @@
+/**
+ * userApi
+ *
+ * RTK Query service that manages authenticated user interactions with the
+ * backend: fetching the principal, updating profile data, listing and
+ * updating users (admin) and logout. Includes a custom base query wrapper
+ * which clears local auth state on 401/403 responses.
+ */
 import {
   createApi,
   fetchBaseQuery,

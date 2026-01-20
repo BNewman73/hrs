@@ -1,6 +1,12 @@
+/**
+ * RoomTable
+ *
+ * Admin room listing that uses `useRoomTable` logic hook, renders an
+ * `EntityTable` and provides edit modal to create/update rooms.
+ */
 import { useState } from "react";
 import { Box, Modal } from "@mui/material";
-import { EntityTable } from "./EntityTable";
+import { EntityTable } from "../EntityTable";
 import { RoomRow } from "./RoomRow";
 import { useRoomTable } from "../../hooks/useRoomTable";
 import { RoomTableToolbar } from "./RoomTableToolbar";
@@ -13,6 +19,12 @@ const GRID_CONFIG = {
   actions: "80px",
 };
 
+/**
+ * RoomTable component
+ *
+ * No props. Renders the admin table for rooms and manages modal state for
+ * editing a selected room.
+ */
 export default function RoomTable() {
   const logic = useRoomTable();
 

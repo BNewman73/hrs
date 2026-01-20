@@ -1,3 +1,12 @@
+/**
+ * Global ambient types and DTO interfaces used throughout the frontend.
+ *
+ * This file augments the global namespace with common app shapes (Room,
+ * Reservation, DTOs) so components and hooks can import them without
+ * repeating type imports. Keep this file focused on shared runtime types.
+ *
+ * @module src/types/global
+ */
 export {};
 
 declare global {

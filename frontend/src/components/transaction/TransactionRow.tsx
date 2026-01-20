@@ -1,3 +1,15 @@
+/**
+ * TransactionRow
+ *
+ * Renders a single transaction row for use inside the transactions table.
+ * Shows a summary row with payment id, date, amount and status, and an
+ * expandable area containing payment, customer and reservation details.
+ *
+ * Props: `TransactionRowProps` describes the expected shape:
+ * - `transaction`: Transaction object with payment and reservation fields.
+ * - `isExpanded`: whether the detail panel is open.
+ * - `onToggle`: callback to toggle expansion state.
+ */
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Box,
@@ -37,6 +49,12 @@ interface TransactionRowProps {
   onToggle: () => void;
 }
 
+/**
+ * TransactionRow component
+ *
+ * Stateless presentation component that formats and displays transaction
+ * information and handles expand/collapse via the `onToggle` prop.
+ */
 export const TransactionRow = ({
   transaction,
   isExpanded,

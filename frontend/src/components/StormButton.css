@@ -17,6 +17,13 @@
   backface-visibility: hidden;
 }
 
+/*
+ * StormButton.css
+ *
+ * Styles for the primary call-to-action `.storm-btn`. Includes hover and
+ * animation keyframes used across the landing page.
+ */
+
 .storm-away {
   pointer-events: none;
   animation: stormSweep 0.9s linear forwards;
@@ -34,7 +41,8 @@
   }
 }
 .storm-btn:hover {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.053),
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.053),
     0 12px 40px rgba(255, 255, 255, 0.15);
 }
 
