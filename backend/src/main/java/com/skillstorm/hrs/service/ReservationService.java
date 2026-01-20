@@ -48,6 +48,9 @@ public class ReservationService {
   private final RoomRepository roomRepository;
   private final ReservationEmailService emailService;
 
+  /**
+   * Retrieves a reservation by its ID.
+   */ 
   public Reservation getReservationById(String id) {
     Optional<Reservation> reservation = reservationRepository.findById(id);
     if (!reservation.isPresent())
@@ -55,29 +58,48 @@ public class ReservationService {
     return reservation.get();
   }
 
+  /**
+   * Retrieves reservations associated with a specific user ID.
+   */
   public List<Reservation> getReservationsByUserId(String userId) {
     checkUserExists(userId);
     return reservationRepository.findByUserId(userId);
   }
 
+  /**
+   * Retrieves reservations associated with a specific room ID.
+   */
   public List<Reservation> getReservationsByRoomId(String roomId) {
     checkRoomExists(roomId);
     return reservationRepository.findByRoomId(roomId);
   }
 
+  /**
+   * Retrieves reservations of a specific type.
+   */
   public List<Reservation> getReservationsByType(ReservationType type) {
     return reservationRepository.findByType(type);
   }
 
+  /**
+   * Retrieves reservations for a specific room within a date range.
+   */ 
   public List<Reservation> getReservationsByRoomAndDateRange(String roomId, LocalDate startDate, LocalDate EndDate) {
     checkRoomExists(roomId);
     return reservationRepository.findByRoomIdAndDateRange(roomId, startDate, EndDate);
   }
 
+  /**
+   * Retrieves all reservations.
+   */
   public List<Reservation> getAllReservations() {
     return reservationRepository.findAll();
   }
 
+  /**
+   * Retrieves all reservations along with their associated guest information.
+   * @return List of ReservationWithGuestDTO objects containing reservation and guest details.
+   */
   public List<ReservationWithGuestDTO> getAllReservationsWithGuests() {
 
     List<Reservation> reservations = reservationRepository.findAll();
@@ -113,12 +135,19 @@ public class ReservationService {
     }).toList();
   }
 
+  /**
+   * Deletes a reservation by its ID.
+   */
   public void deleteReservation(String id) {
     if (!reservationRepository.existsById(id))
       throw new ResourceNotFoundException("Reservation not found with id " + id);
     reservationRepository.deleteById(id);
   }
 
+  /**
+   * Creates a block reservation based on the provided request details.
+   * @param request The block reservation request details.
+   */
   public Reservation createBlock(BlockRequestDTO request) {
     checkDateLogic(request.getStartDate(), request.getEndDate());
     checkRoomAvailability(request.getRoomId(), request.getStartDate(), request.getEndDate());
@@ -126,6 +155,10 @@ public class ReservationService {
     return reservationRepository.save(reservation);
   }
 
+  /**
+   * Creates a booking reservation based on the provided request details.
+   * @param request The booking reservation request details.
+   */
   public Reservation createBooking(BookingRequestDTO request) {
     // checkUserExists(request.getUserId())
     checkDateLogic(request.getStartDate(), request.getEndDate());
@@ -158,6 +191,14 @@ public class ReservationService {
       throw new ResourceNotFoundException("User not found with id " + id);
   }
 
+  /**
+   * Retrieves available rooms based on the specified criteria.
+   * @param checkInDate The desired check-in date.
+   * @param checkOutDate The desired check-out date.
+   * @param guests The number of guests.
+   * @param roomType The desired room type.
+   * @return List of available rooms matching the criteria.
+   */
   public List<Room> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, Integer guests,
       RoomType roomType) {
     List<Room> allRooms = roomRepository.findAll();
@@ -179,6 +220,13 @@ public class ReservationService {
     return availableRooms;
   }
 
+  /**
+   * Retrieves reservations for a specific room within a date range, formatted as calendar events.
+   * @param roomNumber The room number to filter reservations.
+   * @param startDate The start date of the range.  
+   * @param endDate The end date of the range.
+   * @return List of CalendarEventDTO representing the reservations.
+   */
   public List<CalendarEventDTO> getRoomReservations(String roomNumber, LocalDate startDate, LocalDate endDate) {
     List<Reservation> reservations = reservationRepository
         .findReservationsInDateRange(startDate, endDate)
@@ -192,6 +240,9 @@ public class ReservationService {
         .collect(Collectors.toList());
   }
 
+  /**
+   * Creates a reservation based on the details from a Stripe session.
+   */
   public Reservation createReservationFromStripeSession(
       String receiptUrl,
       String sessionId,
@@ -205,7 +256,7 @@ public class ReservationService {
       String userId) {
 
     // Find the room
-    Room room = roomRepository.findByRoomNumber(roomNumber)
+    roomRepository.findByRoomNumber(roomNumber)
         .orElseThrow(() -> new RuntimeException("Room not found: " + roomNumber));
 
     // Calculate number of nights
@@ -286,11 +337,16 @@ public class ReservationService {
         userId);
   }
 
-  // get reservations associated with User providerId
+  /**
+   * Retrieves reservations for a specific user ID.
+   */
   public List<Reservation> getUserReservations(String userId) {
     return reservationRepository.findByUserIdOrderByStartDateDesc(userId);
   }
 
+  /**
+   * Retrieves upcoming reservations for a specific user ID.
+   */
   public List<ReservationResponseDTO> getUpcomingReservations(String userId) {
     LocalDate today = LocalDate.now();
     List<Reservation> reservations = reservationRepository
@@ -300,6 +356,9 @@ public class ReservationService {
         .collect(Collectors.toList());
   }
 
+  /**
+   * Retrieves past reservations for a specific user ID.
+   */
   public List<ReservationResponseDTO> getPastReservations(String userId) {
     LocalDate today = LocalDate.now();
     List<Reservation> reservations = reservationRepository
@@ -310,6 +369,9 @@ public class ReservationService {
         .collect(Collectors.toList());
   }
 
+  /**
+   * Retrieves current reservations for a specific user ID.
+   */
   public List<ReservationResponseDTO> getCurrentReservations(String userId) {
     LocalDate today = LocalDate.now();
     List<Reservation> reservations = reservationRepository
@@ -317,6 +379,7 @@ public class ReservationService {
     return reservations.stream().map(this::mapToResponseDTO).collect(Collectors.toList());
   }
 
+  /** Maps a Reservation entity to a ReservationResponseDTO. */
   private ReservationResponseDTO mapToResponseDTO(Reservation reservation) {
     Room room = roomRepository.findByRoomNumber(reservation.getRoomId())
         .orElseThrow(() -> new ResourceNotFoundException("Room not found with number " + reservation.getRoomId()));
@@ -337,6 +400,11 @@ public class ReservationService {
         .build();
   }
 
+  /**
+   * Processes a refund for a given payment intent ID.
+   * @param paymentIntentId The Stripe payment intent ID to refund.
+   * @return RefundResponseDTO containing details of the refund.
+   */
   public RefundResponseDTO postRefund(String paymentIntentId) {
     try {
       PaymentIntent paymentIntent = PaymentIntent.retrieve(paymentIntentId);
@@ -374,6 +442,12 @@ public class ReservationService {
     }
   }
 
+  /**
+   * Retrieves occupancy data by day within a specified date range.
+   * @param startDate The start date of the range.
+   * @param endDate The end date of the range.
+   * @return Map of LocalDate to Integer representing occupancy counts per day.
+   */
   public Map<LocalDate, Integer> getOccupancyByDay(LocalDate startDate, LocalDate endDate) {
 
     List<Reservation> reservations = reservationRepository.findReservationsInDateRange(startDate, endDate);
@@ -391,6 +465,11 @@ public class ReservationService {
     return occupancyMap;
   }
 
+  /**
+   * Retrieves year-to-date revenue data starting from a given date.
+   * @param date The starting date for year-to-date revenue.
+   * @return Map of LocalDate to Integer representing revenue amounts per day.
+   */
   public Map<LocalDate, Integer> getRevenueYtd(LocalDate date) {
 
     LocalDate startDate = LocalDate.of(date.getYear(), 1, 1);

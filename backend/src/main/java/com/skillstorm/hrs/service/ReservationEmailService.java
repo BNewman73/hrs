@@ -24,6 +24,9 @@ public class ReservationEmailService {
         @Value("${app.email.from}")
         private String from;
 
+        /**
+         * Sends a booking confirmation email to the specified recipient.
+         */
         public void sendBookingConfirmation(
 
                         String receiptUrl,
@@ -69,6 +72,7 @@ public class ReservationEmailService {
                 sesClient.sendEmail(request);
         }
 
+        /** Builds the HTML content for the booking confirmation email.*/
         private String buildHtml(
                         String roomNumber,
                         String checkInDate,
@@ -92,6 +96,7 @@ public class ReservationEmailService {
                                 .replace("{{lastName}}", lastName);
         }
 
+        /** Loads the specified email template from the classpath. */
         private String loadTemplate(String name) {
                 try {
                         ClassPathResource resource = new ClassPathResource("email/" + name);

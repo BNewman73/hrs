@@ -34,6 +34,7 @@ public class UserController {
      * provider.
      * 
      * @param principal the authenticated OAuth2 user
+     * @return the UserProfileDTO representation of the user
      */
     @GetMapping("/principal")
     public UserProfileDTO user(@AuthenticationPrincipal OAuth2User principal) {
@@ -44,7 +45,7 @@ public class UserController {
      * Get the currently authenticated user's stored information from the database.
      * 
      * @param principal the authenticated OAuth2 user
-     * @return
+     * @return the UserDTO representation of the user
      */
     @GetMapping("/storedUser")
     public UserDTO getCurrentUser(@AuthenticationPrincipal OAuth2User principal) {
@@ -66,16 +67,33 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
+    /**
+     * Retrieves the User entity for the currently authenticated user.
+     * 
+     * @param principal the authenticated OAuth2 user
+     * @return ResponseEntity containing the User entity
+     */
     @GetMapping("/me")
     public ResponseEntity<User> getUser(@AuthenticationPrincipal OAuth2User principal) {
         return new ResponseEntity<>(userService.oauth2UserToUser(principal), HttpStatus.OK);
     }
 
+    /**
+     * Retrieves all users from the database.
+     * 
+     * @return ResponseEntity containing the list of all users
+     */
     @GetMapping
     public ResponseEntity<List<User>> getUser() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
+    /**
+     * Updates a user based on the provided public ID and UserDTO.
+     * @param publicId The public ID of the user to update.
+     * @param dto The UserDTO containing updated user information.
+     * @return ResponseEntity containing the updated User entity
+     */
     @PutMapping("/{publicId}")
     public ResponseEntity<User> updateUser(
             @PathVariable String publicId,

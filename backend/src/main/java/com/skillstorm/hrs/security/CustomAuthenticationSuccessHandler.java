@@ -1,16 +1,12 @@
 package com.skillstorm.hrs.security;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.skillstorm.hrs.model.User;
-import com.skillstorm.hrs.service.UserService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,12 +17,9 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Value("${app.frontend.url}")
     private String frontendUrl;
 
-    private final UserService userService;
-
-    public CustomAuthenticationSuccessHandler(UserService userService) {
-        this.userService = userService;
-    }
-
+    /**
+     * Handles successful authentication by redirecting users based on their roles.
+     */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {

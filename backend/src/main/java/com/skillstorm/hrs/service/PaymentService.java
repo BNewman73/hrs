@@ -33,6 +33,12 @@ public class PaymentService {
         @Value("${APP_FRONTEND_URL:http://localhost:3000}")
         private String baseUrl;
 
+        /**
+         * Creates a Stripe checkout session based on the provided request details.
+         * @param request
+         * @return Session
+         * @throws StripeException
+         */
         public Session createCheckoutSession(CheckoutRequest request) throws StripeException {
                 long amountInCents = (long) (request.getTotalPrice() * 100);
 

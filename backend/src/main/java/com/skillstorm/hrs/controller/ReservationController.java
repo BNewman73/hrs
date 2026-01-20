@@ -42,36 +42,66 @@ public class ReservationController {
   private final ReservationService reservationService;
   private final UserService userService;
 
+  /**
+   * Retrieves all reservations from the database.
+   * @return ResponseEntity containing the list of all Reservation objects.
+   */
   @GetMapping
   public ResponseEntity<List<Reservation>> getAllReservations() {
     List<Reservation> reservations = reservationService.getAllReservations();
     return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 
+  /**
+   * Retrieves all reservations along with their associated guest information.
+   * @return ResponseEntity containing the list of ReservationWithGuestDTO objects.
+   */
   @GetMapping("/with-guests")
   public ResponseEntity<List<ReservationWithGuestDTO>> getAllReservationsWithGuest() {
     List<ReservationWithGuestDTO> reservations = reservationService.getAllReservationsWithGuests();
     return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 
+  /**
+   * Retrieves a reservation by its ID.
+   * @param id The ID of the reservation to retrieve.
+   * @return ResponseEntity containing the Reservation object.
+   */
   @GetMapping("/{id}")
   public ResponseEntity<Reservation> getReservationById(@PathVariable String id) {
     Reservation reservation = reservationService.getReservationById(id);
     return new ResponseEntity<>(reservation, HttpStatus.OK);
   }
 
+  /**
+   * Retrieves reservations by user ID.
+   * @param id The user ID to filter reservations.
+   * @return ResponseEntity containing the list of Reservation objects.
+   */
   @GetMapping("/user/{userId}")
   public ResponseEntity<List<Reservation>> getReservationsByUserId(@PathVariable String id) {
     List<Reservation> reservations = reservationService.getReservationsByUserId(id);
     return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 
+  /**
+   * Retrieves reservations by their type.
+   * @param type The type of reservations to retrieve.
+   * @return ResponseEntity containing the list of Reservation objects.
+   */
   @GetMapping("/type/{type}")
   public ResponseEntity<List<Reservation>> getReservationsByType(@PathVariable ReservationType type) {
     List<Reservation> reservations = reservationService.getReservationsByType(type);
     return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 
+  /**
+   * Retrieves reservations for a specific room within a date range.
+   * @param roomId The ID of the room to filter reservations.
+   * @param startDate The start date of the date range.
+   * @param endDate The end date of the date range.
+   * @return ResponseEntity containing the list of Reservation objects.
+   */
   @GetMapping("/room/{roomId}")
   public ResponseEntity<List<Reservation>> getReservationsByRoomAndDateRange(
       @PathVariable String roomId,
@@ -87,24 +117,47 @@ public class ReservationController {
     return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 
+  /**
+   * Creates a new booking reservation.
+   * @param request The BookingRequestDTO object containing booking information.
+   * @return ResponseEntity containing the created Reservation object.
+   */
   @PostMapping("/bookings")
   public ResponseEntity<Reservation> createBooking(@Valid @RequestBody BookingRequestDTO request) {
     Reservation reservation = reservationService.createBooking(request);
     return new ResponseEntity<>(reservation, HttpStatus.CREATED);
   }
 
+  /**
+   * Creates a new block reservation.
+   * @param request The BlockRequestDTO object containing block information.
+   * @return ResponseEntity containing the created Reservation object.
+   */
   @PostMapping("/blocks")
   public ResponseEntity<Reservation> createBlock(@Valid @RequestBody BlockRequestDTO request) {
     Reservation reservation = reservationService.createBlock(request);
     return new ResponseEntity<>(reservation, HttpStatus.CREATED);
   }
 
+  /**
+   * Deletes a reservation by its ID.
+   * @param id The ID of the reservation to delete.
+   * @return ResponseEntity with no content.
+   */
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteReservation(@PathVariable String id) {
     reservationService.deleteReservation(id);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
+  /**
+   * Retrieves available rooms for given criteria.
+   * @param checkInDate The check-in date.
+   * @param checkOutDate The check-out date.
+   * @param guests The number of guests.
+   * @param roomType The type of room.
+   * @return ResponseEntity containing the list of available Room objects.
+   */
   @GetMapping("/available")
   public ResponseEntity<List<Room>> getAvailableRooms(
       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
@@ -120,6 +173,12 @@ public class ReservationController {
     return new ResponseEntity<>(availableRooms, HttpStatus.OK);
   }
 
+  /**
+   * Completes a reservation using a session ID.
+   * @param sessionId The session ID for completing the reservation.
+   * @param principal The authenticated OAuth2 user.
+   * @return ResponseEntity containing the created Reservation object.
+   */
   @PostMapping("/complete/{sessionId}")
   public ResponseEntity<?> completeReservation(@PathVariable String sessionId,
       @AuthenticationPrincipal OAuth2User principal) {
@@ -132,6 +191,11 @@ public class ReservationController {
     }
   }
 
+  /**
+   * Retrieves reservations for the currently authenticated user.
+   * @param principal The authenticated OAuth2 user.
+   * @return ResponseEntity containing the list of Reservation objects.
+   */
   @GetMapping("/mine")
   public ResponseEntity<List<Reservation>> getMyReservations(@AuthenticationPrincipal OAuth2User principal) {
     String userId = userService.principalToUserId(principal);
@@ -139,6 +203,11 @@ public class ReservationController {
     return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 
+  /**
+   * Retrieves upcoming reservations for the currently authenticated user.
+   * @param principal The authenticated OAuth2 user.
+   * @return ResponseEntity containing the list of ReservationResponseDTO objects.
+   */
   @GetMapping("/mine/upcoming")
   public ResponseEntity<List<ReservationResponseDTO>> getMyUpcomingReservations(
       @AuthenticationPrincipal OAuth2User principal) {
@@ -147,6 +216,11 @@ public class ReservationController {
     return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 
+  /**
+   * Retrieves past reservations for the currently authenticated user.
+   * @param principal The authenticated OAuth2 user.
+   * @return ResponseEntity containing the list of ReservationResponseDTO objects.
+   */
   @GetMapping("/mine/past")
   public ResponseEntity<List<ReservationResponseDTO>> getMyPastReservations(
       @AuthenticationPrincipal OAuth2User principal) {
@@ -155,6 +229,11 @@ public class ReservationController {
     return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 
+  /**
+   * Retrieves current reservations for the currently authenticated user.
+   * @param principal The authenticated OAuth2 user.
+   * @return ResponseEntity containing the list of ReservationResponseDTO objects.
+   */
   @GetMapping("/mine/current")
   public ResponseEntity<List<ReservationResponseDTO>> getMyCurrentReservations(
       @AuthenticationPrincipal OAuth2User principal) {
@@ -163,12 +242,23 @@ public class ReservationController {
     return new ResponseEntity<>(reservations, HttpStatus.OK);
   }
 
+  /**
+   * Creates a refund for a given payment ID.
+   * @param paymentId The payment ID to refund.
+   * @return ResponseEntity containing the RefundResponseDTO object.
+   */
   @PostMapping("/refund/{paymentId}")
   public ResponseEntity<RefundResponseDTO> createBooking(@PathVariable String paymentId) {
     RefundResponseDTO refund = reservationService.postRefund(paymentId);
     return new ResponseEntity<>(refund, HttpStatus.CREATED);
   }
 
+  /**
+   * Retrieves occupancy data for a given date range.
+   * @param checkInDate The check-in date.
+   * @param checkOutDate The check-out date.
+   * @return ResponseEntity containing a map of dates to occupancy counts.
+   */
   @GetMapping("/occupancy")
   public ResponseEntity<Map<LocalDate, Integer>> getOccupancy(
       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
@@ -176,6 +266,19 @@ public class ReservationController {
     return ResponseEntity.ok(reservationService.getOccupancyByDay(checkInDate, checkOutDate));
   }
 
+  /**
+   * Retrieves year-to-date occupancy data.
+   * @return ResponseEntity containing a map of dates to occupancy counts.
+   */
+  @GetMapping("/occupancy/ytd")
+  public ResponseEntity<Map<LocalDate, Integer>> getYearToDateOccupancy() {
+    return ResponseEntity.ok(reservationService.getOccupancyByDay(LocalDate.now().withDayOfYear(1), LocalDate.now()));
+  }
+  /**
+   * Retrieves year-to-date revenue data starting from a given date.
+   * @param date The starting date for year-to-date revenue.
+   * @return ResponseEntity containing a map of dates to revenue amounts.
+   */
   @GetMapping("/revenue")
   public ResponseEntity<Map<LocalDate, Integer>> getRevenue(
       @RequestParam String date) {
