@@ -1,3 +1,9 @@
+/**
+ * FooterPage
+ *
+ * Site footer used on public-facing pages. Presents brand, links and
+ * copyright information.
+ */
 import { Box, Container, Typography, alpha, Divider } from "@mui/material";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 

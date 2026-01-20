@@ -1,3 +1,13 @@
+/**
+ * UserRow
+ *
+ * Renders a single user row inside an admin table. Shows avatar, name,
+ * email and role, and includes an expandable details panel and edit action
+ * callbacks.
+ *
+ * Props: `UserRowProps` describes the `user`, `gridConfig`, expansion and
+ * action callbacks.
+ */
 import {
   Box,
   ListItem,
@@ -22,6 +32,13 @@ interface UserRowProps {
   onEdit: () => void;
 }
 
+/**
+ * UserRow component
+ *
+ * Presentational row component. Receives `user`, layout `gridConfig`, and
+ * callbacks: `onToggle` to expand/collapse and `onEdit` to launch the
+ * edit flow.
+ */
 export function UserRow({
   user,
   gridConfig,

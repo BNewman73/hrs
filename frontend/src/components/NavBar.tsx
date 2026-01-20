@@ -48,6 +48,13 @@ const style = {
   },
 };
 
+/**
+ * NavBar
+ *
+ * Top navigation bar used across the app. Supports light/dark variants,
+ * user menu and optional mobile menu button. Exposes props via
+ * `NavBarProps`.
+ */
 export default function NavBar({
   variant = "light",
   showHomeButton = false,

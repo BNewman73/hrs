@@ -2,6 +2,12 @@ import { Box, Button, Container, Typography, alpha } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { usePageTitle } from "../hooks/usePageTitle";
 
+/**
+ * NotFoundPage
+ *
+ * Simple 404 route that informs the user the requested route doesn't exist
+ * and provides a call-to-action to return home.
+ */
 export default function NotFoundPage() {
   usePageTitle("Not Found");
   const navigate = useNavigate();

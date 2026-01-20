@@ -1,7 +1,17 @@
-// src/hooks/useBooking.ts
+/**
+ * Hooks related to booking operations.
+ *
+ * `useBooking` exposes a `bookRoom` method that creates a Stripe checkout
+ * session via the `roomApi` and redirects the browser to the returned URL.
+ *
+ * @module hooks/useBooking
+ */
 import { useCreateCheckoutSessionMutation } from "../features/roomApi";
 import { calculateNights } from "../features/utils";
 
+/**
+ * Parameters required to create a booking/checkout session.
+ */
 interface BookingParams {
   roomNumber: string;
   roomPricePerNight: number;
@@ -10,6 +20,11 @@ interface BookingParams {
   guests: number;
 }
 
+/**
+ * Creates a checkout session and redirects to Stripe Checkout.
+ *
+ * @returns An object with `bookRoom`, `isLoading`, and `error`.
+ */
 export const useBooking = () => {
   const [createCheckoutSession, { isLoading, error }] =
     useCreateCheckoutSessionMutation();

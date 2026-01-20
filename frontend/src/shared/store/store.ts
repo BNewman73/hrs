@@ -1,3 +1,12 @@
+/**
+ * Redux store configuration for the frontend application.
+ *
+ * Combines slices (`toast`, `user`) and RTK Query API reducers (user, room,
+ * reservation). Middleware from the APIs is concatenated to enable caching
+ * and automatic refetch behavior.
+ *
+ * @module src/shared/store/store
+ */
 // Infer the `RootState` and `AppDispatch` types from the store itself
 
 import { configureStore } from "@reduxjs/toolkit";

@@ -1,3 +1,10 @@
+/**
+ * Shared enums and display-name maps used across the UI for rooms and
+ * room amenities. These values are stable identifiers used by the backend
+ * and should match server-side enums.
+ *
+ * @module src/types/enum
+ */
 export enum RoomType {
   SINGLE = "SINGLE",
   DOUBLE = "DOUBLE",

@@ -1,6 +1,13 @@
+/**
+ * UserTable
+ *
+ * Admin users listing with search, filter and edit capabilities. Fetches
+ * the list of users via `useGetAllUsersQuery` and supports updating a
+ * selected user with `useUpdateUserMutation`.
+ */
 import { useState, useMemo } from "react";
 import { Box, Modal } from "@mui/material";
-import { EntityTable } from "../room/EntityTable";
+import { EntityTable } from "../EntityTable";
 import { UserRow } from "./UserRow";
 import { UserTableToolbar } from "./UserTableToolbar";
 import UserCrudForm from "./UserCrudForm";
@@ -19,6 +26,11 @@ const GRID_CONFIG = {
 type UserRoleFilter = "ALL" | "ADMIN" | "MANAGER" | "GUEST";
 type UserSortOrder = "none" | "name_asc" | "name_desc";
 
+/**
+ * UserTable component
+ *
+ * Renders paginated user rows and manages the edit modal state. No props.
+ */
 export default function UserTable() {
   const { data: users = [], isLoading } = useGetAllUsersQuery();
   const [updateUser] = useUpdateUserMutation();
@@ -42,7 +54,7 @@ export default function UserTable() {
       result = result.filter(
         (u) =>
           `${u.firstName} ${u.lastName}`.toLowerCase().includes(q) ||
-          u.email.toLowerCase().includes(q)
+          u.email.toLowerCase().includes(q),
       );
     }
 
@@ -67,9 +79,9 @@ export default function UserTable() {
     () =>
       filteredAndSorted.slice(
         page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
+        page * rowsPerPage + rowsPerPage,
       ),
-    [filteredAndSorted, page, rowsPerPage]
+    [filteredAndSorted, page, rowsPerPage],
   );
 
   return (

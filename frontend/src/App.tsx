@@ -1,3 +1,12 @@
+/**
+ * Top-level application component that wires theme, routing and global UI.
+ *
+ * Routes defined here map to the main pages used by the application. Keep
+ * this file focused on composition only; page-level logic belongs in the
+ * page components under `components/`.
+ *
+ * @module src/App
+ */
 import GlobalSnackbar from "./components/GlobalSnackbar";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import DashboardPage from "./components/DashboardPage";
@@ -10,7 +19,7 @@ import BookingPage from "./components/reservations/BookingPage";
 import ReservationsTable from "./components/reservations/ReservationsTable";
 import LogoutPage from "./components/login/LogoutPage";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import theme from "./components/reservations/theme.ts";
+import theme from "../theme.ts";
 import UserHomePage from "./components/UserHomePage.tsx";
 import AuthBootstrap from "./AuthGlobal.tsx";
 import NotFoundPage from "./components/NotFoundPage.tsx";

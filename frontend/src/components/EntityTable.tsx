@@ -1,3 +1,10 @@
+/**
+ * EntityTable
+ *
+ * Generic presentational table used across the admin UI to render lists of
+ * entities. Accepts column metadata, rows, pagination state and a
+ * `renderRow` callback to produce each row's content.
+ */
 import {
   Box,
   Paper,

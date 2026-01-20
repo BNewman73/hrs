@@ -1,3 +1,10 @@
+/**
+ * toastSlice
+ *
+ * Redux slice for transient toast notifications used application-wide.
+ * Provides `showToast` and `hideToast` actions and a small `ToastState`
+ * shape consumed by `GlobalSnackbar`.
+ */
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 

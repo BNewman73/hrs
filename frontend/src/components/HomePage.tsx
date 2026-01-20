@@ -1,3 +1,9 @@
+/**
+ * HomePage
+ *
+ * Public landing page that presents brand hero, features and room type
+ * carousel. Composes `NavBar`, `RoomTypesCarousel` and `FooterPage`.
+ */
 import {
   Box,
   Toolbar,
@@ -13,7 +19,7 @@ import LanguageIcon from "@mui/icons-material/Language";
 import StarIcon from "@mui/icons-material/Star";
 import { useRef } from "react";
 import "./StormButton.css";
-import RoomTypesCarousel from "./reservations/RoomTypesCarousel";
+import RoomTypesCarousel from "./room/RoomTypesCarousel";
 import FooterPage from "./FooterPage";
 
 import NavBar from "./NavBar";

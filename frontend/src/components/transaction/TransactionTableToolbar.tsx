@@ -1,3 +1,12 @@
+/**
+ * TransactionTableToolbar
+ *
+ * Toolbar controls for the transactions table: search input, status filter,
+ * date sort selector and an optional reset button. All interactions are
+ * delegated to callbacks provided via props.
+ *
+ * Props interface `Props` describes the shape and callbacks expected.
+ */
 import {
   Box,
   TextField,
@@ -25,6 +34,13 @@ interface Props {
   onReset: () => void;
 }
 
+/**
+ * TransactionTableToolbar component
+ *
+ * Controlled toolbar component used by `TransactionsTable` to manage
+ * filtering and sorting state. This is a presentational component that
+ * forwards user interactions via the provided callbacks.
+ */
 export const TransactionTableToolbar = ({
   searchQuery,
   onSearchChange,

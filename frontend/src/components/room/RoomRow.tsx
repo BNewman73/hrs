@@ -1,3 +1,10 @@
+/**
+ * RoomRow
+ *
+ * Renders a single row for the admin room table, including an expandable
+ * detail section that lists amenities and other metadata. Provides edit and
+ * expand actions via callbacks.
+ */
 import {
   Box,
   ListItem,
@@ -37,6 +44,11 @@ interface RoomItemProps {
   onEdit: () => void;
 }
 
+/**
+ * RoomRow component
+ *
+ * Props: `room`, `gridConfig`, `isExpanded`, `onToggle`, `onEdit`.
+ */
 export const RoomRow = ({
   room,
   gridConfig,

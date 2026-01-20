@@ -1,3 +1,11 @@
+/**
+ * Hook to provide paginated, filtered reservation data for table views.
+ *
+ * It consumes `useGetAllReservationsQuery` and exposes helpers for
+ * searching, filtering, paging and resetting the table state.
+ *
+ * @returns An object with reservation page data and controls used by table components.
+ */
 import { useMemo, useState } from "react";
 import { useGetAllReservationsQuery } from "../features/reservationApi";
 
@@ -26,7 +34,7 @@ export function useReservationTable() {
         (r) =>
           r.roomId.toLowerCase().includes(q) ||
           r.type.toLowerCase().includes(q) ||
-          r.blockReason?.toLowerCase().includes(q)
+          r.blockReason?.toLowerCase().includes(q),
       );
     }
 

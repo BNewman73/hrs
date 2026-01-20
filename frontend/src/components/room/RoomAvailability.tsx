@@ -1,3 +1,10 @@
+/**
+ * RoomAvailability
+ *
+ * Page widget that allows users to select dates and number of guests, then
+ * search available rooms for a given `roomType`. It toggles between showing
+ * all rooms of a type and filtered availability results.
+ */
 import { useState } from "react";
 import { Container, Paper, Grid, TextField, Button } from "@mui/material";
 import { SearchOutlined } from "@mui/icons-material";
@@ -12,6 +19,12 @@ interface RoomAvailabilityProps {
   roomType: RoomType;
 }
 
+/**
+ * RoomAvailability component
+ *
+ * Props: `roomType` - the room type to query. Maintains local form state
+ * for date inputs and guests and calls availability APIs.
+ */
 const RoomAvailability: React.FC<RoomAvailabilityProps> = ({ roomType }) => {
   const [checkInDate, setCheckInDate] = useState<string>("");
   const [checkOutDate, setCheckOutDate] = useState<string>("");

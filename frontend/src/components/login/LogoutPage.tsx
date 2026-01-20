@@ -1,3 +1,9 @@
+/**
+ * LogoutPage
+ *
+ * Page that prompts the user to confirm logging out. Clears local redux
+ * user state and redirects to the backend logout endpoint on confirmation.
+ */
 import {
   Box,
   Button,
@@ -16,6 +22,12 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "../NavBar";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
+/**
+ * LogoutPage component
+ *
+ * No props. Handles client-side logout and redirection to the server's
+ * logout path.
+ */
 export default function LogoutPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();

@@ -1,5 +1,12 @@
+/**
+ * ReservationTableToolbar
+ *
+ * Toolbar for reservation lists. Provides search by room number, type and
+ * status filters, sorting, and a modal to create admin blocks using
+ * `RoomCalendar`.
+ */
 import { Box, TextField, Button, MenuItem, Stack, Modal } from "@mui/material";
-import RoomCalendar from "../reservations/RoomCalendar";
+import RoomCalendar from "../room/RoomCalendar";
 import { useState } from "react";
 
 interface Props {
@@ -19,6 +26,12 @@ interface Props {
   onReset: () => void;
 }
 
+/**
+ * ReservationTableToolbar component
+ *
+ * Controlled toolbar component. All interactions are forwarded via props
+ * defined in the `Props` interface.
+ */
 export function ReservationTableToolbar({
   searchQuery,
   onSearchChange,
