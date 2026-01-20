@@ -51,6 +51,13 @@ public class PaymentController {
   @GetMapping("/test")
   public ResponseEntity<String> test() {
     return ResponseEntity.ok("Payment controller is working!");
+  }
+
+  /**
+   * Retrieves a list of recent transactions from Stripe.
+   * @param limit The maximum number of transactions to retrieve.
+   * @return ResponseEntity containing the list of transactions or an error message.
+   */
   @GetMapping("/transactions")
   public ResponseEntity<?> getTransactionHistory(
       @RequestParam(required = false, defaultValue = "10") Integer limit) {

@@ -273,6 +273,12 @@ public class ReservationController {
   @GetMapping("/occupancy/ytd")
   public ResponseEntity<Map<LocalDate, Integer>> getYearToDateOccupancy() {
     return ResponseEntity.ok(reservationService.getOccupancyByDay(LocalDate.now().withDayOfYear(1), LocalDate.now()));
+  }
+  /**
+   * Retrieves year-to-date revenue data starting from a given date.
+   * @param date The starting date for year-to-date revenue.
+   * @return ResponseEntity containing a map of dates to revenue amounts.
+   */
   @GetMapping("/revenue")
   public ResponseEntity<Map<LocalDate, Integer>> getRevenue(
       @RequestParam String date) {

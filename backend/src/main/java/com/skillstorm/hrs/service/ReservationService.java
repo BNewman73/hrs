@@ -465,6 +465,11 @@ public class ReservationService {
     return occupancyMap;
   }
 
+  /**
+   * Retrieves year-to-date revenue data starting from a given date.
+   * @param date The starting date for year-to-date revenue.
+   * @return Map of LocalDate to Integer representing revenue amounts per day.
+   */
   public Map<LocalDate, Integer> getRevenueYtd(LocalDate date) {
 
     LocalDate startDate = LocalDate.of(date.getYear(), 1, 1);
