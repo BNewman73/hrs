@@ -26,6 +26,9 @@ public class ModelMapperConfig {
 
         private final RoomDetailsRepository roomDetailsRepository;
 
+        /**
+         * Configures and provides a ModelMapper bean with custom mappings and converters.
+         */
         @Bean
         public ModelMapper modelMapper() {
                 ModelMapper modelMapper = new ModelMapper();

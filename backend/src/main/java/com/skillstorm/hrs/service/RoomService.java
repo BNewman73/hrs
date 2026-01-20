@@ -23,6 +23,9 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final ModelMapper modelMapper;
 
+    /**
+     * Creates a new Room entry in the database.
+     */
     @Transactional
     public RoomResponseDTO createRoom(RoomDTO room) {
         // Business logic: Use RoomNotAvailableException for duplicates
@@ -41,6 +44,10 @@ public class RoomService {
         return convertToDto(roomRepository.save(convertToRoom(room)), RoomResponseDTO.class);
     }
 
+    /**
+     * Deletes a Room entry from the database.
+     * @param publicId The public ID of the room to delete.
+     */
     @Transactional
     public void deleteRoom(String publicId) {
         Room room = roomRepository.findByPublicId(publicId)
@@ -48,12 +55,19 @@ public class RoomService {
         roomRepository.delete(room);
     }
 
+    /**
+     * Retrieves all rooms from the database.
+     */
     public List<RoomResponseDTO> retrieveAllRooms() {
         return roomRepository.findAll().stream()
                 .map(room -> convertToDto(room, RoomResponseDTO.class))
                 .toList();
     }
 
+    /**
+     * Retrieves a specific room by its public ID.
+     * @return RoomResponseDTO
+     */
     public RoomResponseDTO retrieveRoom(String publicId) {
         Room room = roomRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found with ID: " + publicId));
@@ -61,6 +75,13 @@ public class RoomService {
         return convertToDto(room, RoomResponseDTO.class);
     }
 
+    /**
+     * Updates a Room entry in the database.
+     * @param publicId The public ID of the room to update.
+     * @param dto The DTO containing updated room information.
+     * @param isFullUpdate Flag indicating whether it's a full update (PUT) or partial update (PATCH).
+     * @return Updated RoomResponseDTO
+     */
     @Transactional
     public <T> RoomResponseDTO updateRoom(String publicId, T dto, boolean isFullUpdate) {
         Room room = roomRepository.findByPublicId(publicId)
@@ -78,14 +99,19 @@ public class RoomService {
         return convertToDto(savedRoom, RoomResponseDTO.class);
     }
 
+    /**
+     * Retrieves rooms by their type.
+     */
     public List<Room> getRoomsByType(RoomType roomType) {
         return roomRepository.findByRoomDetails(roomType);
     }
 
+    /** Converts an entity to a DTO of the specified target class. */
     private <S, T> T convertToDto(S entity, Class<T> targetClass) {
         return modelMapper.map(entity, targetClass);
     }
 
+    /** Converts a room DTO to a Room entity. */
     private <T> Room convertToRoom(T roomDTO) {
         return modelMapper.map(roomDTO, Room.class);
     }

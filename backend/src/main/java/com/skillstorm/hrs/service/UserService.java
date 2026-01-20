@@ -22,14 +22,23 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Retrieves all users from the database.
+     */
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    /**
+     * Retrieves a user by their provider and provider ID.
+     */
     public Optional<User> getByProviderAndProviderId(User.Provider provider, String providerId) {
         return userRepository.findByProviderAndProviderId(provider, providerId);
     }
 
+    /**
+     * Converts an OAuth2User to a UserProfileDTO.
+     */
     public UserProfileDTO oauth2UserToUserProfileDto(OAuth2User user) {
         final Map<String, Object> attributes = user.getAttributes();
 
@@ -62,6 +71,10 @@ public class UserService {
                 user.getRole().name());
     }
 
+    /**
+     * Updates a User entity based on the provided OAuth2User and UserUpdateDTO.
+     * @return Updated UserDTO
+     */
     public UserDTO updateUserFromOAuth2User(OAuth2User principal, UserUpdateDTO userUpdateDTO) {
 
         User user = oauth2UserToUser(principal);
@@ -83,6 +96,11 @@ public class UserService {
                 updatedUser.getRole().name());
     }
 
+    /**
+     * Finds an existing user by provider and provider ID, or creates a new user
+     * if none exists.
+     * @return The found or newly created User entity
+     */
     public User findOrCreateUser(User.Provider provider, String providerId, String email, String firstName,
             String lastName, String avatar) {
         return userRepository
@@ -121,6 +139,10 @@ public class UserService {
         return null;
     }
 
+    /**
+     * Determines the OAuth2 provider based on the issuer URL.
+     * @return User.Provider enum value
+     */
     public User.Provider determineProvider(String issuer) {
         if (issuer != null && issuer.contains("github.com")) {
             return User.Provider.GITHUB;
@@ -145,10 +167,18 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    /**
+     * Retrieves the user ID from the OAuth2User principal.
+     * @return User's provider ID
+     */
     public String principalToUserId(OAuth2User principal) {
         return oauth2UserToUser(principal).getProviderId();
     }
 
+    /**
+     * Updates a User entity based on the provided UserDTO and public ID.
+     * @return Updated User entity
+     */
     public User updateUser(UserDTO dto, String publicId) {
 
         User user = userRepository.findByPublicId(publicId)

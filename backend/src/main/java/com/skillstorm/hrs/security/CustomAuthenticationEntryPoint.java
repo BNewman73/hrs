@@ -12,6 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
+  /** 
+   * Handles unauthorized access attempts by sending a 401 Unauthorized response
+   * with a JSON error message.
+   */
   @Override
   public void commence(
       HttpServletRequest request,

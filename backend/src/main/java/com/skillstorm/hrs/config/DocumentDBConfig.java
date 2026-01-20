@@ -39,6 +39,9 @@ public class DocumentDBConfig extends AbstractMongoClientConfiguration {
         return (dbName != null) ? dbName : "hrs";
     }
 
+    /**
+     * Configures MongoClientSettings to connect to DocumentDB with SSL using multiple certificates from a PEM bundle.
+     */
     @Override
     @NonNull
     public MongoClientSettings mongoClientSettings() {

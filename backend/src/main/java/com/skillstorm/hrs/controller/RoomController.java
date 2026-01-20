@@ -41,12 +41,21 @@ public class RoomController {
         this.reservationService = reservationService;
     }
 
+    /**
+     * Creates a new Room entry in the database.
+     * @param room The RoomDTO object to create.
+     * @return ResponseEntity containing the created RoomResponseDTO object.
+     */
     @PostMapping
     public ResponseEntity<RoomResponseDTO> postRoom(@RequestBody @Valid RoomDTO room) {
         RoomResponseDTO createdRoom = roomService.createRoom(room);
         return new ResponseEntity<>(createdRoom, HttpStatus.CREATED);
     }
 
+    /**
+     * Retrieves all rooms from the database.
+     * @return ResponseEntity containing the list of all RoomResponseDTO objects.
+     */
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<RoomResponseDTO>> getRooms() {
@@ -54,6 +63,11 @@ public class RoomController {
         return ResponseEntity.ok(allRooms);
     }
 
+    /**
+     * Retrieves rooms by their type.
+     * @param roomType The type of rooms to retrieve.
+     * @return ResponseEntity containing the list of Room objects of the specified type.
+     */
     @GetMapping("/type/{roomType}")
     public ResponseEntity<List<Room>> getRoomsByType(@PathVariable RoomType roomType) {
         System.out.println(roomType);
@@ -61,12 +75,23 @@ public class RoomController {
         return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
 
+    /**
+     * Retrieves a room by its public ID.
+     * @param publicId The public ID of the room to retrieve.
+     * @return ResponseEntity containing the RoomResponseDTO object.
+     */
     @GetMapping("{publicId}")
     public ResponseEntity<RoomResponseDTO> getRoom(@PathVariable String publicId) {
 
         return ResponseEntity.ok(roomService.retrieveRoom(publicId));
     }
 
+    /**
+     * Updates a room by its public ID.
+     * @param publicId The public ID of the room to update.
+     * @param dto The RoomPutDTO object containing updated room information.
+     * @return ResponseEntity containing the updated RoomResponseDTO object.
+     */
     @PutMapping("/{publicId}")
     public ResponseEntity<RoomResponseDTO> putRoom(
             @PathVariable String publicId,
@@ -74,6 +99,12 @@ public class RoomController {
         return ResponseEntity.ok(roomService.updateRoom(publicId, dto, true));
     }
 
+    /**
+     * Partially updates a room by its public ID.
+     * @param publicId The public ID of the room to update.
+     * @param dto The RoomPatchDTO object containing updated room information.
+     * @return ResponseEntity containing the updated RoomResponseDTO object.
+     */
     @PatchMapping("/{publicId}")
     public ResponseEntity<RoomResponseDTO> patchRoom(
             @PathVariable String publicId,
@@ -81,12 +112,24 @@ public class RoomController {
         return ResponseEntity.ok(roomService.updateRoom(publicId, dto, false));
     }
 
+    /**
+     * Deletes a room by its public ID.
+     * @param publicId The public ID of the room to delete.
+     * @return ResponseEntity with no content.
+     */
     @DeleteMapping("/{publicId}")
     public ResponseEntity<Void> deleteRoom(@PathVariable String publicId) {
         roomService.deleteRoom(publicId);
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Retrieves reservations for a specific room within a date range.
+     * @param roomNumber The room number to retrieve reservations for.
+     * @param startDate The start date of the date range.
+     * @param endDate The end date of the date range.
+     * @return ResponseEntity containing the list of CalendarEventDTO objects.
+     */
     @GetMapping("/{roomNumber}/reservations")
     public ResponseEntity<List<CalendarEventDTO>> getRoomReservations(
             @PathVariable String roomNumber,

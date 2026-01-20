@@ -22,6 +22,9 @@ public class RoomDetailsService {
     private final RoomDetailsRepository roomDetailsRepository;
     private final RoomRepository roomRepository;
 
+    /**
+     * Creates a new RoomDetails entry in the database.
+     */
     public RoomDetails createRoomDetails(RoomDetails roomDetails) {
         if (roomDetailsRepository.findById(roomDetails.getType()).isPresent()) {
             throw new RuntimeException(roomDetails.getType().toString() + " already exists!");
@@ -29,14 +32,23 @@ public class RoomDetailsService {
         return roomDetailsRepository.save(roomDetails);
     }
 
+    /**
+     * Retrieves all RoomDetails entries from the database.
+     */
     public List<RoomDetails> getRoomDetails() {
         return roomDetailsRepository.findAll();
     }
 
+    /**
+     * Retrieves all RoomDetails entries from the database.
+     */
     public List<RoomDetails> getAllRoomDetails() {
         return roomDetailsRepository.findAll();
     }
 
+    /**
+     * Retrieves comprehensive details for all RoomDetails entries.
+     */
     public List<RoomDetailsDTO> getComprehensiveRoomDetails() {
         List<RoomDetails> allRoomDetails = roomDetailsRepository.findAll();
         return allRoomDetails.stream()
@@ -44,6 +56,9 @@ public class RoomDetailsService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Builds a RoomDetailsDTO from a RoomDetails entity, including computed fields.
+     */
     private RoomDetailsDTO buildRoomDetailsDTO(RoomDetails roomDetails) {
         List<Room> roomsOfType = roomRepository.findByRoomDetails(roomDetails.getType());
         double minPrice = roomsOfType.stream()
@@ -71,6 +86,7 @@ public class RoomDetailsService {
                 .build();
     }
 
+    /** Builds a map of amenity categories to their respective amenities. */
     private Map<String, List<String>> buildAmenitiesMap(RoomDetails roomDetails) {
         Map<String, List<String>> amenitiesMap = new LinkedHashMap<>();
         if (roomDetails.getTech() != null && !roomDetails.getTech().isEmpty()) {
@@ -100,6 +116,11 @@ public class RoomDetailsService {
         return amenitiesMap;
     }
 
+    /**
+     * Formats enum names by replacing underscores with spaces and capitalizing words.
+     * @param enumValue The enum value to format.
+     * @return Formatted string representation of the enum value.
+     */
     private String formatEnumName(String enumValue) {
         return Arrays.stream(enumValue.split("_"))
                 .map(word -> word.charAt(0) + word.substring(1).toLowerCase())
